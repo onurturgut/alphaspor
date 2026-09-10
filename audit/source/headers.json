@@ -1,0 +1,15 @@
+{
+    "Access-Control-Allow-Origin":  "*",
+    "Cache-Status":  "Souin; fwd=uri-miss; stored; key=GET-www.fethiyealfaspor.com/",
+    "Cad-Status":  "proxy",
+    "Cdn-Tag":  "11959673",
+    "Vary":  "Accept-Encoding",
+    "X-Cache":  "MISS",
+    "X-Eb-Env":  "eb-ireland",
+    "Content-Length":  "380205",
+    "Cache-Control":  "no-store",
+    "Content-Type":  "text/html;charset=UTF-8",
+    "Date":  "Wed, 09 Sep 2026 18:21:25 GMT",
+    "Last-Modified":  "Wed, 09 Sep 2026 18:21:25 GMT",
+    "Via":  "1.1 Caddy"
+}

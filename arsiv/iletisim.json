@@ -1,0 +1,24 @@
+{
+  "sourceUrl": "https://www.fethiyealfaspor.com/%C4%B0leti%C5%9Fim",
+  "text": "İletişim\n\nE-posta\n Fethiyealfask@gmail.com\nİletişim bilgileri\n +90-5387662431\n\nAdres\nFethiye, Muğla, Türkiye\n48100\n Hafta içi:09:00-20:00\nHafta Sonu:09:00-20:00\n\nBize Ulaşın",
+  "links": [
+    {
+      "href": "mailto:Fethiyealfask@gmail.com",
+      "text": "Fethiyealfask@gmail.com"
+    },
+    {
+      "href": "tel:+90-5387662431",
+      "text": "+90-5387662431"
+    },
+    {
+      "href": "https://www.instagram.com/alfaskfethiye?igsh=MXZtcWM0eHZzaThreA==",
+      "text": ""
+    }
+  ],
+  "formFields": [
+    "İsim",
+    "Telefon",
+    "E-posta adresi",
+    "Mesaj"
+  ]
+}

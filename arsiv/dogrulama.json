@@ -1,0 +1,47 @@
+{
+  "capturedAt": "2026-09-09T18:40:48.374Z",
+  "pages": 16,
+  "newsCategories": [
+    {
+      "category": "U10",
+      "textLength": 1116
+    },
+    {
+      "category": "U11",
+      "textLength": 1066
+    },
+    {
+      "category": "U12",
+      "textLength": 1719
+    },
+    {
+      "category": "U13",
+      "textLength": 1186
+    },
+    {
+      "category": "U14",
+      "textLength": 1437
+    },
+    {
+      "category": "U8-U7",
+      "textLength": 391
+    },
+    {
+      "category": "U9",
+      "textLength": 1174
+    }
+  ],
+  "rosterEntries": 74,
+  "teams": {
+    "U10": 13,
+    "U11": 12,
+    "U12": 16,
+    "U13": 16,
+    "U14/U15": 17
+  },
+  "imageUrls": 168,
+  "downloaded": 168,
+  "failed": [],
+  "missingPlayerPhotos": [],
+  "totalBytes": 31838484
+}

@@ -1,0 +1,152 @@
+<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alfa Spor — Site incelemesi</title><style>body{margin:0;background:#1b1a1a;color:#fff;font:17px/1.65 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:40px 24px}h1{font-size:40px;line-height:1.15}a{color:#ddd}nav{display:flex;gap:24px;margin:24px 0}.report{white-space:pre-wrap;overflow-wrap:anywhere;background:#292727;padding:28px;border-radius:12px}figure{margin:32px 0;padding:24px;background:#43403f;border-radius:12px}figure img{display:block;max-width:100%;max-height:950px;width:auto;margin:auto}figure p{color:#eee}h3{margin:0}footer{padding:32px 0;color:#b1aeac}</style><main><h1>Fethiye Alfa Spor<br>Mevcut site incelemesi</h1><p>9 Eylül 2026 · Masaüstü 1440×1000 · Mobil 390×844 · 23 ekran görüntüsü</p><nav><a href="#rapor">Bulgular ve yol haritası</a><a href="#kanit">Ekran kanıtları</a><a href="INCELEME.md">Markdown dosyası</a></nav><article id="rapor" class="report"># Fethiye Alfa Spor — mevcut site incelemesi
+
+İnceleme tarihi: 9 Eyl&#252;l 2026. Kaynak: https://www.fethiyealfaspor.com/
+
+## Sonu&#231;
+
+Marka kimliği korunabilir: siyah ve antrasit zeminler, sıcak gri vurgular, Aldrich yazı tipi, kurt amblemi ve kul&#252;be ait fotoğraflar. B&#252;y&#252;k &#231;alışma &#246;ncelikle bilgi mimarisi, başvuru akışı ve y&#246;netilebilir i&#231;erik &#252;zerinde yapılmalı. Mevcut ana sayfa, b&#252;t&#252;n kul&#252;p arşivini bir araya getiren uzun bir vitrin gibi &#231;alışıyor. Yeni ziyaret&#231;inin yaş grubu, eğitim, tesis ve başvuru bilgisine ulaşması kolaylaştırılmalı.
+
+Bu &#231;alışma canlı sitenin herkese a&#231;ık aray&#252;z&#252;, HTML/CSS, tarayıcı DOM&#39;u, &#231;alışan etkileşimler ve sitemap &#252;zerinden yapılan dış incelemedir. Y&#246;netim paneli, sunucu kodu ve veritabanı incelenmedi. Canlı site değiştirilmedi; iletişim formundan mesaj g&#246;nderilmedi.
+
+## Doğrulanmış teknik yapı
+
+- Platform: SITE123. Footer, kaynak dosyalar ve CDN adresleri bunu doğruluyor.
+- Ana sayfa 16 b&#246;l&#252;m i&#231;eriyor. 1440 &#215; 1000 tarayıcı boyutunda belge y&#252;ksekliği 20.474 piksel &#246;l&#231;&#252;ld&#252;. Bu, yaklaşık 20 ekranlık bir i&#231;erik uzunluğu; hız puanı değildir.
+- Yapı yalnızca tek sayfadan ibaret değil: ana sayfa b&#246;l&#252;mleri toplarken men&#252;ler bağımsız URL&#39;lerde ilgili b&#246;l&#252;m&#252; a&#231;ıyor. Mobil U14 ligi bağlantısı tıklanarak doğrulandı.
+- Sitemap 16 URL i&#231;eriyor. Tanıtım sayfası sitemap&#39;te var, ana men&#252;de g&#246;r&#252;nm&#252;yor.
+- Tarayıcıda jQuery 1.11.2 ve Bootstrap 3.3.2 s&#252;r&#252;mleri g&#246;r&#252;ld&#252;. Font Awesome 4.7 CSS bağlantısı mevcut. Bunlar mevcut &#246;n y&#252;z&#252;n bileşenleri; buradan sunucu altyapısı veya belirli bir g&#252;venlik a&#231;ığı sonucu &#231;ıkarılamaz.
+- G&#246;rsellerin b&#252;y&#252;k kısmı CSS arka planı olarak sunuluyor. Yalnızca img etiketlerini saymak varlık sayısını veya g&#246;rsel erişilebilirliğini doğru g&#246;stermez.
+- Robots ve sitemap erişilebilir. Ana sayfada a&#231;ıklama, canonical bağlantı ve Open Graph/Twitter metaverileri bulunuyor. A&#231;ıklama ağırlıklı olarak slogandan oluşuyor; eğitim ve yer bilgisi a&#231;ısından geliştirilebilir.
+- İlk masa&#252;st&#252; oturumunda DOMContentLoaded yaklaşık 1,36 saniye, load yaklaşık 1,71 saniye g&#246;r&#252;ld&#252;. Sonraki b&#246;l&#252;m gezintileri sonunda 130 kaynak kaydı vardı. Bunlar tek yerel oturum g&#246;zlemleridir; mobil saha verisi, Lighthouse veya Core Web Vitals &#246;l&#231;&#252;m&#252; değildir.
+
+## Korunacak tasarım değerleri
+
+| Değer | Kaynakta g&#246;r&#252;len kullanım |
+|---|---|
+| Aldrich, Arial, sans-serif | Men&#252;, başlık ve g&#246;vde metni ailesi |
+| #000000 | Siyah alanlar, &#252;st men&#252; |
+| #1B1A1A | Koyu antrasit b&#246;l&#252;m/kart y&#252;zeyleri |
+| #43403F | Sıcak koyu gri y&#252;zeyler |
+| #B1AEAC | Gri vurgu ve tema rengi |
+| #FFFFFF | Ana metin |
+
+&#214;neri: Aldrich&#39;i koruyup başlık, men&#252;, kısa a&#231;ıklama ve uzun metin arasında boyut/ağırlık/satır aralığı hiyerarşisi kurmak. Uzun paragrafların tamamını kalın ve ortalı kullanmak yerine daha kısa satırlar ve sola hizalı g&#246;vde metni kullanmak. Başka bir fonta ge&#231;mek bu incelemenin varsayımı değil.
+
+## İncelenen akışlar ve kanıtlar
+
+### 1. Ana sayfa ve ilk ekran — geliştirme gerekli
+
+Kanıt: 01-desktop-home.png, 09-mobile-home.png.
+
+G&#252;&#231;l&#252;: Belirgin logo, tutarlı koyu palet, g&#252;&#231;l&#252; slogan ve b&#252;y&#252;k g&#246;rsel. Mobilde iki s&#252;tun tek s&#252;tuna d&#246;n&#252;ş&#252;yor.
+
+Sorun: İlk ekranda başvuru, deneme antrenmanı veya arama d&#252;ğmesi yok. Kul&#252;b&#252;n kimlere eğitim verdiği ve Fethiye&#39;de nerede olduğu ilk bakışta anlaşılmıyor. Mobilde slogan ve afiş ilk ekranın neredeyse tamamını kaplıyor.
+
+&#214;neri: Mevcut sloganın yanında kısa bir kul&#252;p tanımı, yaş aralığı ve belirgin bir başvuru d&#252;ğmesi. Ger&#231;ek antrenman fotoğraflarıyla eğitim deneyimini g&#246;r&#252;n&#252;r kılmak.
+
+### 2. Hakkında ve tanıtım — okunabilirlik geliştirilmeli
+
+Kanıt: 02-about.png, 21-promo.png.
+
+G&#252;&#231;l&#252;: Eğitim yaklaşımını a&#231;ıklayan i&#231;erik mevcut.
+
+Sorun: Hakkında metni &#231;ok geniş satırlara, ortalı ve yoğun kalın yazıya sahip. Noktalardan sonra eksik boşluklar var. Tanıtım afişinin alt kısmı masa&#252;st&#252; g&#246;r&#252;nt&#252;s&#252;nde kırpılıyor; afiş i&#231;indeki a&#231;ıklamalar se&#231;ilebilir HTML metni değil.
+
+&#214;neri: Eğitim yaklaşımını 3–4 kısa başlık altında sunmak; &#246;nemli metni g&#246;rselin dışına taşımak. Tanıtım i&#231;eriğini kul&#252;p/eğitim sayfasıyla ilişkilendirmek.
+
+### 3. Ekiplerimiz — i&#231;erik ve g&#246;rsel d&#252;zenleme gerekli
+
+Kanıt: 03-teams.png.
+
+G&#252;&#231;l&#252;: Altı takım kartı yaş gruplarını hızlı taratıyor; ger&#231;ek takım fotoğrafları mevcut.
+
+Sorun: Kartlarda 25/26 sezonu, kul&#252;p tanıtımında 2026/2027 sezonu var. Bunlar arşiv olarak etiketlenmediği i&#231;in g&#252;ncellik belirsiz. U13 kartının g&#246;rsel alanı alınan g&#246;r&#252;nt&#252;de boş; diğer takım fotoğraflarında kırpma tutarlılığı zayıf.
+
+&#214;neri: Aktif sezon ve arşiv se&#231;imini a&#231;ık hale getirmek; takım kartlarını ilgili kadro, antren&#246;r ve fikst&#252;rle birleştirmek. G&#246;rsel boşluğu i&#231;erik kaynağında doğrulanmalı; tek ekran g&#246;r&#252;nt&#252;s&#252;nden dosyanın bozuk olduğu sonucuna varılmadı.
+
+### 4. Duyurular ve kategori filtresi — filtre &#231;alışıyor, sunum geliştirilmeli
+
+Kanıt: 04-news.png, 23-news-filter.png.
+
+U9 filtresi tıklandığında i&#231;erik değişti; kategori etkileşimi &#231;alışıyor. İlk g&#246;r&#252;n&#252;m b&#252;t&#252;n duyuru arşivi değildir.
+
+Sorun: Duyuru kartlarında değerlendirme izlenimi veren beş yıldız var. Uzun metinler ve k&#252;&#231;&#252;k g&#246;rseller haberin ana bilgisini geri plana atıyor. 2026/2027 hazırlık duyurularında 20/08/2027 tarihi ve ge&#231;miş zamanlı anlatım birlikte bulunuyor; 19/08/2026 tarihli başka kayıtla birlikte editoryal doğrulama gerekiyor. Doğru tarihi varsayarak değiştirmemek gerekir.
+
+&#214;neri: Başlık, yayın/etkinlik tarihi, yaş grubu, kısa &#246;zet ve g&#246;rseli ayrı alanlarda y&#246;netmek; yıldızları kaldırmak; oyuncu alımı duyurusunu başvuru sayfasına bağlamak.
+
+### 5. Teknik ekip — g&#252;ven veren i&#231;erik eksik
+
+Kanıt: 05-staff.png.
+
+D&#246;rt antren&#246;r&#252;n adı ve g&#246;revi var. Ancak aynı y&#252;z&#252; g&#246;r&#252;nmeyen takım elbiseli fotoğraf tekrarlanıyor; a&#231;ıklamalar &#252;&#231; nokta olarak duruyor.
+
+&#214;neri: Ger&#231;ek portreler, doğrulanmış kısa &#246;zge&#231;miş, uzmanlık ve &#231;alıştırdığı yaş grupları. Kul&#252;p tanıtımındaki deneyim iddiaları i&#231;erik sahibi tarafından teyit edilmeli; bu incelemede bağımsız doğrulanmadı.
+
+### 6. U10–U14/U15 kadroları ve oyuncu se&#231;imi — &#231;alışıyor, yapı ağır
+
+Kanıt: 06-roster.png, 14-u11.png, 15-u12.png, 16-u13.png, 17-u14-u15.png, 22-player-selection.png.
+
+Beş yaş grubu incelendi. U10 listesinde ikinci oyuncuya tıklanınca b&#252;y&#252;k portre ve se&#231;ili satır değişti. Kaynakta tekrar g&#246;r&#252;nen isimlerin bir b&#246;l&#252;m&#252; liste ve b&#252;y&#252;k portre bileşeninden kaynaklanıyor; bunları doğrudan yinelenen veri hatası saymamak gerekir.
+
+Sorun: Beş uzun kadro ana sayfayı b&#252;y&#252;t&#252;yor. Portrelerin ışık, kadraj ve arka planları farklı; bazı yerlerde temsili fotoğraf kullanılıyor. Yazım ve mevki adlarında bi&#231;im farklılıkları var.
+
+&#214;neri: Ana sayfada takım &#246;zeti; takım sayfasında kadro. Tek oyuncu kaydını sezon ve takım ilişkileriyle kullanmak. Aynı sporcunun farklı yaş gruplarında bulunması otomatik olarak hata kabul edilmemeli. Tıklanabilir satırların klavye ve ekran okuyucu davranışı ayrıca test edilmeli.
+
+### 7. U11–U14 ligleri — y&#252;ksek &#246;ncelikli okunabilirlik sorunu
+
+Kanıt: 07-league.png, 11-mobile-league.png, 18-league-u13.png, 19-league-u12.png, 20-league-u11.png.
+
+D&#246;rt ligde de sonu&#231;lar g&#246;rsel i&#231;inde. U14 ve U12 g&#246;rselleri eğik sunuluyor; bazı g&#246;rsellerde ilk/son satırlar kırpılmış g&#246;r&#252;n&#252;yor. U14 mobil g&#246;r&#252;n&#252;m&#252;nde yazılar &#231;ok k&#252;&#231;&#252;k. DOM&#39;da karşılaşmaları temsil eden tablo veya bağlantı yok; yalnızca b&#246;l&#252;m başlığı bulunuyor.
+
+&#214;neri: Takım ve sezona g&#246;re filtrelenen HTML ma&#231; listesi. Mobilde tarih, rakip, skor ve saha bilgisi okunabilir kartlara d&#246;n&#252;şmeli. Skor ve ma&#231; durumu ayrı alanlar olmalı; g&#246;rselden veri aktarımı yapılırsa kul&#252;p kayıtlarıyla doğrulanmalı.
+
+### 8. İletişim ve form — erişilebilir, başvuru i&#231;in yetersiz
+
+Kanıt: 08-contact.png, 12-mobile-contact.png, 13-mobile-form.png.
+
+G&#252;&#231;l&#252;: Telefon tel: ve e-posta mailto: bağlantıları var. İletişim sayfası a&#231;ılıyor; form mobilde tek s&#252;tuna d&#246;n&#252;ş&#252;yor. 390 piksel genişlikte incelenen iletişim ve lig sayfalarında yatay belge taşması &#246;l&#231;&#252;lmedi.
+
+Sorun: Adres yalnızca il&#231;e/il d&#252;zeyinde; harita belirli antrenman tesisini g&#246;stermiyor. Formda kalıcı label veya aria-label bulunmuyor, placeholder kullanılıyor. Telefon ve e-posta alanları type=text. Mobilde iletişim saatleri &#231;ok satıra b&#246;l&#252;n&#252;yor; forma gelmeden uzun bir harita/bilgi alanı ge&#231;iliyor.
+
+&#214;neri: A&#231;ık tesis adresi ve yol tarifi; sabit alan etiketleri; uygun e-posta/telefon alan t&#252;rleri. Oyuncu başvurusu i&#231;in velinin iletişim bilgisi, doğum yılı, ilgili program ve uygun iletişim saati gibi karar verilen asgari alanlarla ayrı akış. Başvurunun kime ulaşacağı ve kullanıcıya nasıl teyit verileceği netleştirilmeli.
+
+Sınır: Form g&#246;nderilmedi; teslimat, spam koruması, başarı/hata ekranı ve e-posta ulaşması test edilmedi.
+
+### 9. Mobil men&#252; — &#231;alışıyor, sadeleştirme gerekli
+
+Kanıt: 10-mobile-menu.png, 11-mobile-league.png.
+
+Men&#252; a&#231;ıldı; U14 ligi bağlantısı doğru alt sayfaya g&#246;t&#252;rd&#252;. 15 bağlantı tek listede, İletişim en sonda. Men&#252;/paylaşım kontrolleri erişilebilirlik ağacında isimsiz d&#252;ğmeler olarak g&#246;r&#252;n&#252;yor.
+
+&#214;neri: Kul&#252;p, Takımlar, Ma&#231;lar, Haberler, İletişim şeklinde gruplama ve g&#246;r&#252;n&#252;r başvuru eylemi. Kontrol adları, odak sırası, Escape ile kapanma ve odak geri d&#246;n&#252;ş&#252; ayrıca doğrulanmalı.
+
+### 10. URL, i&#231;erik ve teknik envanter — &#231;ıkarıldı, ge&#231;işte korunmalı
+
+Kanıt: source/sitemap.xml.txt, source/robots.txt.txt, source/dom-details.json, source/technical.json, source/sections.json, source/website.css.
+
+Mevcut yollar: /, /hakkında, /tanıtım, /ekiplerimiz, /duyurular, /teknik-ekip, /u10, /u11, /u12-1, /u13, /u14-u15, /u14-lİgİ, /u13-lİgİ, /u12-lİgİ, /u11-lİgİ, /İletişim. Kesin URL kodlamaları i&#231;in sitemap esas alınmalı.
+
+&#214;neri: Her eski URL i&#231;in hedefi belirleyen y&#246;nlendirme listesi; sayfaya &#246;zel başlık ve a&#231;ıklamalar; anlaşılır takım/sezon URL&#39;leri. Sitemap bulunması arama motorunda indekslenmenin veya iyi sıralamanın kanıtı değildir.
+
+## Yenileme i&#231;in &#246;nerilen temel
+
+Ana men&#252;: Kul&#252;p &#183; Takımlar &#183; Ma&#231;lar ve Sonu&#231;lar &#183; Haberler &#183; İletişim &#183; Başvur.
+
+Ana sayfa sırası: slogan ve kısa a&#231;ıklama → başvuru → yaklaşan ma&#231;/son sonu&#231; → eğitim yaklaşımı → yaş grupları → teknik ekip &#246;zeti → son haberler → tesis ve iletişim.
+
+İ&#231;erik modeli: Sezon, Takım, Oyuncu, Takım–Oyuncu ilişkisi, Antren&#246;r, Haber, Ma&#231;, Tesis, Başvuru. Bu, mevcut veritabanının &#231;ıkarılmış şeması değil; g&#246;zlenen i&#231;erikten &#246;nerilen yeni modeldir.
+
+İlk &#246;ncelikler: Tarih/sezon tutarlılığı; fikst&#252;rlerin ger&#231;ek veriye d&#246;n&#252;şmesi; g&#246;r&#252;n&#252;r başvuru; ger&#231;ek teknik ekip i&#231;eriği; a&#231;ık tesis konumu.
+
+İkinci aşama: Men&#252; ve sayfa ayrımı, fotoğraf standardı, uzun metin d&#252;zeni, form erişilebilirliği, i&#231;erik y&#246;netimi ve URL ge&#231;işi.
+
+Son doğrulama: Ger&#231;ek mobil cihazlar, klavye/ekran okuyucu, form teslimatı, g&#246;rsel y&#252;kleme, y&#246;nlendirmeler ve &#246;l&#231;&#252;lm&#252;ş performans. Belirli bir framework/CMS se&#231;imi i&#231;in mevcut SITE123 planı, y&#246;netim ihtiyacı, kaynaklara erişim ve bakım sorumluluğu g&#246;r&#252;lmeli. Renk/font korumak mevcut altyapıya bağlı kalmayı gerektirmez.
+
+## Dosyalar ve sınırlar
+
+report.html: Ekran g&#246;r&#252;nt&#252;lerini bulgularla birlikte g&#246;steren yerel rapor.
+
+screenshots/: Bu oturumda alınan 23 ekran g&#246;r&#252;nt&#252;s&#252;. source/: Kamuya a&#231;ık kaynaklar ve teknik g&#246;zlemler. Her fotoğraf/arka plan indirilmiş tam site yedeği veya &#231;alışır klon değildir.
+
+Tam erişilebilirlik uygunluğu, g&#252;venlik denetimi, y&#246;netim paneli işlevleri ve siteye ait ger&#231;ek ziyaret&#231;i/d&#246;n&#252;ş&#252;m verileri bu &#231;alışmanın kapsamında doğrulanmadı. Kaynak dosyaları ile siteyi yeniden &#252;retmek i&#231;in yeterli g&#246;rsel/aray&#252;z bilgisi &#231;ıkarıldı; sunucu kodunun elde edildiği iddia edilmiyor.
+</article><h2 id="kanit">Ekran kanıtları</h2><figure><h3>1. Ana sayfa</h3><p>Marka tutarlı; ilk ekranda başvuru eylemi yok.</p><a href="screenshots/01-desktop-home.png"><img loading="lazy" src="screenshots/01-desktop-home.png" alt="1. Ana sayfa"></a></figure><figure><h3>2. Hakkında</h3><p>Geniş ve kalın paragraflar okunabilirliği azaltıyor.</p><a href="screenshots/02-about.png"><img loading="lazy" src="screenshots/02-about.png" alt="2. Hakkında"></a></figure><figure><h3>3. Takımlar</h3><p>Sezon etiketleri ve fotoğraf alanları d&#252;zenlenmeli.</p><a href="screenshots/03-teams.png"><img loading="lazy" src="screenshots/03-teams.png" alt="3. Takımlar"></a></figure><figure><h3>4. Duyurular</h3><p>Tarih tutarlılığı ve haber kartı hiyerarşisi geliştirilmeli.</p><a href="screenshots/04-news.png"><img loading="lazy" src="screenshots/04-news.png" alt="4. Duyurular"></a></figure><figure><h3>5. Teknik ekip</h3><p>Tekrarlanan temsili portreler ve eksik &#246;zge&#231;mişler.</p><a href="screenshots/05-staff.png"><img loading="lazy" src="screenshots/05-staff.png" alt="5. Teknik ekip"></a></figure><figure><h3>6. U10 kadrosu</h3><p>Liste ve se&#231;ili portre d&#252;zeni; ana sayfada fazla alan kaplıyor.</p><a href="screenshots/06-roster.png"><img loading="lazy" src="screenshots/06-roster.png" alt="6. U10 kadrosu"></a></figure><figure><h3>7. U14 ligi — masa&#252;st&#252;</h3><p>Sonu&#231;lar HTML tablo yerine g&#246;rsel i&#231;inde.</p><a href="screenshots/07-league.png"><img loading="lazy" src="screenshots/07-league.png" alt="7. U14 ligi — masa&#252;st&#252;"></a></figure><figure><h3>8. İletişim — masa&#252;st&#252;</h3><p>Telefon ve e-posta var; a&#231;ık tesis adresi eksik.</p><a href="screenshots/08-contact.png"><img loading="lazy" src="screenshots/08-contact.png" alt="8. İletişim — masa&#252;st&#252;"></a></figure><figure><h3>1. Ana sayfa — mobil</h3><p>S&#252;tunlar uyarlanıyor; ilk ekran başvuruya y&#246;nlendirmiyor.</p><a href="screenshots/09-mobile-home.png"><img loading="lazy" src="screenshots/09-mobile-home.png" alt="1. Ana sayfa — mobil"></a></figure><figure><h3>9. Mobil men&#252;</h3><p>A&#231;ılıyor; 15 bağlantı gruplandırılmamış.</p><a href="screenshots/10-mobile-menu.png"><img loading="lazy" src="screenshots/10-mobile-menu.png" alt="9. Mobil men&#252;"></a></figure><figure><h3>7. U14 ligi — mobil</h3><p>Men&#252;den ulaşıldı; g&#246;rseldeki sonu&#231;lar &#231;ok k&#252;&#231;&#252;k.</p><a href="screenshots/11-mobile-league.png"><img loading="lazy" src="screenshots/11-mobile-league.png" alt="7. U14 ligi — mobil"></a></figure><figure><h3>8. İletişim — mobil</h3><p>Harita ve iletişim paneli; form aşağıda.</p><a href="screenshots/12-mobile-contact.png"><img loading="lazy" src="screenshots/12-mobile-contact.png" alt="8. İletişim — mobil"></a></figure><figure><h3>8. Form — mobil</h3><p>Form tek s&#252;tun; kalıcı alan etiketleri yok. G&#246;nderim yapılmadı.</p><a href="screenshots/13-mobile-form.png"><img loading="lazy" src="screenshots/13-mobile-form.png" alt="8. Form — mobil"></a></figure><figure><h3>6. U11 kadrosu</h3><p>Portre ve liste a&#231;ılıyor; fotoğraf standardı gerekli.</p><a href="screenshots/14-u11.png"><img loading="lazy" src="screenshots/14-u11.png" alt="6. U11 kadrosu"></a></figure><figure><h3>6. U12 kadrosu</h3><p>Aynı kadro şablonu; farklı yaş grupları sezon modeliyle y&#246;netilmeli.</p><a href="screenshots/15-u12.png"><img loading="lazy" src="screenshots/15-u12.png" alt="6. U12 kadrosu"></a></figure><figure><h3>6. U13 kadrosu</h3><p>İsim ve mevki yazımında bi&#231;im tutarlılığı gerekli.</p><a href="screenshots/16-u13.png"><img loading="lazy" src="screenshots/16-u13.png" alt="6. U13 kadrosu"></a></figure><figure><h3>6. U14/U15 kadrosu</h3><p>Birleşik yaş grubu i&#231;in sezon ve takım ilişkisi a&#231;ık olmalı.</p><a href="screenshots/17-u14-u15.png"><img loading="lazy" src="screenshots/17-u14-u15.png" alt="6. U14/U15 kadrosu"></a></figure><figure><h3>7. U13 ligi</h3><p>G&#246;rselin satırları kırpılmış; veri tablosu gerekli.</p><a href="screenshots/18-league-u13.png"><img loading="lazy" src="screenshots/18-league-u13.png" alt="7. U13 ligi"></a></figure><figure><h3>7. U12 ligi</h3><p>Eğik g&#246;rsel sonu&#231;ları okumayı zorlaştırıyor.</p><a href="screenshots/19-league-u12.png"><img loading="lazy" src="screenshots/19-league-u12.png" alt="7. U12 ligi"></a></figure><figure><h3>7. U11 ligi</h3><p>G&#246;rsel i&#231;indeki ma&#231; verileri se&#231;ilebilir veya filtrelenebilir değil.</p><a href="screenshots/20-league-u11.png"><img loading="lazy" src="screenshots/20-league-u11.png" alt="7. U11 ligi"></a></figure><figure><h3>2. Tanıtım</h3><p>Afiş altı kırpılıyor; &#246;nemli metin HTML olarak sunulmalı.</p><a href="screenshots/21-promo.png"><img loading="lazy" src="screenshots/21-promo.png" alt="2. Tanıtım"></a></figure><figure><h3>6. Oyuncu se&#231;imi</h3><p>İkinci oyuncuya tıklandığında b&#252;y&#252;k portre değişti.</p><a href="screenshots/22-player-selection.png"><img loading="lazy" src="screenshots/22-player-selection.png" alt="6. Oyuncu se&#231;imi"></a></figure><figure><h3>4. U9 duyuru filtresi</h3><p>U9 se&#231;imi ilgili haberleri getiriyor.</p><a href="screenshots/23-news-filter.png"><img loading="lazy" src="screenshots/23-news-filter.png" alt="4. U9 duyuru filtresi"></a></figure><footer>Yerel inceleme raporu. Canlı sitede değişiklik yapılmadı. Yönetim paneli ve form teslimatı doğrulanmadı.</footer></main></html>

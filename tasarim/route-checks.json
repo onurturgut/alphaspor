@@ -1,0 +1,170 @@
+[
+  {
+    "path": "/",
+    "status": 200
+  },
+  {
+    "path": "/kulubumuz",
+    "status": 200
+  },
+  {
+    "path": "/takimlar",
+    "status": 200
+  },
+  {
+    "path": "/haberler",
+    "status": 200
+  },
+  {
+    "path": "/iletisim",
+    "status": 200
+  },
+  {
+    "path": "/maclar",
+    "status": 200
+  },
+  {
+    "path": "/robots.txt",
+    "status": 200
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200
+  },
+  {
+    "path": "/takimlar/u9",
+    "status": 200
+  },
+  {
+    "path": "/takimlar/u10",
+    "status": 200
+  },
+  {
+    "path": "/takimlar/u11",
+    "status": 200
+  },
+  {
+    "path": "/takimlar/u12",
+    "status": 200
+  },
+  {
+    "path": "/takimlar/u13",
+    "status": 200
+  },
+  {
+    "path": "/takimlar/u14-u15",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a0b7e1a8b1c9",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a9ea1a696a74",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a86b0c1be7aa",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a855ab71e691",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a05a545d4d65",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a0b6743d2a4e",
+    "status": 200
+  },
+  {
+    "path": "/haberler/69d109b18bd96",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a85595d6031b",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a0b6740c0ddc",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a05a53cdcf00",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6aa1a2c9a6ebc",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a855db0e3bb8",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a8d672071497",
+    "status": 200
+  },
+  {
+    "path": "/haberler/69fc5ce16bc13",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a855c9ae9cc3",
+    "status": 200
+  },
+  {
+    "path": "/haberler/69d109b191e10",
+    "status": 200
+  },
+  {
+    "path": "/haberler/69f04fb637184",
+    "status": 200
+  },
+  {
+    "path": "/haberler/6a05a798386a2",
+    "status": 200
+  },
+  {
+    "path": "/u10",
+    "status": 308,
+    "location": "/takimlar/u10"
+  },
+  {
+    "path": "/u12-1",
+    "status": 308,
+    "location": "/takimlar/u12"
+  },
+  {
+    "path": "/ekiplerimiz",
+    "status": 308,
+    "location": "/takimlar"
+  },
+  {
+    "path": "/duyurular",
+    "status": 308,
+    "location": "/haberler"
+  },
+  {
+    "path": "/hakk%C4%B1nda",
+    "status": 308,
+    "location": "/kulubumuz"
+  },
+  {
+    "path": "/%C4%B0leti%C5%9Fim",
+    "status": 308,
+    "location": "/iletisim"
+  },
+  {
+    "path": "/u14-l%C4%B0g%C4%B0",
+    "status": 308,
+    "location": "/maclar?takim=u14"
+  },
+  {
+    "path": "/takimlar/olmayan",
+    "status": 404,
+    "location": null
+  }
+]

@@ -1,0 +1,32 @@
+﻿[
+    {
+        "path":  "robots.txt",
+        "status":  200,
+        "bytes":  137,
+        "title":  ""
+    },
+    {
+        "path":  "sitemap.xml",
+        "status":  200,
+        "bytes":  2341,
+        "title":  ""
+    },
+    {
+        "path":  "u10",
+        "status":  200,
+        "bytes":  259071,
+        "title":  ""
+    },
+    {
+        "path":  "duyurular",
+        "status":  200,
+        "bytes":  254385,
+        "title":  ""
+    },
+    {
+        "path":  "u14-l%C4%B0g%C4%B0",
+        "status":  200,
+        "bytes":  244514,
+        "title":  ""
+    }
+]

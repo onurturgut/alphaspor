@@ -1,0 +1,741 @@
+{
+  "teams": [
+    {
+      "slug": "u9",
+      "name": "U9",
+      "season": "2026/2027",
+      "playerCount": 0,
+      "players": []
+    },
+    {
+      "slug": "u10",
+      "name": "U10",
+      "season": "2026/2027",
+      "playerCount": 13,
+      "players": [
+        {
+          "id": "u10-69d2b85f243ff",
+          "name": "Batu BÖCE",
+          "position": "Forvet",
+          "photo": "/media/91c165a52c4824f8d86e.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2b85f182bb",
+          "name": "Cesur Armağan ÜNAL",
+          "position": "Orta Saha",
+          "photo": "/media/7cb1569a96be19f4af7a.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2b85f215fd",
+          "name": "Haluk Arda YAVUZ",
+          "position": "Orta Saha",
+          "photo": "/media/70f0a6242d69a762b95b.jpg",
+          "placeholder": true
+        },
+        {
+          "id": "u10-69d2bb6d71242",
+          "name": "Aslan DİKMEN",
+          "position": "Forvet",
+          "photo": "/media/2a17cfb909722388e93e.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2b85f19f7f",
+          "name": "Yusuf Aras YANIKLAR",
+          "position": "Defans",
+          "photo": "/media/013fd73904b7a94ad36c.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2b85f1bec4",
+          "name": "Emir SÖKMEN",
+          "position": "Kaleci",
+          "photo": "/media/5af7ccbec3797c4fad81.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2b85f0f6b6",
+          "name": "Ateş BOSTANCI",
+          "position": "Orta Saha",
+          "photo": "/media/76b27c307435f77d4af4.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2b85f22c93",
+          "name": "Asil Murat KOÇ",
+          "position": "Defans",
+          "photo": "/media/22888326fd59f9965784.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2b85f07fd2",
+          "name": "Serdest YILDIRIM",
+          "position": "Orta Saha",
+          "photo": "/media/70f0a6242d69a762b95b.jpg",
+          "placeholder": true
+        },
+        {
+          "id": "u10-69d2b85f124c5",
+          "name": "Mete ÖZTÜRK",
+          "position": "Orta Saha",
+          "photo": "/media/00906ee4d6e7a999bb62.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-6a86cb22b7d52",
+          "name": "Çağan Arel TURGUT",
+          "position": "Orta Saha",
+          "photo": "/media/d0f1e3bd2c161a6e1ee3.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2bf708a292",
+          "name": "Yiğit HAMMALOĞLU",
+          "position": "Orta Saha",
+          "photo": "/media/df47e34573fa81f1d905.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u10-69d2bf86e9c0a",
+          "name": "YAMAN HAMMALOĞLU",
+          "position": "Forvet",
+          "photo": "/media/26d7a2b8d70ef020f781.jpg",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "slug": "u11",
+      "name": "U11",
+      "season": "2026/2027",
+      "playerCount": 12,
+      "players": [
+        {
+          "id": "u11-69d2bdaa34e60",
+          "name": "Yiğitcan YAŞAR",
+          "position": "Forvet",
+          "photo": "/media/847c4a758a7d86181dce.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-69d2bdaa31bdd",
+          "name": "Emirhan ALICIOĞLU",
+          "position": "Orta Saha",
+          "photo": "/media/5c2be433c95cf1a36561.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-69d2bdaa23685",
+          "name": "Adil BADUR",
+          "position": "Defans",
+          "photo": "/media/65dff75f89f62d87308c.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-69d2bdaa24e0e",
+          "name": "Adnan Asrın ÇALIK",
+          "position": "Defans",
+          "photo": "/media/45fd39ed723f6fb9a4e9.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-69d2bdaa2eba1",
+          "name": "Deniz AYNACI",
+          "position": "Kaleci",
+          "photo": "/media/40dbc9d4c3a5b45ea1fe.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-69d2bdaa26642",
+          "name": "Ahmet Eren ŞENER",
+          "position": "Forvet",
+          "photo": "/media/9490fa94a4ea204aeba7.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-6a85884cb3f68",
+          "name": "Cesur Armağan Ünal",
+          "position": "Orta Saha",
+          "photo": "/media/7cb1569a96be19f4af7a.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-69d2bdaa305e6",
+          "name": "Efe Hasbi",
+          "position": "Orta Saha",
+          "photo": "/media/e9a38d482471d59f074e.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-6a86fc0170d6d",
+          "name": "Batu Böce",
+          "position": "Orta Saha",
+          "photo": "/media/91c165a52c4824f8d86e.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-69d2bdaa292e2",
+          "name": "Atahan ÇİL",
+          "position": "Forvet",
+          "photo": "/media/70f0a6242d69a762b95b.jpg",
+          "placeholder": true
+        },
+        {
+          "id": "u11-6a86b4ed0cfb7",
+          "name": "Aslan DİKMEN",
+          "position": "Forvet",
+          "photo": "/media/2a17cfb909722388e93e.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u11-6a86b4b62f974",
+          "name": "Mete ÖZTÜRK",
+          "position": "Orta Saha",
+          "photo": "/media/00906ee4d6e7a999bb62.jpg",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "slug": "u12",
+      "name": "U12",
+      "season": "2026/2027",
+      "playerCount": 16,
+      "players": [
+        {
+          "id": "u12-69d2baa0f0510",
+          "name": "Miraç Eymen KUŞCU",
+          "position": "Defans",
+          "photo": "/media/5ebd81c86473e1bb7d97.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0eec1c",
+          "name": "Hasan PEHLİVAN",
+          "position": "Orta Saha",
+          "photo": "/media/7500e95bbfcf4fa6a7b7.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0eb9c6",
+          "name": "Cesur KURT",
+          "position": "Orta Saha",
+          "photo": "/media/17e1bd6353fd1ad04b85.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa106064",
+          "name": "Adil BADUR",
+          "position": "Defans",
+          "photo": "/media/65dff75f89f62d87308c.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0f39c7",
+          "name": "Adnan Asrın ÇALIK",
+          "position": "Defans",
+          "photo": "/media/45fd39ed723f6fb9a4e9.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0e9eaf",
+          "name": "Yiğitcan YAŞAR",
+          "position": "Forvet",
+          "photo": "/media/847c4a758a7d86181dce.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa1078d6",
+          "name": "Ayaz UYSAL",
+          "position": "Orta Saha",
+          "photo": "/media/92c1c3891ed47fab145d.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0e86f3",
+          "name": "Ali Eren TUNCAY",
+          "position": "Orta Saha",
+          "photo": "/media/b9bf379cfe09cf413228.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa1028ee",
+          "name": "Barın KAPTAN",
+          "position": "Defans",
+          "photo": "/media/7818d5e0e45c475a4f37.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0ed19e",
+          "name": "Muhammet Hamza YALÇIN",
+          "position": "Orta Saha",
+          "photo": "/media/5a44dbcbcf3ddad9a547.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0f2323",
+          "name": "Emirhan ALICIOĞLU",
+          "position": "Orta Saha",
+          "photo": "/media/5c2be433c95cf1a36561.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa0e655f",
+          "name": "Ahmet Eren ŞENER",
+          "position": "Forvet",
+          "photo": "/media/9490fa94a4ea204aeba7.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa10105e",
+          "name": "Efe Hasbi",
+          "position": "Orta Saha",
+          "photo": "/media/e9a38d482471d59f074e.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-6a855fc6e6f1f",
+          "name": "Batu BÖCE",
+          "position": "ORTA SAHA",
+          "photo": "/media/91c165a52c4824f8d86e.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-69d2baa10467d",
+          "name": "Deniz AYNACI",
+          "position": "Kaleci",
+          "photo": "/media/40dbc9d4c3a5b45ea1fe.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u12-6a8588b3b607b",
+          "name": "Cesur Armağan Ünal",
+          "position": "Orta Saha",
+          "photo": "/media/7cb1569a96be19f4af7a.jpg",
+          "placeholder": false
+        }
+      ]
+    },
+    {
+      "slug": "u13",
+      "name": "U13",
+      "season": "2026/2027",
+      "playerCount": 16,
+      "players": [
+        {
+          "id": "u13-69d2b3358b871",
+          "name": "Asil CENGİZ",
+          "position": "Forvet",
+          "photo": "/media/3c94b6f4cbfd2baaaa84.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-6a8587da197b8",
+          "name": "Aren Söğüt",
+          "position": "Orta Saha",
+          "photo": "/media/cd044975884744bd06f8.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-6a857d1d370b9",
+          "name": "Cesur Kurt",
+          "position": "Ortasaha",
+          "photo": "/media/17e1bd6353fd1ad04b85.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b4d615fc2",
+          "name": "Vedat Can YAŞAR",
+          "position": "Defans",
+          "photo": "/media/f5d53ea1cffdb304359d.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b5a4d2e38",
+          "name": "Miraç Eymen KUŞCU",
+          "position": "Defans",
+          "photo": "/media/5ebd81c86473e1bb7d97.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b3825ddd5",
+          "name": "Adil BADUR",
+          "position": "Defans",
+          "photo": "/media/65dff75f89f62d87308c.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-6a85cd26da0a1",
+          "name": "Barın KAPTAN",
+          "position": "Orta Saha",
+          "photo": "/media/7818d5e0e45c475a4f37.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-6a981d0d89f50",
+          "name": "Bekir Aras ÖZDEMİR",
+          "position": "Orta Saha",
+          "photo": "/media/e6ea381199e212a84ee1.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2bd6528a61",
+          "name": "Emirhan ALICIOĞLU",
+          "position": "Orta Saha",
+          "photo": "/media/5c2be433c95cf1a36561.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b70444fe9",
+          "name": "Yiğitcan YAŞAR",
+          "position": "Forvet",
+          "photo": "/media/847c4a758a7d86181dce.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-6a86b3ba1c1e9",
+          "name": "Muhamet Hamza YALÇIN",
+          "position": "Orta Saha",
+          "photo": "/media/5a44dbcbcf3ddad9a547.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b5cf9bd6b",
+          "name": "Ali Eren TUNCAY",
+          "position": "Orta Saha",
+          "photo": "/media/b9bf379cfe09cf413228.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b51579ffd",
+          "name": "Ayaz Uysal",
+          "position": "Orta Saha",
+          "photo": "/media/92c1c3891ed47fab145d.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b5f0dbc09",
+          "name": "Hasan PEHLİVAN",
+          "position": "Orta Saha",
+          "photo": "/media/164772755c32f7ea3bd9.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u13-69d2b10153d7a",
+          "name": "Sedat Kerem CANER",
+          "position": "Kaleci",
+          "photo": "/media/70f0a6242d69a762b95b.jpg",
+          "placeholder": true
+        },
+        {
+          "id": "u13-69d2b101562cf",
+          "name": "Rodi Seven BİTEN",
+          "position": "Kaleci",
+          "photo": "/media/70f0a6242d69a762b95b.jpg",
+          "placeholder": true
+        }
+      ]
+    },
+    {
+      "slug": "u14-u15",
+      "name": "U14/U15",
+      "season": "2026/2027",
+      "playerCount": 17,
+      "players": [
+        {
+          "id": "u14-u15-69d2bc4fd4d8b",
+          "name": "Demir KURT",
+          "position": "Orta Saha",
+          "photo": "/media/63c845c098d2667c262f.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fd2a38",
+          "name": "Cemil GÜRSOY",
+          "position": "Orta Saha",
+          "photo": "/media/d7983c8d1ae3785bf2e7.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fd0d56",
+          "name": "Barış Ali ALTINOK",
+          "position": "Defans",
+          "photo": "/media/0dc6bdfa1b218794b879.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fe00f1",
+          "name": "Rüzgar SAAT",
+          "position": "Defans",
+          "photo": "/media/fc414549aa343668f559.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-6a85879d5ac8a",
+          "name": "Aren Söğüt",
+          "position": "Orta Saha",
+          "photo": "/media/cd044975884744bd06f8.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fe57f1",
+          "name": "Selahattin BADUR",
+          "position": "Defans",
+          "photo": "/media/a4c4da482066d783cfc3.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fdc681",
+          "name": "Miraç Eymen KUŞCU",
+          "position": "Defans",
+          "photo": "/media/5ebd81c86473e1bb7d97.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fe74d1",
+          "name": "Ulaş Doruk DENİZ",
+          "position": "Kaleci",
+          "photo": "/media/631bcad4578512c1c164.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fe9264",
+          "name": "Vedat Can YAŞAR",
+          "position": "Defans",
+          "photo": "/media/f5d53ea1cffdb304359d.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fe3b25",
+          "name": "Sarp DÖLEK",
+          "position": "Orta Saha",
+          "photo": "/media/9bf00f7db33da93264ca.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fd8b9b",
+          "name": "Eymen BULUT",
+          "position": "Orta Saha",
+          "photo": "/media/be45521864c13e934ce8.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fcd264",
+          "name": "Asil CENGİZ",
+          "position": "Forvet",
+          "photo": "/media/3c94b6f4cbfd2baaaa84.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fde3c3",
+          "name": "Nevzat Rüzgar ÜNAL",
+          "position": "Orta Saha",
+          "photo": "/media/c474067d590ddff8823c.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fc995a",
+          "name": "Ali Eren TUNCAY",
+          "position": "Orta Saha",
+          "photo": "/media/b9bf379cfe09cf413228.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fda874",
+          "name": "Hasan PEHLİVAN",
+          "position": "Orta Saha",
+          "photo": "/media/164772755c32f7ea3bd9.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-69d2bc4fc741d",
+          "name": "Çayan BİTEN",
+          "position": "Orta Saha",
+          "photo": "/media/25fecbaa65552f1575e9.jpg",
+          "placeholder": false
+        },
+        {
+          "id": "u14-u15-6a86f62c3a694",
+          "name": "Emir TURĞAY",
+          "position": "Forvet",
+          "photo": "/media/b8eddd02a80a1c9ffeb9.png",
+          "placeholder": false
+        }
+      ]
+    }
+  ],
+  "news": [
+    {
+      "id": "6a0b7e1a8b1c9",
+      "title": "GELECEĞİN ALFALARI",
+      "category": "U14",
+      "subtitle": "OYUNCU ALIMI",
+      "body": "2026-2027 futbol sezonu için 2013-2014-2015-2016-2017-2018 doğumlu sporculara kulübümüzün kapılarını açıyoruz.",
+      "image": "/media/4d6a6c47c5262f60ac33.jpg"
+    },
+    {
+      "id": "6a9ea1a696a74",
+      "title": "U14-2026/2027",
+      "category": "U14",
+      "subtitle": "Hazırlık Karşılaşmaları 20/08/2027",
+      "body": "U14, U12, U11 ve U10 ekiplerimiz, Düşbelen Okaliptus Tesisleri’nde Düşbelen SK’nın konuğu oldu.\n\nSporcularımızın gelişimi, oyun deneyimi ve öğrenme süreçlerine katkı sağlayan karşılaşmalarla dolu güzel bir günü geride bıraktık.\n\nMisafirperverlikleri ve katkıları için Düşbelen SK’ya teşekkür eder, tüm sporcularımızı mücadeleleri ve emekleri için kutlarız.",
+      "image": "/media/a271682774cc54fce27a.png"
+    },
+    {
+      "id": "6a86b0c1be7aa",
+      "title": "U14-2026/2027",
+      "category": "U14",
+      "subtitle": "Hazırlık Karşılaşmaları 20/08/2027",
+      "body": "Dün Çiftlik SK ile oynadığımız hazırlık maçının ardından U14 ekibimiz bugün yeniden sahada. 20.15 | Makri SK📍 Fethiye Sentetik Arka arkaya maçlarla yeni sezon öncesi oyun temposunu, takım savunmasını ve özellikle pres organizasyonumuzu geliştirmeye devam ediyoruz.\n\nHer maç, biraz daha iyi olmak için.",
+      "image": "/media/a00977e490bd6742aa9a.jpg"
+    },
+    {
+      "id": "6a855ab71e691",
+      "title": "U14 - 2026/2027",
+      "category": "U14",
+      "subtitle": "HAZIRLIK KARŞILAŞMALARI - 19/08/2026",
+      "body": "2026-2027 sezonuna hazırlanan U14 ekibimiz, haftayı hazırlık maçlarıyla dolu dolu geçiriyor.\n\nDaha önce Seydikemer SK ve Ekol SK ile karşılaşan ekibimiz, bugün yeni bir hazırlık maçında sahaya çıkıyor. ⚽ Çiftlik SK – Fethiye Alfa Spor 📍 Çiftlik Sahası 🕕 18.00\n\nYeni sezon öncesi oyun gelişimimizi ve takım uyumumuzu güçlendirmeye devam ediyoruz.",
+      "image": "/media/7ecb96005eb5833643b5.jpg"
+    },
+    {
+      "id": "6a05a545d4d65",
+      "title": "U11 LİGİ / 10. Hafta",
+      "category": "U11",
+      "subtitle": "09 MAYIS 2026 Cumartesi",
+      "body": "Ekibimiz, Fethiye temsilcisi Menteşeoğlu SK ile karşı karşıya geldi. Mücadele seviyesi yüksek ve oyunun keyif verdiği karşılaşmada sporcularımız, gelişim ve öğrenme adına değerli deneyimler kazanarak sahadan ayrıldı. Bir güzel gelişim hikâyesini daha geride bıraktık",
+      "image": "/media/efa179c614edec01b5a3.jpg"
+    },
+    {
+      "id": "6a0b6743d2a4e",
+      "title": "U11 LİGİ / 11. Hafta",
+      "category": "U11",
+      "subtitle": "16 MAYIS 2026 CUMARTESİ",
+      "body": "Esenköy Sahası’nda Hakkar Doğan SK ile karşılaşan U11 ekibimiz, maçın ilk anından son düdüğe kadar ortaya koyduğu istekli oyun, mücadele gücü ve takım disipliniyle gelişim adına değerli bir karşılaşmayı geride bıraktı.\n\nHer deneyimi öğrenme yolculuğunun bir parçası olarak görüyor, sahada cesaretle büyüyen sporcularımızı ve teknik ekibimizi kutluyoruz",
+      "image": "/media/9ead48532fcf9e8d7e16.png"
+    },
+    {
+      "id": "69d109b18bd96",
+      "title": "U11 LİGİ / 9.HAFTA",
+      "category": "U11",
+      "subtitle": "02 MAYIS 2026 CUMARTESİ",
+      "body": "Ekibimiz, bu hafta Esenköy Sahası’nda Karaçulha SK ile verimli bir karşılaşmada buluştu. Mücadele gücü, oyun disiplini ve öğrenme dolu anlarla geçen bu karşılaşma, gelişim yolculuğumuza değerli bir sayfa daha ekledi.",
+      "image": "/media/91352b8bc0666777fd7b.jpg"
+    },
+    {
+      "id": "6a85595d6031b",
+      "title": "U13 LİGİ / 12. Hafta",
+      "category": "U13",
+      "subtitle": "17 MAYIS 2026 PAZAR - Kopyala",
+      "body": "Fethiye Sentetik Sahası’nda Dalaman temsilcisine karşı oynanan karşılaşmada U13 takımımız; ortaya koyduğu mücadele, oyun disiplini ve gelişim odaklı yaklaşımıyla sahadan değerli kazanımlarla ayrıldı.\n\nHer karşılaşmayı öğrenme ve gelişimin bir parçası olarak görüyoruz. Bu güzel hikayede emeği olan sporcularımızı ve teknik ekibimizi kutluyoruz.",
+      "image": "/media/a81d73df821cb3039e65.jpg"
+    },
+    {
+      "id": "6a0b6740c0ddc",
+      "title": "U13 LİGİ / 11. Hafta",
+      "category": "U13",
+      "subtitle": "10 MAYIS 2026 PAZAR",
+      "body": "Ekibimiz, Fethiye Sentetik Sahası’nda Makri Spor Kulübü ile verimli bir karşılaşmada buluştu. Güzel bir havada oynanan müsabaka; mücadele, oyun disiplini ve öğrenme açısından kıymetli deneyimler sundu.\n\nÇocuklarımızın gelişim yolculuğunda, her hafta yeni kazanımlarla ilerlemeye devam ediyoruz.",
+      "image": "/media/a0bdf0469f5bd277507b.jpg"
+    },
+    {
+      "id": "6a05a53cdcf00",
+      "title": "U13 LİGİ / 10. Hafta",
+      "category": "U13",
+      "subtitle": "03 MAYIS 2026 PAZAR - Kopyala",
+      "body": "Ekibimiz, Dalaman Stadı’nda Dalaman temsilcisi Dalaman B. SK ile karşı karşıya geldi. Zorlu zemin ve hava koşullarına rağmen oyuna bağlılık, mücadele gücü ve istekli performansıyla sahada güzel anlar ortaya koyan ekibimiz; gelişim ve öğrenme adına değerli kazanımlarla bir karşılaşmayı daha geride bıraktı.",
+      "image": "/media/ed917d330c191b239613.jpg"
+    },
+    {
+      "id": "6aa1a2c9a6ebc",
+      "title": "U12 - 2026/2027",
+      "category": "U12",
+      "subtitle": "30 Ağustos Zafer Kupası 09/09/2026 -",
+      "body": "U12 Ekibimiz Zafer Kupası’nda Yarı Final İçin Sahada! 🏆\n\n2026-2027 sezonu hazırlıklarını sürdüren U12 ekibimiz, Fethiye’de düzenlenen 30 Ağustos Zafer Kupası grup karşılaşmalarında mücadelesine devam ediyor.\n\nÜzümlüspor ve Çiftlikspor’un ardından bugün Fethiye 1923 ile karşılaşan ekibimiz, grup maçlarında 2 galibiyet ve 1 beraberlik elde etti.\nEkibimiz, Cumartesi günü Makri SK ile oynayacağı son grup maçında, beraberlik halinde dahi yarı finale yükselme şansını koruyor.\n\nKupada son 4’e kalan ekiplerin yarı final karşılaşmaları ise Pazar günü oynanacak.",
+      "image": "/media/a32c0516598ad73f037c.png"
+    },
+    {
+      "id": "6a855db0e3bb8",
+      "title": "U12 - 2026/2027",
+      "category": "U12",
+      "subtitle": "Hazırlık Karşılaşmaları 23/08/2026",
+      "body": "2026-2027 sezonuna hazırlanan U12 ekibimiz, haftayı hazırlık maçlarıyla dolu dolu geçiriyor.\n\n23/08/2026 Pazartesi 20:30 Esenköy sentetik saha da Menteşeoğlu Sk ile karşılan yaş grubumuz güzel ve keyifli bir mücadale örneği gösterdi.\n\nEkibimiz 26/08/2026 Çarşamba günü 30 Ağustos Zafer Bayramı etkinlikleri kapsamında Denizli Serinhisar ilçesinde 12 Takımlı organizasyona katılacak ayrıca hafta sonu Fethiye de yine etkinlikler kapsamında organizasyonda mücadele edecek.\n\nYeni sezon öncesi oyun gelişimimizi ve takım uyumumuzu güçlendirmeye devam ediyoruz.",
+      "image": "/media/8f57a0176be150e88c22.png"
+    },
+    {
+      "id": "6a8d672071497",
+      "title": "U12 - 2026/2027",
+      "category": "U12",
+      "subtitle": "Hazırlık Karşılaşmaları 20/08/2026",
+      "body": "2026-2027 sezonuna hazırlanan U12 ekibimiz, haftayı hazırlık maçlarıyla dolu dolu geçiriyor.\n\nDaha önce Seydikemer SK -Ekol SK- Dalaman Atletik SK ile karşılaşan ekibimiz, 20/08/2026 tarihinde saat 18:00 Çiftlik SK ve 21/08/2026 saat 20:30 Makri SK yeni bir hazırlık maçında sahaya çıkıyor.\n\nYeni sezon öncesi oyun gelişimimizi ve takım uyumumuzu güçlendirmeye devam ediyoruz.",
+      "image": "/media/7e214b4a3389c0c768ca.jpg"
+    },
+    {
+      "id": "69fc5ce16bc13",
+      "title": "U10 EKİBİMİZ DOLU DİZGİN",
+      "category": "U10",
+      "subtitle": "23 nisan u10 futbol şenliği - Kopyala",
+      "body": "Fethiye’de düzenlenen 1. 23 Nisan Futbol Şenliği, 18 Nisan itibarıyla 12 kulübün katılımıyla başladı.\n\nBölge futbolunun gelişimine katkı sunan bu değerli organizasyonda; Fethiye Alfa SK, Fethiyespor, Makri SK, Karaçulha SK, Çamköy SK, Y. Üzümlü SK, Günlükbaşı SK, Eldirek SK, Fethiye 1923 SK, Likya SK, Beşkaza SK ve Çiftlik SK yer aldı.\n\nEkibimiz, organizasyon boyunca tüm karşılaşmalarda yüksek mücadele gücü, oyun disiplini ve sahaya yansıttığı gelişim odaklı yaklaşımıyla spor severlerin takdirini kazandı.\n\nGelişim, öğrenme ve çocuk futbolunun ruhuna yakışan anlarla dolu, son derece değerli bir organizasyonu geride bırakmanın mutluluğunu yaşıyoruz.",
+      "image": "/media/83764a83ebebf74269f5.jpg"
+    },
+    {
+      "id": "6a855c9ae9cc3",
+      "title": "U10 - 2026/2027",
+      "category": "U10",
+      "subtitle": "Hazırlık Karşılaşması",
+      "body": "2026-2027 sezonuna hazırlanan U10 ekibimiz, haftayı hazırlık maçı ile geçiriyor. Dalaman Atletik spor ile 18/08/2026 Salı günü karşılaşan ekibimiz sahada gösterdiği performans alkış topladı.\n\nYeni sezon öncesi oyun gelişimimizi ve takım uyumumuzu güçlendirmeye devam ediyoruz.",
+      "image": "/media/846372a4d26d1234f266.jpg"
+    },
+    {
+      "id": "69d109b191e10",
+      "title": "1 MAYIS YILDIZ CUP FUTBOL ŞENLİĞİ",
+      "category": "U9",
+      "subtitle": "U9 Ekibimiz Muğla'da",
+      "body": "Muğla Kötekli Sahası’nda Menteşe Yıldız SK’nın ev sahipliğinde düzenlenen organizasyonda ekibimiz; Denizli Bereketli SK, Yatağan Sportif SK ve Menteşe Yıldız SK ile verimli karşılaşmalarda buluştu.\n\nGelişim, öğrenme, oyun coşkusu ve paylaşımın ön planda olduğu bu özel organizasyon, sporcularımız adına oldukça değerli kazanımlarla tamamlandı.",
+      "image": "/media/5c0adfe795833ed78366.jpg"
+    },
+    {
+      "id": "69f04fb637184",
+      "title": "U9 EKİBİMİZ DALAMAN'DA",
+      "category": "U9",
+      "subtitle": "23 nisan U9 futbol şenliği",
+      "body": "Dalaman’da düzenlenen 23 Nisan Futbol Şenliği, 23 Nisan itibarıyla 12 kulübün katılımıyla başladı. Gelişim ve paylaşım odaklı bu değerli organizasyonda ekibimiz, grup aşamasında Ekol SK, Menteşe Yıldız SK ve Yeşil Üzümlü SK ile karşı karşıya geldi.\n\nOrganizasyonun final etabında ise Muğla temsilcisi Düğerek Güneş SK ile oldukça keyifli ve mücadele seviyesi yüksek bir karşılaşma oynayan ekibimiz, ortaya koyduğu oyun anlayışı, mücadele gücü ve saha içindeki duruşuyla spor severlerin takdirini kazanarak organizasyondan ayrıldı.\n\nGelişim, öğrenme ve çocuk futbolunun ruhuna yakışan çok değerli bir organizasyonu daha geride bıraktık.",
+      "image": "/media/965080d2c32550eb5c0e.jpg"
+    },
+    {
+      "id": "6a05a798386a2",
+      "title": "U8-U7 Dostluk maçı",
+      "category": "U8-U7",
+      "subtitle": "09 MAYIS 2026 Cumartesi",
+      "body": "Ekibimiz, Dalaman temsilcisi E.İ. Dalaman Atletik SK ile Özel Fethiye Eğitim Kurumları Halı Sahası’nda keyifli bir karşılaşmada buluştu. Mücadele, oyun coşkusu ve öğrenme dolu anlarla geçen bu özel günde, sporcularımız gelişim yolculuklarına önemli kazanımlar ekledi.",
+      "image": "/media/e28a70514680263490b0.jpg"
+    }
+  ],
+  "staff": [
+    {
+      "name": "Murat GÜL",
+      "role": "Altyapı İdari ve Teknik Koordinatörü"
+    },
+    {
+      "name": "Mehmet Cihan ÖLMEZ",
+      "role": "Altyapı Antrenörü"
+    },
+    {
+      "name": "Görkem Nevzat ATABAY",
+      "role": "Altyapı Antrenörü"
+    },
+    {
+      "name": "Nazmi BAYKARA",
+      "role": "Kaleci Departman Sorumlusu"
+    }
+  ],
+  "contact": {
+    "email": "Fethiyealfask@gmail.com",
+    "phone": "+90 538 766 24 31",
+    "address": "Fethiye, Muğla, Türkiye, 48100",
+    "hours": "Hafta içi: 09:00–20:00 · Hafta sonu: 09:00–20:00",
+    "instagram": "https://www.instagram.com/alfaskfethiye?igsh=MXZtcWM0eHZzaThreA=="
+  },
+  "about": "Altyapı Odaklı Gelişim Merkezi / Oyun Temelli Eğitim Yaklaşımı / Nitelikli Eğitim-Bilinçli Sporcu\nFethiye’de 2024 yılında kurulan Alfa Spor Kulübü, altyapı odaklı ve gelişim merkezli eğitim modeliyle faaliyet göstermektedir.2026/2027 futbol sezonunda U8’den U15’e kadar farklı yaş gruplarında oyuncu gelişimini esas alan kulübümüz, her sezon büyüyen yapısıyla daha fazla çocuğa ulaşmayı hedeflemektedir.Fenerbahçe altyapısında görev almış ve Arda Güler’in gelişim sürecinde yer almış Murat Gül yönetiminde, oyun aklı yüksek, bilinçli ve karakterli sporcular yetiştirilmektedir.\n\nAlfa Spor Kulübü, çocukların yalnızca futbol oynayan bireyler değil; düşünen, karar verebilen ve sorumluluk alan sporcular olarak yetişmesini amaçlar. Oyun temelli antrenman yaklaşımı ve bireysel gelişim odaklı eğitim modeliyle, her oyuncunun potansiyelini en doğru şekilde ortaya çıkarmayı hedefler."
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "league": "U11",
+    "group": "H",
+    "teamSlug": "u11",
+    "season": "2025/2026",
+    "page": "https://www.fethiyealfaspor.com/u11-l%C4%B0g%C4%B0",
+    "image": "/media/fixtures/u11-2025-2026.jpg",
+    "originalImage": "https://files.cdn-files-a.com/uploads/11959673/2000_6a0b720c9f99e.jpg",
+    "retrievedAt": "2026-09-10",
+    "sha256": "d423751ae4936810c4274d778e35ca4bbffe262dcbc86b11382bb1755dec01f9"
+  },
+  {
+    "league": "U12",
+    "group": "H",
+    "teamSlug": "u12",
+    "season": "2025/2026",
+    "page": "https://www.fethiyealfaspor.com/u12-l%C4%B0g%C4%B0",
+    "image": "/media/fixtures/u12-2025-2026.jpg",
+    "originalImage": "https://files.cdn-files-a.com/uploads/11959673/2000_69d3a5541ad4e.jpg",
+    "retrievedAt": "2026-09-10",
+    "sha256": "40c2a88a5c4dfd18dbbb47f77606514c3581cb8af1033b2555d33221c9a42685"
+  },
+  {
+    "league": "U13",
+    "group": "G",
+    "teamSlug": "u13",
+    "season": "2025/2026",
+    "page": "https://www.fethiyealfaspor.com/u13-l%C4%B0g%C4%B0",
+    "image": "/media/fixtures/u13-2025-2026.jpg",
+    "originalImage": "https://files.cdn-files-a.com/uploads/11959673/2000_6a0b6f7585445.jpg",
+    "retrievedAt": "2026-09-10",
+    "sha256": "c63d01e028e583ac39b19ea64a7bf0144d0c54a1f8057b172573fec3f8100815"
+  },
+  {
+    "league": "U14",
+    "group": "E",
+    "teamSlug": "u14-u15",
+    "season": "2025/2026",
+    "page": "https://www.fethiyealfaspor.com/u14-l%C4%B0g%C4%B0",
+    "image": "/media/fixtures/u14-2025-2026.jpg",
+    "originalImage": "https://files.cdn-files-a.com/uploads/11959673/2000_69d3a381407ec.jpg",
+    "retrievedAt": "2026-09-10",
+    "sha256": "4788b213efb68ca02662578512bdcbbac6016db9c10c75e4922450994660ff3f"
+  }
+]
