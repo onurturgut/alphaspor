@@ -104,7 +104,7 @@ export default function Home() {
           <div className="about-grid">
             <div>
               <p className="eyebrow">
-                <span>01</span>BİZ ALFA’YIZ
+                <span>01</span>KULÜBÜMÜZ
               </p>
               <h2>
                 Yalnızca futbol değil.
@@ -113,11 +113,9 @@ export default function Home() {
               </h2>
             </div>
             <div className="about-copy">
-              <p>
-                Her çocuğun içinde bir potansiyel var. Biz, oyun temelli eğitim
-                ve bireysel gelişim yaklaşımımızla bu potansiyelin sahaya
-                yansıması için buradayız.
-              </p>
+              {content.about.split(/\n\s*\n/).map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
               <Link href="/kulubumuz" className="text-link">
                 Kulübümüzü tanıyın
                 <ArrowUpRight size={18} />
