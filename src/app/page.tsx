@@ -164,9 +164,9 @@ export default function Home() {
           <SectionHeading
             number="03"
             eyebrow="KULÜPTEN, SAHADAN, BİZDEN"
-            title="Alfa’dan haberler."
+            title="Duyurular."
             href="/haberler"
-            linkText="Tüm haberler"
+            linkText="Tüm duyurular"
           />
           <NewsCards
             news={content.news

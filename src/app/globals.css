@@ -518,6 +518,10 @@
     height: 240px;
     overflow: hidden;
   }
+  .team-photo {
+    object-fit: cover;
+    object-position: center;
+  }
   .team-card-media .visual-placeholder {
     height: 100%;
     background: #373534;
@@ -578,6 +582,8 @@
     gap: 28px;
   }
   .news-visual {
+    position: relative;
+    background: #222120;
     height: 225px;
     transition: background 0.4s;
   }
@@ -882,6 +888,19 @@
   .article-layout {
     max-width: 850px;
     margin: auto;
+  }
+  .article-image {
+    position: relative;
+    height: clamp(300px, 65vw, 680px);
+    margin-bottom: 40px;
+  }
+  .news-card p.news-body {
+    display: block;
+    overflow: visible;
+    white-space: pre-line;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
   }
   .article-layout > .visual-placeholder {
     height: 380px;

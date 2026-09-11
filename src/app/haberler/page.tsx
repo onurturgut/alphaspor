@@ -22,9 +22,9 @@ export default async function News({
   return (
     <>
       <PageIntro
-        title="Alfa’dan haberler."
+        title="Duyurular."
         eyebrow="KULÜPTEN, SAHADAN, BİZDEN"
-        description="Gelişim yolculuğumuzdan hikâyeler, takım haberleri ve yeni başlangıçlar."
+        description="Burası ALFA, Gelecek Burada Büyür!"
       />
       <section className="container page-content">
         <nav className="filter-bar" aria-label="Haber kategorileri">
@@ -41,7 +41,7 @@ export default async function News({
             </Link>
           ))}
         </nav>
-        <NewsCards news={news} />
+        <NewsCards news={news} fullText />
       </section>
     </>
   );

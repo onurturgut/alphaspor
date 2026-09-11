@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { Tilt } from "./motion";
 export function Visual({ className = "" }: { className?: string }) {
@@ -42,7 +43,13 @@ export function SectionHeading({
 export function TeamCards({
   teams,
 }: {
-  teams: { slug: string; name: string; playerCount: number }[];
+  teams: {
+    slug: string;
+    name: string;
+    playerCount: number;
+    photo: string;
+    photoAlt: string;
+  }[];
 }) {
   return (
     <div className="team-grid">
@@ -50,7 +57,13 @@ export function TeamCards({
         <Tilt key={team.slug}>
           <Link className="team-card" href={`/takimlar/${team.slug}`}>
             <div className="team-card-media">
-              <Visual />
+              <Image
+                src={team.photo}
+                alt={team.photoAlt}
+                fill
+                sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                className="team-photo"
+              />
               <span className="card-index">0{i + 1}</span>
               <span className="circle-arrow">
                 <ArrowUpRight size={21} />
@@ -73,20 +86,40 @@ export function TeamCards({
 }
 export function NewsCards({
   news,
+  fullText = false,
 }: {
-  news: { id: string; title: string; category: string; subtitle: string }[];
+  news: {
+    id: string;
+    title: string;
+    category: string;
+    subtitle: string;
+    image: string | null;
+    body: string;
+  }[];
+  fullText?: boolean;
 }) {
   return (
     <div className="news-grid">
-      {news.map((item, i) => (
+      {news.map((item) => (
         <Link className="news-card" href={`/haberler/${item.id}`} key={item.id}>
-          <Visual className={`news-visual news-visual-${i}`} />
+          <div className="news-visual">
+            {item.image && (
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                style={{ objectFit: "contain" }}
+              />
+            )}
+          </div>
           <div className="news-meta">
             <span>{item.category}</span>
             <ArrowUpRight size={18} />
           </div>
           <h3>{item.title}</h3>
           <p>{item.subtitle}</p>
+          {fullText && <p className="news-body">{item.body}</p>}
           <span className="micro news-read">
             HABERİ OKU <ArrowRight size={14} />
           </span>

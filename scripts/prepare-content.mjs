@@ -206,9 +206,24 @@ async function resolveImage(url) {
 }
 
 const teamNames = ["U9", "U10", "U11", "U12", "U13", "U14/U15"];
+const teamPage = await readFile(
+  path.join(archive, "sayfalar", "04-ekiplerimiz.html"),
+  "utf8",
+);
+const teamPhotos = new Map(
+  [
+    ...teamPage.matchAll(/aria-label="(U\d+) ALFA[^"\n]*" data-bg="([^"]+)"/g),
+  ].map((match) => [match[1], match[2]]),
+);
 const teams = [];
 for (const name of teamNames) {
   const slug = name.toLowerCase().replaceAll("/", "-");
+  const photoTeam = name === "U14/U15" ? "U14" : name;
+  const photo = await resolveImage(teamPhotos.get(photoTeam));
+  if (!photo)
+    throw new Error(
+      `Missing team photo for ${name}; run with --fetch-missing-media`,
+    );
   const players = [];
   for (const student of students.filter(
     (student) => student.team.trim() === name,
@@ -227,6 +242,8 @@ for (const name of teamNames) {
     slug,
     name,
     season: "2026/2027",
+    photo,
+    photoAlt: `${photoTeam} Alfa Spor takım fotoğrafı, 2025/2026`,
     playerCount: players.length,
     players,
   });

@@ -34,8 +34,13 @@ original team cards also contain 25/26 labels; those original labels survive in
 
 ## Brand assets
 
-- `public/media/logo.png`: original transparent crest, downloaded from
-  `https://files.cdn-files-a.com/uploads/11959673/400_69d214b288fdb.png`.
+Team card photos are matched by the U9–U14 labels in the archived
+`arsiv/sayfalar/04-ekiplerimiz.html` and stored locally under `public/media/`.
+The U14 source photo is used for the combined U14/U15 team. Their source season
+is 2025/2026; the mapping is preserved by `prepare-content.mjs`.
+
+- `public/media/logo.webp`: club crest supplied by the user as
+  `400_69d214b288fdb.webp`, used in the header and browser icon.
 - `public/fonts/aldrich.woff2`: official Google Fonts Aldrich Latin subset.
 - `public/fonts/Aldrich-OFL.txt`: the upstream SIL Open Font License.
 - `public/fonts/aldrich-regular.ttf`: upstream full font retained as the source.

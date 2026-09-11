@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import content from "@/data/content.json";
 import { PageIntro } from "@/components/page-intro";
-import { Visual } from "@/components/ui";
+import Image from "next/image";
 export function generateStaticParams() {
   return content.news.map((n) => ({ id: n.id }));
 }
@@ -37,7 +37,18 @@ export default async function Article({
       />
       <article className="container page-content">
         <div className="article-layout">
-          <Visual />
+          {item.image && (
+            <div className="article-image">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                sizes="(max-width: 900px) 100vw, 850px"
+                style={{ objectFit: "contain" }}
+                preload
+              />
+            </div>
+          )}
           <div className="article-meta">
             <span>{item.category}</span>
             <span>{item.subtitle}</span>

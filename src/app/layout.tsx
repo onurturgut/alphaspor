@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   description:
     "Fethiye Alfa Spor: oyun temelli eğitim, bireysel gelişim ve takım ruhu. Takımlarımızı keşfedin, geleceğe birlikte adım atalım.",
-  icons: { icon: "/media/logo.png" },
+  icons: { icon: "/media/logo.webp" },
 };
 export default function RootLayout({
   children,
