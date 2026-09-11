@@ -1432,6 +1432,57 @@
       font-size: 12px;
     }
   }
+  .hero-poster-stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: center;
+    padding: 0 0 50px;
+    min-height: 0;
+  }
+  .hero-poster-stage .hero-image {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    grid-column: 2;
+    grid-row: 1;
+    background: transparent;
+  }
+  .hero-poster {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .hero-poster-stage .hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+  .hero-poster-stage h1 {
+    font-size: clamp(48px, 5.6vw, 82px);
+    letter-spacing: -3px;
+  }
+  .hero-poster-stage .hero-side {
+    display: none;
+  }
+  @media (max-width: 700px) {
+    .hero-poster-stage {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .hero-poster-stage .hero-image {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .hero-poster-stage .hero-copy {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .hero-poster-stage h1 {
+      font-size: clamp(48px, 12vw, 78px);
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

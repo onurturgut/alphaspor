@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowUpRight,
   ArrowDown,
@@ -27,9 +28,17 @@ export default function Home() {
           </span>
           <span>2026 / 2027 SEZONU</span>
         </div>
-        <div className="hero-stage">
+        <div className="hero-stage hero-poster-stage">
           <Tilt className="hero-image">
-            <Visual />
+            <Image
+              src="/media/hero-alfa.png"
+              alt="Alfa Spor Kulübü: Burası Alfa. Stadyumda geleceğe bakan genç futbolcu ve gökyüzünde kurt gözleri."
+              width={1024}
+              height={1536}
+              sizes="(max-width: 700px) 100vw, 45vw"
+              preload
+              className="hero-poster"
+            />
           </Tilt>
           <div className="hero-copy">
             <p className="eyebrow">GELECEĞİN OYUNU BURADA BAŞLAR</p>
