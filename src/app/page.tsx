@@ -29,28 +29,28 @@ export default function Home() {
           <span>2026 / 2027 SEZONU</span>
         </div>
         <div className="hero-stage hero-poster-stage">
-          <Tilt className="hero-image">
+          <div className="hero-image">
             <Image
               src="/media/hero-alfa.png"
               alt="Alfa Spor Kulübü: Burası Alfa. Stadyumda geleceğe bakan genç futbolcu ve gökyüzünde kurt gözleri."
               width={1024}
               height={1536}
-              sizes="(max-width: 700px) 100vw, 45vw"
+              sizes="100vw"
               preload
               className="hero-poster"
             />
-          </Tilt>
+          </div>
           <div className="hero-copy">
-            <p className="eyebrow">GELECEĞİN OYUNU BURADA BAŞLAR</p>
+            <p className="eyebrow">ALFA SPOR KULÜBÜ</p>
             <h1>
-              BİR TAKIM!
+              BURASI
               <br />
-              <span>BİR RÜYA!</span>
+              <span>ALFA</span>
             </h1>
             <p className="hero-description">
-              Aidiyetle kurulur. Güvenle büyür.
+              Daha ilerisi her zaman mümkün.
               <br />
-              Sahada birlikte, geleceğe birlikte.
+              Küçük adımlar, büyük hikâyeler.
             </p>
             <div className="hero-actions">
               <Link href="/takimlar" className="button">

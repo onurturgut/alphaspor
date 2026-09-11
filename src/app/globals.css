@@ -1433,54 +1433,86 @@
     }
   }
   .hero-poster-stage {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 36px;
+    display: flex;
     align-items: center;
-    padding: 0 0 50px;
-    min-height: 0;
+    min-height: 680px;
+    padding: 70px 6% 100px;
+    overflow: hidden;
+    isolation: isolate;
   }
   .hero-poster-stage .hero-image {
-    position: relative;
-    inset: auto;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
-    grid-column: 2;
-    grid-row: 1;
-    background: transparent;
+    height: 100%;
+    z-index: -2;
+  }
+  .hero-poster-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.87),
+        rgba(0, 0, 0, 0.48) 44%,
+        rgba(0, 0, 0, 0.08)
+      ),
+      linear-gradient(0deg, rgba(0, 0, 0, 0.65), transparent 35%);
   }
   .hero-poster {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 46%;
   }
   .hero-poster-stage .hero-copy {
-    grid-column: 1;
-    grid-row: 1;
     min-width: 0;
+    text-shadow: 0 2px 20px #0008;
   }
   .hero-poster-stage h1 {
-    font-size: clamp(48px, 5.6vw, 82px);
-    letter-spacing: -3px;
+    font-size: clamp(70px, 8vw, 120px);
+    letter-spacing: 4px;
+  }
+  .hero-poster-stage h1 > span {
+    color: #fff;
+  }
+  .hero-poster-stage .hero-scroll {
+    left: 6%;
+    bottom: 28px;
+  }
+  .hero-poster-stage .hero-caption {
+    right: 6%;
+    bottom: 28px;
   }
   .hero-poster-stage .hero-side {
     display: none;
   }
   @media (max-width: 700px) {
     .hero-poster-stage {
-      grid-template-columns: 1fr;
-      gap: 30px;
+      min-height: 650px;
+      align-items: flex-end;
+      padding: 60px 22px 85px;
     }
-    .hero-poster-stage .hero-image {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    .hero-poster-stage .hero-copy {
-      grid-column: 1;
-      grid-row: 2;
+    .hero-poster-stage::after {
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.94),
+        rgba(0, 0, 0, 0.62) 50%,
+        rgba(0, 0, 0, 0.1)
+      );
     }
     .hero-poster-stage h1 {
-      font-size: clamp(48px, 12vw, 78px);
+      font-size: clamp(64px, 18vw, 90px);
+      letter-spacing: 2px;
+    }
+    .hero-poster-stage .hero-actions {
+      flex-wrap: wrap;
+    }
+    .hero-poster-stage .hero-caption {
+      display: none;
     }
   }
   @media (prefers-reduced-motion: reduce) {
