@@ -518,6 +518,7 @@
   line-height: 1.7;
 }
 .roster-mobile-selection,
+.roster-team-pitch,
 .roster-mobile-tabs,
 .roster-mobile-choose {
   display: none;
@@ -604,6 +605,94 @@
 }
 
 @media (max-width: 760px) {
+  .roster-desktop-pitch,
+  .roster-mobile-choose {
+    display: none;
+  }
+  .roster-team-pitch {
+    display: block;
+  }
+  .roster-team-field {
+    position: relative;
+    isolation: isolate;
+    margin: 12px;
+    padding: 14px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: repeating-linear-gradient(
+      180deg,
+      #243a2d 0px,
+      #243a2d 50px,
+      #294232 50px,
+      #294232 100px
+    );
+  }
+  .roster-team-field::before {
+    content: "";
+    position: absolute;
+    inset: 50% 0 auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    z-index: -1;
+  }
+  .roster-team-field::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90px;
+    height: 90px;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    z-index: -1;
+  }
+  .roster-team-zone + .roster-team-zone {
+    margin-top: 16px;
+  }
+  .roster-team-zone > p {
+    font-size: 9px;
+    text-align: center;
+    color: #d1dfd2;
+    margin-bottom: 8px;
+  }
+  .roster-team-players {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 5px;
+  }
+  .roster-team-players > button {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 4px 2px;
+    min-width: 0;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: #10231866;
+    color: #fff;
+  }
+  .roster-team-players > button[aria-pressed="true"] {
+    border-color: #fff;
+    background: #0f201de6;
+  }
+  .roster-team-players > button > span:last-child {
+    font-size: 9px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .roster-team-avatar {
+    display: block;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #ddd;
+  }
+  .roster-grid > .roster-mobile-selection {
+    margin: 16px 0;
+    scroll-margin-top: 100px;
+  }
   .roster-intro {
     gap: 12px;
     margin-bottom: 20px;
@@ -712,7 +801,7 @@
     margin-bottom: 18px;
   }
   .roster-mobile-choose {
-    display: flex;
+    display: none;
     width: calc(100% - 40px);
     min-height: 44px;
     margin: 0 20px 20px;

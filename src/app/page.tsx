@@ -14,10 +14,14 @@ import content from "@/data/content.json";
 import { Tilt, Reveal } from "@/components/motion";
 import { Visual, SectionHeading, TeamCards, NewsCards } from "@/components/ui";
 import { ContactSection } from "@/components/contact-section";
+import { ClubGallery } from "@/components/club-gallery";
 import { archiveSeason, formatMatchDate, selectMatches } from "@/lib/matches";
 
 export default function Home() {
-  const latestMatch = selectMatches("", archiveSeason, true)[0];
+  const latestMatches = ["u11", "u12", "u13", "u14-u15"].map((team) => ({
+    team,
+    match: selectMatches(team, archiveSeason, true)[0],
+  }));
   return (
     <>
       <section className="hero container">
@@ -71,34 +75,69 @@ export default function Home() {
           <span className="hero-caption">01 — YENİ BİR BAŞLANGIÇ</span>
         </div>
       </section>
-      <div className="match-strip container">
-        <div className="match-strip-label">
-          <CalendarDays size={21} />
-          <span>
-            SAHADAN
-            <br />
-            HABERLER
-          </span>
+      <section
+        className="latest-results container"
+        aria-labelledby="latest-results-title"
+      >
+        <div className="latest-results-heading">
+          <div>
+            <p className="micro">
+              {archiveSeason} SEZONU · SON YAYIMLANAN SONUÇLAR
+            </p>
+            <h2 id="latest-results-title">
+              <CalendarDays size={22} /> Sahadan sonuçlar.
+            </h2>
+          </div>
+          <Link className="text-link" href="/maclar?gorunum=sonuclar">
+            Tüm maçlar <ArrowUpRight size={18} />
+          </Link>
         </div>
-        <div>
-          <span className="micro">
-            SON YAYIMLANAN SONUÇ · {latestMatch.league} ·{" "}
-            {formatMatchDate(latestMatch.date)}
-          </span>
-          <p>
-            {latestMatch.homeTeam} {latestMatch.homeScore} –{" "}
-            {latestMatch.awayScore} {latestMatch.awayTeam}
-          </p>
+        <div className="latest-results-grid">
+          {latestMatches.map(({ team, match }) => (
+            <Link
+              key={team}
+              className="latest-result-card"
+              href={`/maclar?takim=${team}&sezon=${encodeURIComponent(archiveSeason)}&gorunum=sonuclar`}
+            >
+              <div className="latest-result-meta">
+                <h3>
+                  {match?.league ??
+                    (team === "u14-u15" ? "U14" : team.toUpperCase())}
+                </h3>
+                {match && (
+                  <time dateTime={match.date}>
+                    {formatMatchDate(match.date)}
+                  </time>
+                )}
+              </div>
+              {match ? (
+                <>
+                  <div className="latest-result-team">
+                    <span>{match.homeTeam}</span>
+                    <strong>{match.homeScore}</strong>
+                  </div>
+                  <div className="latest-result-team">
+                    <span>{match.awayTeam}</span>
+                    <strong>{match.awayScore}</strong>
+                  </div>
+                  <div className="latest-result-footer">
+                    <span>
+                      {match.status === "awarded"
+                        ? "Hükmen sonuç"
+                        : "Maç sonucu"}
+                    </span>
+                    <span>
+                      Tüm sonuçlar <ArrowUpRight size={14} />
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <p className="latest-result-empty">Henüz sonuç yayımlanmadı.</p>
+              )}
+            </Link>
+          ))}
         </div>
-        <div className="match-strip-status">
-          <span className="status-dot" />
-          {archiveSeason.replace("/", " / ")} sezonu
-        </div>
-        <Link className="text-link" href="/maclar?gorunum=sonuclar">
-          Maç merkezi
-          <ArrowUpRight size={18} />
-        </Link>
-      </div>
+      </section>
       <section id="kulup" className="section container">
         <Reveal>
           <div className="about-grid">
@@ -122,6 +161,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
+          <ClubGallery />
           <div className="values-row">
             {[
               {

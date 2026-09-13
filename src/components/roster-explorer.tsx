@@ -188,6 +188,7 @@ export function RosterExplorer({ players, teamName }: RosterExplorerProps) {
   const [mobileTab, setMobileTab] = useState<"saha" | "kadro">("saha");
   const pitchTabRef = useRef<HTMLButtonElement>(null);
   const listTabRef = useRef<HTMLButtonElement>(null);
+  const mobileDetailsRef = useRef<HTMLDivElement>(null);
 
   const selectedPlayer =
     players.find((player) => player.id === selectedId) ?? players[0];
@@ -234,19 +235,6 @@ export function RosterExplorer({ players, teamName }: RosterExplorerProps) {
         </span>
       </div>
 
-      <div className="roster-mobile-selection">
-        <div className="roster-mobile-avatar">
-          <PlayerPortrait key={selectedPlayer.id} player={selectedPlayer} />
-        </div>
-        <div>
-          <span className="roster-small-label">
-            {teamName} · {selectedPlayer.position}
-          </span>
-          <p>{selectedPlayer.name}</p>
-        </div>
-        <Check size={18} aria-hidden="true" />
-      </div>
-
       <div
         className="roster-mobile-tabs"
         role="tablist"
@@ -289,7 +277,71 @@ export function RosterExplorer({ players, teamName }: RosterExplorerProps) {
           aria-labelledby={`${instanceId}-pitch-tab`}
           tabIndex={0}
         >
-          <Pitch player={player} teamName={teamName} />
+          <div className="roster-desktop-pitch">
+            <Pitch player={player} teamName={teamName} />
+          </div>
+          <div className="roster-team-pitch">
+            <div className="roster-card-topline">
+              <span>TÜM KADRO</span>
+              <span>{players.length} oyuncu</span>
+            </div>
+            <div
+              className="roster-team-field"
+              aria-label={`${teamName} oyuncuları`}
+            >
+              {(
+                [
+                  "attack",
+                  "midfield",
+                  "defence",
+                  "goalkeeper",
+                  "unknown",
+                ] as PitchZone[]
+              ).map((zone) => {
+                const members = players.filter(
+                  (candidate) => getZone(candidate.position) === zone,
+                );
+                if (!members.length) return null;
+                return (
+                  <div className="roster-team-zone" key={zone}>
+                    <p>{zones[zone].label}</p>
+                    <div className="roster-team-players">
+                      {members.map((candidate) => (
+                        <button
+                          type="button"
+                          key={candidate.id}
+                          aria-pressed={candidate.id === selectedId}
+                          aria-label={`${candidate.name}, ${candidate.position}`}
+                          aria-controls={`${instanceId}-mobile-details`}
+                          onClick={() => {
+                            setSelectedId(candidate.id);
+                            setPreviewId(null);
+                            mobileDetailsRef.current?.scrollIntoView({
+                              behavior: window.matchMedia(
+                                "(prefers-reduced-motion: reduce)",
+                              ).matches
+                                ? "instant"
+                                : "smooth",
+                              block: "nearest",
+                            });
+                          }}
+                        >
+                          <span className="roster-team-avatar">
+                            <PlayerPortrait player={candidate} />
+                          </span>
+                          <span>{candidate.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="roster-pitch-note">
+              Bilgilerini görmek için oyuncuya dokun. Yerleşim genel mevkileri
+              gösterir.
+            </p>
+          </div>
           <button
             className="roster-mobile-choose"
             type="button"
@@ -301,6 +353,24 @@ export function RosterExplorer({ players, teamName }: RosterExplorerProps) {
             Kadrodan oyuncu seç <ArrowUpRight size={16} aria-hidden="true" />
           </button>
         </section>
+
+        <div
+          className="roster-mobile-selection"
+          id={`${instanceId}-mobile-details`}
+          ref={mobileDetailsRef}
+          aria-live="polite"
+        >
+          <div className="roster-mobile-avatar">
+            <PlayerPortrait key={selectedPlayer.id} player={selectedPlayer} />
+          </div>
+          <div>
+            <span className="roster-small-label">
+              {teamName} · {selectedPlayer.position}
+            </span>
+            <p>{selectedPlayer.name}</p>
+          </div>
+          <Check size={18} aria-hidden="true" />
+        </div>
 
         <section
           className="roster-player-card roster-sticky"
