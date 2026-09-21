@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { ChevronDown, Camera } from "lucide-react";
 import "./coaching-team.css";
+import { coachLicense } from "@/lib/coach-license";
 
-type Coach = { name: string; role: string; photo?: string; bio?: string };
+type Coach = { name: string; role: string; photo?: string; bio?: string; license?: string };
 
 export function CoachingTeam({
   staff,
@@ -27,6 +28,7 @@ export function CoachingTeam({
         </header>
         <div className="coaching-grid">
           {staff.map((person, index) => {
+            const license = coachLicense(person);
             const paragraphs =
               person.bio?.split(/\n\s*\n/).filter(Boolean) ?? [];
             return (
@@ -47,7 +49,10 @@ export function CoachingTeam({
                 <div className="coach-content">
                   <div className="coach-intro">
                     <span className="coach-role">{person.role}</span>
-                    <h3>{person.name}</h3>
+                    <div className="coach-name-row">
+                      <h3>{person.name}</h3>
+                      {license && <span className="coach-license" aria-label={`Lisans: ${license}`}>{license}</span>}
+                    </div>
                     {paragraphs[0] && (
                       <p className="coach-summary">{paragraphs[0]}</p>
                     )}

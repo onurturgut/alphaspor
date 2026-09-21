@@ -1,0 +1,76 @@
+.opening-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+}
+.opening-screen[hidden] { display: none; }
+.opening-panel {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  background: #e8e8e8;
+  transition: transform 1100ms cubic-bezier(.76, 0, .24, 1);
+  will-change: transform;
+}
+.opening-panel--top { top: 0; }
+.opening-panel--bottom { bottom: 0; }
+.opening-scene {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at 50% 25%, #fafafa 0%, #e4e4e4 55%, #a3a3a3 100%);
+}
+.opening-panel--top .opening-scene { top: 0; }
+.opening-panel--bottom .opening-scene { bottom: 0; }
+.opening-artwork {
+  position: relative;
+  width: min(100vw, 66.666667dvh);
+  aspect-ratio: 2 / 3;
+  background: url('/media/club/ChatGPT Image 21 Eyl 2026 23_47_05.png') center / 100% 100% no-repeat;
+}
+.opening-ring {
+  position: absolute;
+  /* Original artwork: 1024 × 1536; ring center (512, 420), radius 166. */
+  left: 32.8125%;
+  top: 15.885417%;
+  width: 34.375%;
+  aspect-ratio: 1;
+  background: url('/media/club/ChatGPT Image 21 Eyl 2026 23_47_05.png') 50% 20.608108% / 290.909091% 436.363636% no-repeat;
+  mask-image: radial-gradient(circle, transparent 62.8%, #000 63.4%, #000 69.2%, transparent 69.8%);
+  animation: opening-ring-turn 1600ms linear infinite;
+}
+.opening-screen[data-state="opening"] .opening-panel--top { transform: translateY(-100%); }
+.opening-screen[data-state="opening"] .opening-panel--bottom { transform: translateY(100%); }
+@media (min-width: 768px) and (orientation: landscape) {
+  .opening-artwork {
+    /* One continuous landscape, sized to cover without stretching. */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100vw, 222.35434dvh);
+    aspect-ratio: 1870 / 841;
+    background-image: url('/media/club/opening-desktop-wide.png');
+  }
+  .opening-ring {
+    /* Landscape artwork: ring center (930, 226), radius 90. */
+    left: 44.59893%;
+    top: 15.457788%;
+    width: 10.26738%;
+    background-image: url('/media/club/opening-desktop-wide.png');
+    background-position: 49.702026% 20.030817%;
+    background-size: 973.958333% 438.020833%;
+    mask-image: radial-gradient(circle, transparent 61.5%, #000 62.2%, #000 69.5%, transparent 70.2%);
+  }
+}
+@keyframes opening-ring-turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .opening-ring { animation: none; }
+  .opening-panel { transition: opacity 150ms ease; }
+  .opening-screen[data-state="opening"] .opening-panel { transform: none; opacity: 0; }
+}

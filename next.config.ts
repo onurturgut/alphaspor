@@ -5,6 +5,17 @@ const mediaOrigins = [
 ];
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async headers() {
+    return [{
+      source: "/sw.js",
+      headers: [
+        { key: "Content-Type", value: "application/javascript; charset=utf-8" },
+        { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        { key: "Service-Worker-Allowed", value: "/" },
+        { key: "Content-Security-Policy", value: "default-src 'self'; script-src 'self'; object-src 'none'" },
+      ],
+    }];
+  },
   images: {
     // Serve R2 assets directly: Next's remote optimizer aborts upstream
     // downloads after 7 seconds, which larger gallery images can exceed.

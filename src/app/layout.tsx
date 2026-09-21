@@ -1,5 +1,5 @@
 import { mediaUrl } from "@/lib/media";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "./themes.css";
@@ -9,6 +9,8 @@ const aldrich = localFont({
   display: "swap",
 });
 export const metadata: Metadata = {
+  applicationName: "Fethiye Alfa Spor",
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Alfa Spor" },
   metadataBase: new URL("https://www.fethiyealfaspor.com"),
   title: {
     default: "Fethiye Alfa Spor | Bir Takım. Bir Rüya.",
@@ -16,8 +18,12 @@ export const metadata: Metadata = {
   },
   description:
     "Fethiye Alfa Spor: oyun temelli eğitim, bireysel gelişim ve takım ruhu. Takımlarımızı keşfedin, geleceğe birlikte adım atalım.",
-  icons: { icon: mediaUrl("/media/logo.webp") },
+  icons: {
+    icon: mediaUrl("/media/logo.webp"),
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
+export const viewport: Viewport = { themeColor: "#171717" };
 export default function RootLayout({
   children,
 }: {

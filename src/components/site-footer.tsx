@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, Camera as Instagram } from "lucide-react";
 import { getContent } from "@/lib/content";
+import { PwaControls } from "./pwa-controls";
 export async function SiteFooter() {
   const { contact } = await getContent();
   return (
@@ -15,6 +16,7 @@ export async function SiteFooter() {
             <br />
             Güvenle büyür.
           </p>
+          <PwaControls />
         </div>
         <div>
           <span className="micro">KULÜBÜ KEŞFET</span>

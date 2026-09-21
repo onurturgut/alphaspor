@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import type { z } from "zod";
 import { schemas, type Section } from "@/lib/admin/schema";
 import { Field, MediaField, type FieldProps } from "./fields";
+import { coachLicense } from "@/lib/coach-license";
 type Data = z.infer<typeof schemas.news> &
   z.infer<typeof schemas.teams> &
   z.infer<typeof schemas.matches> &
@@ -26,7 +27,9 @@ export function Editor({
   onSaved: () => Promise<void>;
   onDirty: () => void;
 }) {
-  const [draft, setDraft] = useState<Draft>(initial);
+  const [draft, setDraft] = useState<Draft>(() => section === "staff"
+    ? { ...initial, license: coachLicense(initial) }
+    : initial);
   const [saving, setSaving] = useState(false),
     [uploads, setUploads] = useState(0),
     [error, setError] = useState("");
@@ -327,6 +330,7 @@ export function Editor({
         {section === "staff" && (
           <div className="admin-form-grid">
             {field("name", "Ad soyad", { required: true })}
+            {field("license", "Antrenörlük lisansı (ör. UEFA A)")}
             {field("role", "Görev", { required: true })}
             {image("photo", "Ekip üyesi fotoğrafı")}
             {field("bio", "Biyografi", { multiline: true })}

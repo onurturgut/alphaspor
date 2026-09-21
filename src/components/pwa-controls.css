@@ -1,0 +1,21 @@
+.pwa-controls { margin-top: 20px; font-family: Arial, Helvetica, sans-serif; }
+.pwa-button, .pwa-install-help summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--white);
+  font: 600 12px/1.5 Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  list-style: none;
+}
+.pwa-install-help summary::-webkit-details-marker { display: none; }
+.pwa-button:hover, .pwa-install-help summary:hover { border-color: currentColor; }
+.pwa-button:focus-visible, .pwa-install-help summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.pwa-button:disabled { opacity: .6; cursor: wait; }
+.pwa-install-help p, .pwa-message { max-width: 340px; font-size: 12px; line-height: 1.7; }
+.pwa-update { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 12px; font-size: 12px; }

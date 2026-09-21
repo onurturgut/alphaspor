@@ -15,7 +15,7 @@ import {
 } from "./site-settings";
 
 type Content = Omit<typeof seed, "staff"> & {
-  staff: ((typeof seed.staff)[number] & { photo?: string; bio?: string })[];
+  staff: ((typeof seed.staff)[number] & { photo?: string; bio?: string; license?: string })[];
   heroVideo?: HeroVideoAssets;
   home: typeof defaultHome;
   pages: typeof defaultPages;
