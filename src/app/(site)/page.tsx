@@ -10,9 +10,9 @@ import {
   MapPin,
 } from "lucide-react";
 import { getMatchData, getContent } from "@/lib/content";
-import { Tilt, Reveal } from "@/components/motion";
-import { Visual, SectionHeading, NewsCards } from "@/components/ui";
-import { ContactSection } from "@/components/contact-section";
+import { Reveal } from "@/components/motion";
+import { SectionHeading, NewsCards } from "@/components/ui";
+import { CoachingTeam } from "@/components/coaching-team";
 import { TrainingPrograms } from "@/components/training-programs";
 import { formatMatchDate, selectMatches } from "@/lib/matches";
 
@@ -132,6 +132,10 @@ export default async function Home() {
         </div>
       </section>
       <TrainingPrograms />
+      <CoachingTeam
+        staff={content.staff}
+        instagram={content.contact.instagram}
+      />
       <section id="takimlar" className="section section-soft">
         <div className="academy-shell">
           <Reveal>
@@ -239,44 +243,6 @@ export default async function Home() {
           />
         </Reveal>
       </section>
-      <section id="teknik-ekip" className="section section-soft">
-        <div className="container">
-          <Reveal>
-            <SectionHeading
-              number="03"
-              eyebrow="GELİŞİME REHBERLİK EDENLER"
-              title={content.home.staffTitle}
-              href="/kulubumuz#teknik-ekip"
-              linkText="Ekibimizi tanıyın"
-            />
-            <div className="staff-grid">
-              {content.staff.map((person, i) => (
-                <div className="staff-card" key={person.name}>
-                  <Tilt>
-                    {person.photo ? (
-                      <Image
-                        src={person.photo}
-                        alt={person.name}
-                        width={600}
-                        height={700}
-                        style={{
-                          width: "100%",
-                          height: 300,
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <Visual className={`staff-visual staff-${i}`} />
-                    )}
-                  </Tilt>
-                  <h3>{person.name}</h3>
-                  <p>{person.role}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
       <section className="join-section container">
         <Reveal>
           <div className="join-top">
@@ -309,16 +275,6 @@ export default async function Home() {
             </a>
           </div>
         </Reveal>
-      </section>
-      <section className="section section-soft">
-        <div className="container">
-          <SectionHeading
-            number="05"
-            eyebrow="TANIŞALIM"
-            title="Sahaya uzanan ilk adım."
-          />
-          <ContactSection />
-        </div>
       </section>
     </>
   );

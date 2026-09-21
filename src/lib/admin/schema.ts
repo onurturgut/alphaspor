@@ -115,7 +115,7 @@ export const schemas = {
   staff: z.object({
     name: required(120),
     role: required(250),
-    bio: text(3000).default(""),
+    bio: text(12000).default(""),
     photo: safeUrl.default(""),
     order,
   }),
