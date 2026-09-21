@@ -3,6 +3,7 @@ import { cache } from "react";
 import { connection } from "next/server";
 import { getDb } from "./mongodb";
 import type seed from "@/data/content.json";
+import defaultHeroVideo from "@/data/hero-video.json";
 import type sourceSeed from "@/data/match-sources.json";
 import type { Match } from "./matches";
 import type { HeroVideoAssets } from "@/components/hero-video";
@@ -80,7 +81,7 @@ export const getContent = cache(async (): Promise<Content> => {
     staff,
     about: settings.about,
     contact: settings.contact,
-    heroVideo: settings.heroVideo,
+    heroVideo: settings.heroVideo ?? defaultHeroVideo,
     home: { ...defaultHome, ...settings.home },
     pages: { ...defaultPages, ...settings.pages },
     gallery: settings.gallery ?? defaultGallery,

@@ -40,6 +40,8 @@ R2 görselleri doğrudan tarayıcıya sunulur (`images.unoptimized: true`). Böy
 
 Hazırlanan `desktop.mp4`, `mobile.mp4`, `poster.jpg`, `mobile-poster.jpg` dosyaları Git dışındaki `.local-backups/hero-video` klasöründedir. `npm run publish:hero-video` bu dosyaları içerik hash'li R2 yollarına yükler; public içerik bütünlüğü ve video byte-range (206) erişimi doğrulandıktan sonra MongoDB `settings` koleksiyonundaki `club.heroVideo` alanını günceller. Önceki alanın yedeği aynı yerel klasöre kaydedilir.
 
-Hero, MongoDB'deki `desktop`, `mobile`, `poster`, `mobilePoster` URL'lerini kullanır. Tarayıcı ilk açılışta ekran genişliğine uygun tek video kaynağını seçer. Video sessiz, satır içi ve döngülü oynar; duraklatma düğmesi vardır. Hareketi azaltma tercihinde otomatik oynatılmaz. Oynatma engellenirse kapak ve manuel oynatma düğmesi kalır; medya hatasında kapak gösterilir. Video doğrudan R2'den sunulur, Next.js görsel işleyicisinden geçmez.
+Hero, MongoDB'deki `desktop`, `mobile`, `poster`, `mobilePoster` URL'lerini kullanır. Video ayarı eksik veya null ise `src/data/hero-video.json` içindeki yerel adresler kullanılır. Web için hazırlanmış dosyalar `public/media/hero-video` altında bulunur; yeni veritabanı kurulumlarında aktarım komutu bu adresleri başlangıç ayarlarına ekler. Böylece video ayarının eksik olması hero videosunu tamamen kaldırmaz. Mevcut özel video ayarları korunur; R2 kullanımı isteğe bağlıdır.
+
+Tarayıcı ilk açılışta ekran genişliğine uygun tek video kaynağını seçer. Video sessiz, satır içi ve döngülü oynar; duraklatma düğmesi vardır. Hareketi azaltma tercihinde otomatik oynatılmaz. Oynatma engellenirse kapak ve manuel oynatma düğmesi kalır; medya hatasında kapak gösterilir. Video dosyası doğrudan sunulur, Next.js görsel işleyicisinden geçmez.
 
 Kaynaklar: [MongoDB istemcisi](https://www.mongodb.com/docs/drivers/node/current/connect/mongoclient/), [Cloudflare R2 S3 SDK](https://developers.cloudflare.com/r2/examples/aws/aws-sdk-js-v3/).

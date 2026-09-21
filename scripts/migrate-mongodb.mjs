@@ -14,6 +14,7 @@ const read = async (name) =>
 
 try {
   const content = await read("content");
+  const heroVideo = await read("hero-video");
   const matches = (
     await Promise.all(
       ["u11", "u12", "u13", "u14"].map((team) => read(`matches-${team}`)),
@@ -40,7 +41,7 @@ try {
     ],
     [
       "settings",
-      [{ _id: "club", about: content.about, contact: content.contact }],
+      [{ _id: "club", about: content.about, contact: content.contact, heroVideo }],
     ],
     [
       "matches",
