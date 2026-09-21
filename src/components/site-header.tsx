@@ -1,4 +1,7 @@
 "use client";
+
+import { mediaUrl } from "@/lib/media";
+
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -79,7 +82,13 @@ export function SiteHeader() {
           aria-label="Fethiye Alfa Spor ana sayfa"
           onClick={() => setOpen(false)}
         >
-          <Image src="/media/logo.webp" alt="" width={40} height={60} preload />
+          <Image
+            src={mediaUrl("/media/logo.webp")}
+            alt=""
+            width={40}
+            height={60}
+            preload
+          />
           <span>
             ALFA SPOR<small>FETHİYE · 2024</small>
           </span>

@@ -1,43 +1,22 @@
 "use client";
 
+import { mediaUrl } from "@/lib/media";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
-const photos = [
-  {
-    src: "/media/club/club-3.jpg",
-    alt: "Alfa Spor oyuncularının sahadaki takım fotoğrafı",
-    width: 1536,
-    height: 2048,
-  },
-  {
-    src: "/media/club/club-1.png",
-    alt: "Alfa Spor: altyapıda gelişim yaklaşımı",
-    width: 2000,
-    height: 2500,
-  },
-  {
-    src: "/media/club/club-2.png",
-    alt: "Alfa Spor 2026–2027 sezonu oyuncu katılım afişi",
-    width: 2000,
-    height: 3556,
-  },
-  {
-    src: "/media/club/club-4.png",
-    alt: "Alfa Spor antrenörü oyuncularıyla konuşuyor",
-    width: 863,
-    height: 1536,
-  },
-  {
-    src: "/media/club/club-5.png",
-    alt: "Alfa Spor oyuncuları saha kenarında bir arada",
-    width: 1245,
-    height: 2048,
-  },
-];
-
-export function ClubGallery() {
+export function ClubGallery({
+  photos,
+}: {
+  photos: {
+    id: string;
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  }[];
+}) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(true);
@@ -51,18 +30,20 @@ export function ClubGallery() {
   }, []);
 
   useEffect(() => {
-    if (paused || reducedMotion) return;
+    if (paused || reducedMotion || photos.length < 2) return;
     const timer = window.setInterval(
       () => setActive((index) => (index + 1) % photos.length),
       5000,
     );
     return () => window.clearInterval(timer);
-  }, [paused, reducedMotion]);
+  }, [paused, reducedMotion, photos.length]);
 
   function move(direction: number) {
     setPaused(true);
     setActive((index) => (index + direction + photos.length) % photos.length);
   }
+
+  if (!photos.length) return null;
 
   return (
     <div
@@ -119,7 +100,7 @@ export function ClubGallery() {
       </div>
       <Image
         className="club-gallery-brand"
-        src="/media/club/alfa-wolf.png"
+        src={mediaUrl("/media/club/alfa-wolf.png")}
         alt="ALFA ve kurt amblemi"
         width={400}
         height={133}

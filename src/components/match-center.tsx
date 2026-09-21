@@ -17,26 +17,19 @@ import {
   hasScore,
   isAlfa,
   matchOutcome,
-  matchSources,
   selectMatches,
   type Match,
 } from "@/lib/matches";
+import type { MatchSource } from "@/lib/content";
 import "./utility.css";
 import "./matches.css";
-
-const teams = [
-  { value: "all", label: "Tüm takımlar", slug: "" },
-  { value: "U9", label: "U9", slug: "u9" },
-  { value: "U10", label: "U10", slug: "u10" },
-  { value: "U11", label: "U11", slug: "u11" },
-  { value: "U12", label: "U12", slug: "u12" },
-  { value: "U13", label: "U13", slug: "u13" },
-  { value: "U14/U15", label: "U14 / U15", slug: "u14-u15" },
-] as const;
 
 type MatchTab = "fixtures" | "results";
 
 type MatchCenterProps = {
+  teamOptions: { slug: string; name: string; season: string }[];
+  matches: Match[];
+  matchSources: MatchSource[];
   initialTeam?: string;
   initialSeason?: string;
   initialTab?: MatchTab;
@@ -130,10 +123,26 @@ function MatchRow({ match }: { match: Match }) {
 }
 
 export function MatchCenter({
+  teamOptions,
+  matches,
+  matchSources,
   initialTeam,
   initialSeason,
   initialTab,
 }: MatchCenterProps) {
+  const teams = [
+    { value: "all", label: "Tüm takımlar", slug: "" },
+    ...teamOptions.map((t) => ({ value: t.slug, label: t.name, slug: t.slug })),
+  ];
+  const seasons = [
+    ...new Set([
+      archiveSeason,
+      ...teamOptions.map((t) => t.season),
+      ...matches.map((m) => m.season),
+    ]),
+  ]
+    .sort()
+    .reverse();
   const id = useId();
   const initial = teams.find(
     (team) =>
@@ -142,7 +151,10 @@ export function MatchCenter({
   );
   const [filters, setFilters] = useState<MatchFilters>({
     teamValue: initial?.value ?? "all",
-    season: initialSeason === "2026/2027" ? initialSeason : archiveSeason,
+    season:
+      initialSeason && seasons.includes(initialSeason)
+        ? initialSeason
+        : archiveSeason,
     tab: initialTab === "results" ? "results" : "fixtures",
   });
   const { teamValue, season, tab } = filters;
@@ -156,9 +168,10 @@ export function MatchCenter({
     selectedTeam.value === "all"
       ? "takımlarımızın"
       : `${selectedTeam.label} takımımızın`;
-  const allMatches = selectMatches(selectedTeam.slug, season);
+  const allMatches = selectMatches(matches, selectedTeam.slug, season);
   const resultCount = allMatches.filter(hasScore).length;
   const visibleMatches = selectMatches(
+    matches,
     selectedTeam.slug,
     season,
     tab === "results",
@@ -283,8 +296,11 @@ export function MatchCenter({
                   updateFilters({ season: event.target.value })
                 }
               >
-                <option value="2026/2027">2026 / 2027</option>
-                <option value="2025/2026">2025 / 2026</option>
+                {seasons.map((season) => (
+                  <option key={season} value={season}>
+                    {season.replace("/", " / ")}
+                  </option>
+                ))}
               </select>
               <ChevronDown size={15} aria-hidden="true" />
             </div>

@@ -1,5 +1,41 @@
 @layer reset,base,components,responsive;
 @layer components {
+  .academy-shell { width: calc(100% - clamp(40px, 7vw, 128px)); margin-inline: auto; }
+  .academy-showcase { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(32px, 6vw, 100px); }
+  .academy-intro { text-align: left; }
+  .academy-intro .eyebrow { justify-content: flex-start; color: #dcc080; }
+  .academy-intro h2 { font-size: clamp(32px, 4vw, 56px); line-height: 1.12; letter-spacing: -0.04em; }
+  .academy-intro h2 span { color: #dcc080; }
+  .academy-description { max-width: 580px; margin: 24px 0 0; color: var(--muted); line-height: 1.8; }
+  .academy-invitation { max-width: 540px; margin: 24px 0; font-size: 18px; line-height: 1.7; }
+  .academy-portraits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 3vw, 40px); justify-items: center; }
+  .academy-portraits figure { margin: 0; min-width: 0; }
+  .academy-portraits figcaption { margin-top: 14px; text-align: center; font-size: clamp(12px, 2vw, 14px); color: var(--muted); }
+  .academy-teams { margin: 56px 0 0; padding-top: 32px; border-top: 1px solid var(--line); text-align: left; }
+  .academy-teams h3 { font-size: clamp(22px, 2.4vw, 32px); scroll-margin-top: 110px; }
+  .academy-teams > p { margin: 10px 0 24px; color: var(--muted); font-size: 14px; }
+  .academy-team-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .academy-team-links a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 20px; font-weight: 700; transition: border-color 180ms, background-color 180ms; }
+  .academy-team-links a svg { color: #dcc080; flex-shrink: 0; }
+  .academy-team-links a small { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; font-weight: 400; }
+  .academy-team-links a:hover { border-color: #dcc080; background: #29241c; }
+  .academy-team-links a:focus-visible { outline: 2px solid #dcc080; outline-offset: 4px; }
+}
+@layer responsive {
+  @media (min-width: 1200px) {
+    .academy-team-links { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .academy-team-links a { padding: 20px 16px; }
+  }
+  @media (max-width: 800px) {
+    .academy-showcase { grid-template-columns: 1fr; }
+    .academy-portraits { max-width: 520px; width: 100%; }
+  }
+  @media (max-width: 600px) {
+    .academy-team-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .academy-team-links a { padding: 18px; }
+  }
+}
+@layer components {
   .club-gallery {
     max-width: 420px;
     margin: 32px auto 0;
@@ -218,6 +254,7 @@
     color: #161616;
     min-height: 50px;
     border: 1px solid #ece9e3;
+    border-radius: 12px;
     font-size: 12px;
     transition:
       background 0.25s,

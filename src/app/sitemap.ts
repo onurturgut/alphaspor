@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
-import content from "@/data/content.json";
-export default function sitemap(): MetadataRoute.Sitemap {
+import { getContent } from "@/lib/content";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const content = await getContent();
   const base = "https://www.fethiyealfaspor.com";
   return [
     "",

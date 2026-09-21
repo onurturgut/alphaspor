@@ -1,17 +1,18 @@
 import { ArrowUpRight, Clock3, Mail, MapPin, Phone } from "lucide-react";
 import { ContactForm } from "./contact-form";
 import { Visual } from "./ui";
-import content from "@/data/content.json";
-export function ContactSection() {
+import { getContent } from "@/lib/content";
+export async function ContactSection() {
+  const content = await getContent();
   return (
     <div className="contact-layout" id="basvuru">
       <ContactForm email={content.contact.email} />
       <aside className="contact-aside">
         <p className="eyebrow">FETHİYE ALFA SPOR</p>
         <h2>Bir mesaj kadar yakınız.</h2>
-        <a href="tel:+905387662431">
+        <a href={`tel:${content.contact.phone.replace(/[^+\d]/g, "")}`}>
           <Phone size={17} />
-          +90 538 766 24 31
+          {content.contact.phone}
         </a>
         <a href={`mailto:${content.contact.email}`}>
           <Mail size={17} />
@@ -23,7 +24,7 @@ export function ContactSection() {
         </p>
         <p className="contact-line">
           <Clock3 size={17} />
-          Her gün 09.00 – 20.00
+          {content.contact.hours}
         </p>
         <Visual className="map-placeholder" />
         <div className="map-caption">

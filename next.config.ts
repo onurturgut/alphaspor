@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
+import media from "./src/data/r2-media.json";
+const mediaOrigins = [
+  ...new Set(Object.values(media).map((url) => new URL(url).origin)),
+];
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    // Serve R2 assets directly: Next's remote optimizer aborts upstream
+    // downloads after 7 seconds, which larger gallery images can exceed.
+    unoptimized: true,
+    remotePatterns: mediaOrigins.map((origin) => new URL(`${origin}/media/**`)),
+  },
   async redirects() {
     return [
       { source: "/ekiplerimiz", destination: "/takimlar", permanent: true },

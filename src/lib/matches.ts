@@ -1,9 +1,3 @@
-import u11 from "@/data/matches-u11.json";
-import u12 from "@/data/matches-u12.json";
-import u13 from "@/data/matches-u13.json";
-import u14 from "@/data/matches-u14.json";
-import sources from "@/data/match-sources.json";
-
 export type Match = {
   id: string;
   teamSlug: string;
@@ -22,9 +16,6 @@ export type Match = {
 };
 
 export const archiveSeason = "2025/2026";
-export const matches = [...u11, ...u12, ...u13, ...u14] as Match[];
-
-export const matchSources = sources;
 
 export function hasScore(match: Match) {
   return match.homeScore !== null && match.awayScore !== null;
@@ -52,6 +43,7 @@ export function formatMatchDate(date: string) {
 }
 
 export function selectMatches(
+  matches: Match[],
   teamSlug: string,
   season: string,
   resultsOnly = false,

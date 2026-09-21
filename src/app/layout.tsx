@@ -1,7 +1,6 @@
+import { mediaUrl } from "@/lib/media";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 const aldrich = localFont({
   src: "../../public/fonts/aldrich.woff2",
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
   },
   description:
     "Fethiye Alfa Spor: oyun temelli eğitim, bireysel gelişim ve takım ruhu. Takımlarımızı keşfedin, geleceğe birlikte adım atalım.",
-  icons: { icon: "/media/logo.webp" },
+  icons: { icon: mediaUrl("/media/logo.webp") },
 };
 export default function RootLayout({
   children,
@@ -25,14 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" className={aldrich.variable}>
-      <body>
-        <a className="skip-link" href="#main">
-          İçeriğe geç
-        </a>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight, Camera as Instagram } from "lucide-react";
-export function SiteFooter() {
+import { getContent } from "@/lib/content";
+export async function SiteFooter() {
+  const { contact } = await getContent();
   return (
     <footer className="site-footer">
       <div className="container footer-top">
@@ -24,19 +26,17 @@ export function SiteFooter() {
           <span className="micro">SAHADA VE ÖTESİNDE</span>
           <Link href="/maclar">Maçlar ve Sonuçlar</Link>
           <Link href="/iletisim">İletişim</Link>
-          <a
-            href="https://www.instagram.com/alfaskfethiye"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a href={contact.instagram || "#"} target="_blank" rel="noreferrer">
             <Instagram size={15} /> Instagram <ArrowUpRight size={14} />
           </a>
         </div>
         <div>
           <span className="micro">BİZE ULAŞIN</span>
-          <a href="tel:+905387662431">+90 538 766 24 31</a>
-          <a href="mailto:Fethiyealfask@gmail.com">Fethiyealfask@gmail.com</a>
-          <span className="muted">Fethiye, Muğla</span>
+          <a href={`tel:${contact.phone.replace(/[^+\d]/g, "")}`}>
+            {contact.phone}
+          </a>
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          <span className="muted">{contact.address}</span>
         </div>
       </div>
       <div className="container footer-bottom">
