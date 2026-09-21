@@ -7,6 +7,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ThemeToggle } from "./theme-toggle";
 const links = [
   ["/", "Ana Sayfa"],
   ["/kulubumuz", "Kulübümüz"],
@@ -40,13 +41,11 @@ export function SiteHeader() {
         toggle.current?.focus();
       }
       if (e.key === "Tab") {
-        const items = [
-          toggle.current,
-          ...document.querySelectorAll<HTMLAnchorElement>("#mobile-menu a"),
-        ].filter(
-          (item): item is HTMLButtonElement | HTMLAnchorElement =>
-            item !== null,
-        );
+        const items = Array.from(
+          document.querySelectorAll<HTMLButtonElement | HTMLAnchorElement>(
+            ".site-header a, .site-header button",
+          ),
+        ).filter((item) => item.getClientRects().length > 0);
         const current = items.indexOf(
           document.activeElement as HTMLAnchorElement,
         );
@@ -115,6 +114,7 @@ export function SiteHeader() {
         >
           Başvuru Yap <ArrowUpRight size={15} />
         </Link>
+        <ThemeToggle />
         <button
           ref={toggle}
           className="menu-toggle"

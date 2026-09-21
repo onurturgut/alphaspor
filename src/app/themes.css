@@ -1,0 +1,348 @@
+/* The two page backgrounds below are the exact gradients supplied for the site. */
+:root {
+  --page-gradient-light:
+    radial-gradient(
+      at 21.980550567522773% 29.650507060184793%,
+      hsla(0, 0%, 90.19607843137256%, 1) 0%,
+      hsla(0, 0%, 90.19607843137256%, 0) 100%
+    ),
+    radial-gradient(
+      at 5.675583183471655% 56.09646661582133%,
+      hsla(0, 0%, 78.43137254901961%, 1) 0%,
+      hsla(0, 0%, 78.43137254901961%, 0) 100%
+    ),
+    radial-gradient(
+      at 46.95963957828448% 81.16631764526292%,
+      hsla(0, 0%, 67.05882352941175%, 1) 0%,
+      hsla(0, 0%, 67.05882352941175%, 0) 100%
+    ),
+    radial-gradient(
+      at 24.547757547950756% 51.598496103273405%,
+      hsla(0, 0%, 45.09803921568628%, 1) 0%,
+      hsla(0, 0%, 45.09803921568628%, 0) 100%
+    ),
+    radial-gradient(
+      at 48.834625417466015% 99.61010503814197%,
+      hsla(0, 0%, 90.19607843137256%, 1) 0%,
+      hsla(0, 0%, 90.19607843137256%, 0) 100%
+    ),
+    radial-gradient(
+      at 13.418770287805938% 54.396993215925725%,
+      hsla(0, 0%, 78.43137254901961%, 1) 0%,
+      hsla(0, 0%, 78.43137254901961%, 0) 100%
+    ),
+    radial-gradient(
+      at 82.1907139703395% 98.68780554195669%,
+      hsla(0, 0%, 67.05882352941175%, 1) 0%,
+      hsla(0, 0%, 67.05882352941175%, 0) 100%
+    ),
+    radial-gradient(
+      at 91.3445121317676% 19.543600342422017%,
+      hsla(0, 0%, 45.09803921568628%, 1) 0%,
+      hsla(0, 0%, 45.09803921568628%, 0) 100%
+    ),
+    radial-gradient(
+      at 72.11722378277973% 65.71232820185257%,
+      hsla(0, 0%, 90.19607843137256%, 1) 0%,
+      hsla(0, 0%, 90.19607843137256%, 0) 100%
+    ),
+    radial-gradient(
+      at 74.96403577774726% 74.1335580753314%,
+      hsla(0, 0%, 78.43137254901961%, 1) 0%,
+      hsla(0, 0%, 78.43137254901961%, 0) 100%
+    );
+  --page-gradient-dark:
+    radial-gradient(
+      at 48.92829364276674% 21.487162340829435%,
+      hsla(0, 0%, 0%, 1) 0%,
+      hsla(0, 0%, 0%, 0) 100%
+    ),
+    radial-gradient(
+      at 92.32371670706368% 94.97748311734382%,
+      hsla(0, 0%, 100%, 1) 0%,
+      hsla(0, 0%, 100%, 0) 100%
+    ),
+    radial-gradient(
+      at 54.04580128644534% 8.331544075157261%,
+      hsla(0, 0%, 50.19607843137255%, 1) 0%,
+      hsla(0, 0%, 50.19607843137255%, 0) 100%
+    ),
+    radial-gradient(
+      at 95.824743761897% 79.88200925496682%,
+      hsla(0, 0%, 0%, 1) 0%,
+      hsla(0, 0%, 0%, 0) 100%
+    );
+}
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #101010;
+  --surface: #202020;
+  --muted: #c4c4c4;
+  --line: #515151;
+  --white: #fafafa;
+  --panel: linear-gradient(135deg, #343434f5, #181818f5 70%);
+  --panel-selected: linear-gradient(135deg, #505050, #292929);
+  --page-gradient: var(--page-gradient-dark);
+  --section-surface: #151515e8;
+  --shadow: #00000026;
+  --text: var(--white);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #e6e6e6;
+  --surface: #f4f4f4;
+  --muted: #454545;
+  --line: #999;
+  --white: #151515;
+  --panel: linear-gradient(135deg, #fffffff5, #e9e9e9f5 70%);
+  --panel-selected: linear-gradient(135deg, #fff, #d5d5d5);
+  --page-gradient: var(--page-gradient-light);
+  --section-surface: #f0f0f0e8;
+  --shadow: #00000014;
+}
+html {
+  min-height: 100%;
+  background-color: var(--background);
+}
+body {
+  background: var(--page-gradient);
+  background-attachment: fixed;
+  color: var(--white);
+  min-height: 100svh;
+}
+
+/* Transparent section shells let the exact page gradient remain visible. */
+html body .section-soft,
+html body .training-section,
+html body .coaching-team {
+  background: transparent;
+}
+html body .coach-card,
+html body .training-tabs button,
+html body .training-panel,
+html body .contact-form,
+html body .match-summary,
+html body .roster-player-card {
+  background: var(--panel);
+  border-color: var(--line);
+  box-shadow: 0 14px 36px var(--shadow);
+}
+html body .training-tabs button[aria-selected="true"] {
+  background: var(--panel-selected);
+  border-color: var(--white);
+}
+html body .coach-role,
+html body .coach-details summary,
+html body .coach-social {
+  background: var(--panel-selected);
+  color: var(--white);
+  border-color: var(--line);
+}
+html body .coach-summary,
+html body .coach-biography p,
+html body .coaching-heading > span {
+  color: var(--muted);
+}
+html body .coaching-heading > p {
+  color: var(--white);
+}
+html body .coach-details summary:hover,
+html body .coach-social:hover {
+  background: var(--surface);
+  border-color: var(--white);
+}
+html body .coach-details summary:focus-visible,
+html body .coach-social:focus-visible {
+  outline-color: var(--white);
+}
+
+/* Photo and video overlays keep a fixed dark canvas in both themes. */
+html body .hero-video-section {
+  color: #fafafa;
+}
+html body .hero-video-section .hero-copy h1 {
+  color: #fafafa;
+}
+html body .hero-video-section .hero-actions .button {
+  background: #f0f0f0;
+  color: #161616;
+}
+html body .hero-video-section .hero-actions .text-link {
+  color: #fafafa;
+}
+html body .roster-player-image {
+  color: #fff;
+}
+html body .roster-player-image-shade {
+  background: linear-gradient(180deg, #0000000d 35%, #0003 56%, #000000eb 100%);
+}
+html body .roster-player-team {
+  background: #0009;
+  color: #fff;
+  border-color: #fff6;
+}
+html body .roster-player-position {
+  color: #e2e2e2;
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--surface);
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  border-color: var(--white);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 4px;
+}
+.theme-toggle > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:root .theme-to-dark {
+  display: none;
+}
+:root[data-theme="light"] .theme-to-dark {
+  display: flex;
+}
+:root[data-theme="light"] .theme-to-light {
+  display: none;
+}
+@media (max-width: 1150px) {
+  .nav-shell {
+    gap: 14px;
+  }
+  .desktop-nav {
+    gap: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .nav-shell {
+    gap: 8px;
+  }
+  .theme-toggle {
+    margin-left: auto;
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+@media (max-width: 380px) {
+  .site-header .nav-cta {
+    display: none;
+  }
+}
+
+html body .admin-root {
+  background: var(--page-gradient);
+  background-attachment: fixed;
+  color: var(--white);
+  color-scheme: inherit;
+}
+html body .admin-login {
+  background: transparent;
+}
+html body .admin-sidebar {
+  background: var(--surface);
+  color: var(--white);
+  border-right: 1px solid var(--line);
+}
+html body .admin-sidebar nav button {
+  color: var(--muted);
+}
+html body .admin-sidebar nav button[aria-current="page"] {
+  background: var(--white);
+  color: var(--background);
+}
+html body .admin-sidebar-bottom button {
+  color: var(--white);
+  border-color: var(--line);
+}
+.admin-theme-control {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100;
+}
+html body .admin-theme-control .theme-toggle {
+  border-radius: 50%;
+  width: 44px;
+  padding: 0;
+  background: var(--surface);
+  color: var(--white);
+  border-color: var(--line);
+}
+
+/* Neutral ramp: components share these tones instead of fixed colors. */
+:root,
+:root[data-theme="dark"] {
+  --tone-0: rgb(0, 0, 0);
+  --tone-5: rgb(13, 13, 13);
+  --tone-10: rgb(26, 26, 26);
+  --tone-15: rgb(38, 38, 38);
+  --tone-20: rgb(51, 51, 51);
+  --tone-25: rgb(64, 64, 64);
+  --tone-30: rgb(77, 77, 77);
+  --tone-35: rgb(89, 89, 89);
+  --tone-40: rgb(102, 102, 102);
+  --tone-45: rgb(115, 115, 115);
+  --tone-50: rgb(128, 128, 128);
+  --tone-55: rgb(140, 140, 140);
+  --tone-60: rgb(153, 153, 153);
+  --tone-65: rgb(166, 166, 166);
+  --tone-70: rgb(179, 179, 179);
+  --tone-75: rgb(191, 191, 191);
+  --tone-80: rgb(204, 204, 204);
+  --tone-85: rgb(217, 217, 217);
+  --tone-90: rgb(230, 230, 230);
+  --tone-95: rgb(242, 242, 242);
+  --tone-100: rgb(255, 255, 255);
+}
+:root[data-theme="light"] {
+  --tone-0: rgb(255, 255, 255);
+  --tone-5: rgb(242, 242, 242);
+  --tone-10: rgb(230, 230, 230);
+  --tone-15: rgb(217, 217, 217);
+  --tone-20: rgb(204, 204, 204);
+  --tone-25: rgb(191, 191, 191);
+  --tone-30: rgb(179, 179, 179);
+  --tone-35: rgb(166, 166, 166);
+  --tone-40: rgb(153, 153, 153);
+  --tone-45: rgb(140, 140, 140);
+  --tone-50: rgb(128, 128, 128);
+  --tone-55: rgb(115, 115, 115);
+  --tone-60: rgb(102, 102, 102);
+  --tone-65: rgb(89, 89, 89);
+  --tone-70: rgb(77, 77, 77);
+  --tone-75: rgb(64, 64, 64);
+  --tone-80: rgb(51, 51, 51);
+  --tone-85: rgb(38, 38, 38);
+  --tone-90: rgb(26, 26, 26);
+  --tone-95: rgb(13, 13, 13);
+  --tone-100: rgb(0, 0, 0);
+}

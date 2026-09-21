@@ -2,17 +2,17 @@
   width: 100%;
   min-width: 0;
   padding: clamp(24px, 3vw, 42px);
-  border: 1px solid #353332;
+  border: 1px solid var(--tone-20);
   border-radius: 4px;
-  background: #1b1a1a;
-  color: #fff;
+  background: var(--tone-10);
+  color: var(--tone-100);
 }
 
 .contact-form__eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 10px;
   letter-spacing: 0.16em;
 }
@@ -28,7 +28,7 @@
 .contact-form__heading > p {
   max-width: 420px;
   margin: 0 0 30px;
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 12px;
   line-height: 1.85;
 }
@@ -50,13 +50,13 @@
 }
 
 .contact-form__field label {
-  color: #e8e6e5;
+  color: var(--tone-90);
   font-size: 11px;
   line-height: 1.5;
 }
 
 .contact-form__optional {
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 9px;
 }
 
@@ -66,10 +66,10 @@
   min-width: 0;
   min-height: 48px;
   padding: 14px;
-  border: 1px solid #454241;
+  border: 1px solid var(--tone-25);
   border-radius: 2px;
-  background: #151414;
-  color: #fff;
+  background: var(--tone-10);
+  color: var(--tone-100);
   font: inherit;
   font-size: 12px;
   line-height: 1.7;
@@ -84,23 +84,23 @@
 }
 .contact-form__field input::placeholder,
 .contact-form__field textarea::placeholder {
-  color: #a09b98;
+  color: var(--muted);
   opacity: 1;
 }
 .contact-form__field input:hover,
 .contact-form__field textarea:hover {
-  border-color: #817b77;
+  border-color: var(--tone-50);
 }
 
 .contact-form :is(input, textarea, button, a):focus-visible,
 .match-center :is(button, select, a, [role="tabpanel"]):focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--tone-100);
   outline-offset: 4px;
 }
 
 .contact-form__note {
   margin: 18px 0 24px;
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 10px;
   line-height: 1.8;
 }
@@ -113,10 +113,10 @@
   width: 100%;
   min-height: 52px;
   padding: 16px 20px;
-  border: 1px solid #f4f2f1;
+  border: 1px solid var(--tone-95);
   border-radius: 2px;
-  background: #f4f2f1;
-  color: #171616;
+  background: var(--tone-95);
+  color: var(--tone-10);
   font: inherit;
   font-size: 12px;
   text-align: left;
@@ -125,7 +125,7 @@
 }
 
 .contact-form__submit:hover {
-  background: #d9d5d2;
+  background: var(--tone-85);
 }
 .contact-form__submit svg {
   flex-shrink: 0;
@@ -135,8 +135,8 @@
   gap: 10px;
   margin-top: 20px;
   padding: 15px;
-  border: 1px solid #494643;
-  background: #242220;
+  border: 1px solid var(--tone-30);
+  background: var(--tone-15);
 }
 .contact-form__status > svg {
   margin-top: 2px;
@@ -144,13 +144,13 @@
 }
 .contact-form__status p {
   margin: 0;
-  color: #d2cecb;
+  color: var(--tone-80);
   font-size: 11px;
   line-height: 1.8;
   overflow-wrap: anywhere;
 }
 .contact-form__status a {
-  color: #fff;
+  color: var(--tone-100);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -159,10 +159,10 @@
   width: 100%;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid #353332;
+  border: 1px solid var(--tone-20);
   border-radius: 4px;
-  background: #151414;
-  color: #fff;
+  background: var(--tone-10);
+  color: var(--tone-100);
 }
 .match-center__toolbar {
   display: flex;
@@ -171,17 +171,17 @@
   flex-wrap: wrap;
   gap: 24px;
   padding: 24px 30px;
-  border-bottom: 1px solid #353332;
-  background: #1b1a1a;
+  border-bottom: 1px solid var(--tone-20);
+  background: var(--tone-10);
 }
 .match-center__tabs {
   display: flex;
   align-items: center;
   gap: 5px;
   padding: 4px;
-  border: 1px solid #3f3c39;
+  border: 1px solid var(--tone-25);
   border-radius: 3px;
-  background: #111;
+  background: var(--tone-5);
 }
 .match-center__tabs button {
   display: inline-flex;
@@ -193,7 +193,7 @@
   border: 0;
   border-radius: 2px;
   background: transparent;
-  color: #b1aeac;
+  color: var(--muted);
   font: inherit;
   font-size: 12px;
   cursor: pointer;
@@ -202,12 +202,12 @@
     color 160ms ease;
 }
 .match-center__tabs button:hover {
-  color: #fff;
-  background: #282625;
+  color: var(--tone-100);
+  background: var(--tone-15);
 }
 .match-center__tabs button[aria-selected="true"] {
-  background: #f1eeeb;
-  color: #171616;
+  background: var(--tone-95);
+  color: var(--tone-10);
 }
 .match-center__filters {
   display: flex;
@@ -220,7 +220,7 @@
   gap: 10px;
 }
 .match-center__filter label {
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 10px;
 }
 .match-center__select-wrap {
@@ -231,10 +231,10 @@
   width: 100%;
   appearance: none;
   padding: 11px 32px 11px 12px;
-  border: 1px solid #494542;
+  border: 1px solid var(--tone-25);
   border-radius: 2px;
-  background: #171615;
-  color: #ece9e6;
+  background: var(--tone-10);
+  color: var(--tone-90);
   font: inherit;
   font-size: 11px;
   cursor: pointer;
@@ -244,7 +244,7 @@
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #b1aeac;
+  color: var(--muted);
   pointer-events: none;
 }
 .match-center__panel[hidden] {
@@ -257,7 +257,7 @@
   min-height: 380px;
   padding: 56px 24px 48px;
   text-align: center;
-  background: radial-gradient(ellipse at 50% 20%, #25222080, transparent 65%);
+  background: radial-gradient(ellipse at 50% 20%, color-mix(in srgb, var(--tone-15) 50.2%, transparent), transparent 65%);
 }
 .match-center__empty-icon {
   display: grid;
@@ -265,13 +265,13 @@
   width: 70px;
   height: 70px;
   margin-bottom: 26px;
-  border: 1px solid #4c4743;
+  border: 1px solid var(--tone-30);
   border-radius: 50%;
-  background: #201e1c;
-  color: #d8d0ca;
+  background: var(--tone-10);
+  color: var(--tone-80);
 }
 .match-center__season {
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 10px;
   letter-spacing: 0.14em;
 }
@@ -285,7 +285,7 @@
 .match-center__empty > p {
   max-width: 430px;
   margin: 0;
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 12px;
   line-height: 1.9;
 }
@@ -301,7 +301,7 @@
   align-items: center;
   gap: 8px;
   min-height: 44px;
-  color: #ece8e5;
+  color: var(--tone-90);
   font-size: 11px;
   text-decoration: none;
 }
@@ -310,15 +310,15 @@
   text-underline-offset: 5px;
 }
 .match-center__actions a:last-child {
-  color: #b1aeac;
+  color: var(--muted);
 }
 .match-center__footnote {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 16px 30px;
-  border-top: 1px solid #353332;
-  color: #b1aeac;
+  border-top: 1px solid var(--tone-20);
+  color: var(--muted);
   font-size: 10px;
   line-height: 1.7;
 }
@@ -328,7 +328,7 @@
   height: 5px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: #b1aeac;
+  background: var(--tone-70);
 }
 
 @media (max-width: 760px) {

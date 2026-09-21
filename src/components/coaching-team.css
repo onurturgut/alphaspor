@@ -1,10 +1,10 @@
 .coaching-team {
   padding: 64px 0 72px;
   background:
-    radial-gradient(ellipse at 78% 12%, #c99b4938 0%, transparent 52%),
-    radial-gradient(ellipse at 14% 76%, #e8d7bc16 0%, transparent 50%),
-    var(--background, #101010);
-  color: var(--white, #f7f5f1);
+    radial-gradient(ellipse at 78% 12%, color-mix(in srgb, var(--tone-60) 21.96%, transparent) 0%, transparent 52%),
+    radial-gradient(ellipse at 14% 76%, color-mix(in srgb, var(--tone-85) 8.63%, transparent) 0%, transparent 50%),
+    var(--background, var(--tone-5));
+  color: var(--white, var(--tone-95));
   scroll-margin-top: 90px;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -18,7 +18,7 @@
   margin-bottom: 38px;
 }
 .coaching-heading > p {
-  color: #ead7b4;
+  color: var(--tone-85);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -32,7 +32,7 @@
   margin: 0 0 12px;
 }
 .coaching-heading > span {
-  color: #bcb5ad;
+  color: var(--muted);
   font-size: 16px;
   line-height: 1.6;
 }
@@ -45,12 +45,12 @@
 .coach-card {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid #494139;
+  border: 1px solid var(--tone-25);
   border-radius: 24px;
-  background: linear-gradient(135deg, #4a3d2d 0%, #27231e 35%, #181716 76%);
+  background: linear-gradient(135deg, var(--tone-25) 0%, var(--tone-15) 35%, var(--tone-10) 76%);
   box-shadow:
-    inset 0 1px 0 #f6dfba38,
-    0 16px 48px #00000026;
+    inset 0 1px 0 color-mix(in srgb, var(--tone-90) 21.96%, transparent),
+    0 16px 48px color-mix(in srgb, var(--tone-0) 14.9%, transparent);
 }
 .coach-featured {
   grid-column: 1 / -1;
@@ -61,7 +61,7 @@
 .coach-photo {
   position: relative;
   aspect-ratio: 1;
-  background: #24201c;
+  background: var(--tone-15);
   overflow: hidden;
 }
 .coach-photo img {
@@ -84,10 +84,10 @@
 .coach-role {
   display: inline-block;
   padding: 4px 10px;
-  border: 1px solid #897354;
+  border: 1px solid var(--tone-45);
   border-radius: 999px;
-  background: linear-gradient(120deg, #756044, #3b3125 65%, #665239);
-  color: #ead7b4;
+  background: linear-gradient(120deg, var(--tone-40), var(--tone-20) 65%, var(--tone-35));
+  color: var(--tone-85);
   font-size: 10px;
   line-height: 1.3;
   font-weight: 800;
@@ -103,7 +103,7 @@
 }
 .coach-summary,
 .coach-biography p {
-  color: #bcb5ad;
+  color: var(--muted);
   font-size: 14px;
   line-height: 1.75;
   margin: 0;
@@ -117,7 +117,7 @@
   content: "";
   display: block;
   height: 1px;
-  background: #494139;
+  background: var(--tone-25);
   margin-bottom: 12px;
 }
 .coach-details summary {
@@ -128,10 +128,10 @@
   padding: 5px 12px;
   min-height: 32px;
   margin: 7px 60px 7px 0;
-  border: 1px solid #897354;
+  border: 1px solid var(--tone-45);
   border-radius: 999px;
-  background: #393126;
-  color: #ead7b4;
+  background: var(--tone-20);
+  color: var(--tone-85);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -141,12 +141,12 @@
   display: none;
 }
 .coach-details summary:hover {
-  background: #574632;
-  border-color: #ead7b4;
+  background: var(--tone-30);
+  border-color: var(--tone-85);
 }
 .coach-details summary:focus-visible,
 .coach-social:focus-visible {
-  outline: 2px solid #ead7b4;
+  outline: 2px solid var(--tone-85);
   outline-offset: 4px;
 }
 .coach-read-less,
@@ -174,14 +174,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #665747;
+  border: 1px solid var(--tone-35);
   border-radius: 14px;
-  color: #e7ddd0;
-  background: #302922;
+  color: var(--tone-85);
+  background: var(--tone-15);
 }
 .coach-social:hover {
-  color: #ead7b4;
-  border-color: #897354;
+  color: var(--tone-85);
+  border-color: var(--tone-45);
 }
 .coach-sr-only {
   position: absolute;

@@ -1,8 +1,8 @@
 .roster-explorer {
-  --roster-line: rgba(255, 255, 255, 0.12);
-  --roster-muted: #b1aeac;
-  --roster-field: #243a2d;
-  color: #fff;
+  --roster-line: color-mix(in srgb, var(--tone-100) 12%, transparent);
+  --roster-muted: var(--tone-70);
+  --roster-field: var(--tone-20);
+  color: var(--tone-100);
   width: 100%;
 }
 
@@ -20,7 +20,7 @@
 .roster-explorer button:focus-visible,
 .roster-explorer input:focus-visible,
 .roster-grid > section:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--tone-100);
   outline-offset: 4px;
 }
 .roster-intro {
@@ -60,7 +60,7 @@
 .roster-pitch-card,
 .roster-list-card {
   border: 1px solid var(--roster-line);
-  background: #151514;
+  background: var(--tone-10);
   border-radius: 4px;
 }
 .roster-card-topline {
@@ -86,7 +86,7 @@
   padding: 10px 27px 22px;
   background: radial-gradient(
     ellipse at center,
-    rgba(83, 103, 74, 0.13),
+    color-mix(in srgb, var(--tone-40) 13%, transparent),
     transparent 70%
   );
   perspective: 850px;
@@ -101,9 +101,9 @@
   transform-origin: center 65%;
   border-radius: 2px;
   box-shadow:
-    0 5px 0 #19261d,
-    0 9px 0 #0e1912,
-    0 26px 35px -15px rgba(0, 0, 0, 0.8);
+    0 5px 0 var(--tone-15),
+    0 9px 0 var(--tone-10),
+    0 26px 35px -15px color-mix(in srgb, var(--tone-0) 80%, transparent);
 }
 .roster-pitch-turf {
   position: absolute;
@@ -112,24 +112,24 @@
   background:
     repeating-linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.025) 0%,
-      rgba(255, 255, 255, 0.025) 10%,
-      rgba(0, 0, 0, 0.04) 10%,
-      rgba(0, 0, 0, 0.04) 20%
+      color-mix(in srgb, var(--tone-100) 2.5%, transparent) 0%,
+      color-mix(in srgb, var(--tone-100) 2.5%, transparent) 10%,
+      color-mix(in srgb, var(--tone-0) 4%, transparent) 10%,
+      color-mix(in srgb, var(--tone-0) 4%, transparent) 20%
     ),
     var(--roster-field);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid color-mix(in srgb, var(--tone-100) 10%, transparent);
 }
 .roster-pitch-lines {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  stroke: rgba(230, 238, 229, 0.5);
+  stroke: color-mix(in srgb, var(--tone-90) 50%, transparent);
   stroke-width: 1.1;
 }
 .roster-pitch-dot {
-  fill: rgba(230, 238, 229, 0.5);
+  fill: color-mix(in srgb, var(--tone-90) 50%, transparent);
   stroke: none;
 }
 .roster-pitch-zone {
@@ -139,11 +139,11 @@
   right: 4%;
   background: linear-gradient(
     180deg,
-    rgba(197, 218, 183, 0.03),
-    rgba(197, 218, 183, 0.23),
-    rgba(197, 218, 183, 0.03)
+    color-mix(in srgb, var(--tone-85) 3%, transparent),
+    color-mix(in srgb, var(--tone-85) 23%, transparent),
+    color-mix(in srgb, var(--tone-85) 3%, transparent)
   );
-  border-block: 1px solid rgba(211, 231, 196, 0.17);
+  border-block: 1px solid color-mix(in srgb, var(--tone-90) 17%, transparent);
 }
 .roster-pitch-zone--attack {
   top: 9%;
@@ -166,7 +166,7 @@
   right: 8%;
   font-size: 7px;
   letter-spacing: 0.11em;
-  color: rgba(224, 234, 217, 0.58);
+  color: color-mix(in srgb, var(--tone-90) 58%, transparent);
 }
 .roster-zone-label--attack {
   top: 12%;
@@ -198,25 +198,25 @@
   position: relative;
   overflow: hidden;
   border-radius: 50%;
-  border: 2px solid #f1f2e9;
-  background: #43403f;
+  border: 2px solid var(--tone-95);
+  background: var(--tone-25);
   box-shadow:
-    0 0 0 5px rgba(232, 243, 215, 0.13),
-    0 9px 20px #0b160aaa;
+    0 0 0 5px color-mix(in srgb, var(--tone-95) 13%, transparent),
+    0 9px 20px color-mix(in srgb, var(--tone-5) 66.67%, transparent);
 }
 .roster-pitch-name {
   margin-top: 9px;
   padding: 6px 10px;
-  background: #101510;
-  border: 1px solid rgba(255, 255, 255, 0.17);
-  color: #fff;
+  background: var(--tone-10);
+  border: 1px solid color-mix(in srgb, var(--tone-100) 17%, transparent);
+  color: var(--tone-100);
   font-size: 9px;
   line-height: 1.4;
   max-width: 100%;
   overflow-wrap: anywhere;
   text-align: center;
   border-radius: 2px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--tone-0) 30%, transparent);
 }
 .roster-pitch-caption {
   display: flex;
@@ -234,8 +234,8 @@
   height: 6px;
   width: 6px;
   border-radius: 50%;
-  background: #a5b896;
-  box-shadow: 0 0 0 4px #a5b89616;
+  background: var(--tone-70);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tone-70) 8.63%, transparent);
 }
 .roster-pitch-note {
   font-size: 9px;
@@ -246,14 +246,14 @@
 .roster-player-card {
   border: 1px solid var(--roster-line);
   border-radius: 4px;
-  background: #1b1a1a;
+  background: var(--tone-10);
   overflow: hidden;
 }
 .roster-player-image {
   aspect-ratio: 3 / 4.9;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg, #43403f, #1b1a1a);
+  background: linear-gradient(145deg, var(--tone-25), var(--tone-10));
 }
 .roster-photo {
   object-fit: cover;
@@ -266,10 +266,10 @@
   position: absolute;
   top: 19px;
   left: 19px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid color-mix(in srgb, var(--tone-100) 40%, transparent);
   padding: 8px 10px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.55);
+  color: var(--tone-100);
+  background: color-mix(in srgb, var(--tone-0) 55%, transparent);
   font-size: 10px;
   letter-spacing: 0.08em;
   z-index: 1;
@@ -279,9 +279,9 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.05) 35%,
-    rgba(0, 0, 0, 0.2) 56%,
-    rgba(0, 0, 0, 0.92) 100%
+    color-mix(in srgb, var(--tone-0) 5%, transparent) 35%,
+    color-mix(in srgb, var(--tone-0) 20%, transparent) 56%,
+    color-mix(in srgb, var(--tone-0) 92%, transparent) 100%
   );
   pointer-events: none;
 }
@@ -293,7 +293,7 @@
 }
 .roster-player-position {
   display: block;
-  color: #dedcd8;
+  color: var(--tone-85);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-size: 10px;
@@ -337,8 +337,8 @@
   justify-content: center;
   flex-direction: column;
   gap: 15px;
-  color: #b1aeac;
-  background: linear-gradient(145deg, #363431, #21201f);
+  color: var(--muted);
+  background: linear-gradient(145deg, var(--tone-20), var(--tone-15));
 }
 .roster-photo-fallback--small > svg {
   width: 24px;
@@ -360,8 +360,8 @@
   padding: 0 11px;
   border: 1px solid var(--roster-line);
   border-radius: 3px;
-  color: #a4a19e;
-  background: #101010;
+  color: var(--muted);
+  background: var(--tone-5);
 }
 .roster-search > svg {
   flex: 0 0 auto;
@@ -372,17 +372,17 @@
   height: 43px;
   border: 0;
   background: transparent;
-  color: #fff;
+  color: var(--tone-100);
   font-size: 11px;
   padding: 0 0 0 10px;
   border-radius: 0;
 }
 .roster-search input::placeholder {
-  color: #999692;
+  color: var(--muted);
   opacity: 1;
 }
 .roster-search:focus-within {
-  border-color: #b1aeac;
+  border-color: var(--tone-70);
 }
 .roster-search input:focus-visible {
   outline-offset: 2px;
@@ -405,8 +405,8 @@
   min-height: 77px;
   padding: 12px 9px;
   border: 1px solid transparent;
-  border-bottom-color: rgba(255, 255, 255, 0.065);
-  color: #fff;
+  border-bottom-color: color-mix(in srgb, var(--tone-100) 6.5%, transparent);
+  color: var(--tone-100);
   background: transparent;
   text-align: left;
   transition:
@@ -415,11 +415,11 @@
   border-radius: 2px;
 }
 .roster-player-row[data-preview="true"] {
-  background: #292826;
-  border-color: rgba(255, 255, 255, 0.14);
+  background: var(--tone-15);
+  border-color: color-mix(in srgb, var(--tone-100) 14%, transparent);
 }
 .roster-player-row[aria-pressed="true"] {
-  box-shadow: inset 2px 0 0 #d0cdc8;
+  box-shadow: inset 2px 0 0 var(--tone-80);
 }
 .roster-player-row:focus-visible {
   outline-offset: -2px;
@@ -430,7 +430,7 @@
   height: 48px;
   position: relative;
   overflow: hidden;
-  background: #43403f;
+  background: var(--tone-25);
   border-radius: 2px;
 }
 .roster-row-content {
@@ -450,7 +450,7 @@
   color: var(--roster-muted);
 }
 .roster-row-indicator {
-  color: #a6a39d;
+  color: var(--muted);
   opacity: 0.3;
   flex-shrink: 0;
   width: 17px;
@@ -458,7 +458,7 @@
 }
 .roster-player-row[aria-pressed="true"] .roster-row-indicator,
 .roster-player-row[data-preview="true"] .roster-row-indicator {
-  color: #fff;
+  color: var(--tone-100);
   opacity: 1;
 }
 .roster-list-hint {
@@ -477,19 +477,19 @@
   gap: 14px;
 }
 .roster-search-empty > svg {
-  color: #aaa6a0;
+  color: var(--muted);
 }
 .roster-search-empty > p {
   font-size: 12px;
   line-height: 1.7;
   margin: 0;
-  color: #b1aeac;
+  color: var(--muted);
 }
 .roster-search-empty > button {
   border: 0;
   padding: 7px;
   background: transparent;
-  color: #fff;
+  color: var(--tone-100);
   text-decoration: underline;
   text-underline-offset: 4px;
   font-size: 11px;
@@ -499,9 +499,9 @@
   flex-direction: column;
   align-items: center;
   padding: 70px 24px;
-  background: #1b1a1a;
-  border: 1px solid #43403f;
-  color: #fff;
+  background: var(--tone-10);
+  border: 1px solid var(--tone-25);
+  color: var(--tone-100);
   text-align: center;
   gap: 16px;
 }
@@ -513,7 +513,7 @@
 }
 .roster-empty-team p {
   margin: 0;
-  color: #b1aeac;
+  color: var(--muted);
   font-size: 13px;
   line-height: 1.7;
 }
@@ -617,20 +617,20 @@
     isolation: isolate;
     margin: 12px;
     padding: 14px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid color-mix(in srgb, var(--tone-100) 50%, transparent);
     background: repeating-linear-gradient(
       180deg,
-      #243a2d 0px,
-      #243a2d 50px,
-      #294232 50px,
-      #294232 100px
+      var(--tone-20) 0px,
+      var(--tone-20) 50px,
+      var(--tone-25) 50px,
+      var(--tone-25) 100px
     );
   }
   .roster-team-field::before {
     content: "";
     position: absolute;
     inset: 50% 0 auto;
-    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    border-top: 1px solid color-mix(in srgb, var(--tone-100) 35%, transparent);
     z-index: -1;
   }
   .roster-team-field::after {
@@ -641,7 +641,7 @@
     width: 90px;
     height: 90px;
     transform: translate(-50%, -50%);
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid color-mix(in srgb, var(--tone-100) 35%, transparent);
     border-radius: 50%;
     z-index: -1;
   }
@@ -651,7 +651,7 @@
   .roster-team-zone > p {
     font-size: 9px;
     text-align: center;
-    color: #d1dfd2;
+    color: var(--tone-85);
     margin-bottom: 8px;
   }
   .roster-team-players {
@@ -668,12 +668,12 @@
     min-width: 0;
     border: 1px solid transparent;
     border-radius: 6px;
-    background: #10231866;
-    color: #fff;
+    background: color-mix(in srgb, var(--tone-10) 40%, transparent);
+    color: var(--tone-100);
   }
   .roster-team-players > button[aria-pressed="true"] {
-    border-color: #fff;
-    background: #0f201de6;
+    border-color: var(--tone-100);
+    background: color-mix(in srgb, var(--tone-10) 90.2%, transparent);
   }
   .roster-team-players > button > span:last-child {
     font-size: 9px;
@@ -687,7 +687,7 @@
     height: 44px;
     border-radius: 50%;
     overflow: hidden;
-    border: 1px solid #ddd;
+    border: 1px solid var(--tone-85);
   }
   .roster-grid > .roster-mobile-selection {
     margin: 16px 0;
@@ -710,7 +710,7 @@
     align-items: center;
     gap: 13px;
     padding: 18px;
-    background: #1b1a1a;
+    background: var(--tone-10);
     border: 1px solid var(--roster-line);
     border-radius: 4px;
   }
@@ -749,7 +749,7 @@
     margin: 15px 0;
     border: 1px solid var(--roster-line);
     border-radius: 4px;
-    background: #101010;
+    background: var(--tone-5);
   }
   .roster-mobile-tabs > button {
     display: flex;
@@ -758,16 +758,16 @@
     gap: 8px;
     min-height: 44px;
     padding: 10px;
-    color: #b1aeac;
+    color: var(--muted);
     background: transparent;
     border: 1px solid transparent;
     border-radius: 2px;
     font-size: 12px;
   }
   .roster-mobile-tabs > button[aria-selected="true"] {
-    background: #34322f;
-    border-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: var(--tone-20);
+    border-color: color-mix(in srgb, var(--tone-100) 10%, transparent);
+    color: var(--tone-100);
   }
   .roster-mobile-tabs > button > span {
     font-size: 9px;
@@ -809,9 +809,9 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: #262522;
-    color: #fff;
+    border: 1px solid color-mix(in srgb, var(--tone-100) 20%, transparent);
+    background: var(--tone-15);
+    color: var(--tone-100);
     font-size: 11px;
     border-radius: 2px;
   }
