@@ -1,7 +1,5 @@
 "use client";
 
-import { mediaUrl } from "@/lib/media";
-
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -82,7 +80,7 @@ export function SiteHeader() {
           onClick={() => setOpen(false)}
         >
           <Image
-            src={mediaUrl("/media/logo.webp")}
+            src="/media/logo.webp"
             alt=""
             width={40}
             height={60}

@@ -348,6 +348,7 @@
   }
   .brand {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     gap: 12px;
     line-height: 1.2;
@@ -356,6 +357,8 @@
     white-space: nowrap;
   }
   .brand img {
+    display: block;
+    flex-shrink: 0;
     object-fit: contain;
   }
   .brand small {
@@ -393,6 +396,13 @@
     background: none;
     color: var(--tone-100);
     padding: 10px;
+    flex-shrink: 0;
+    line-height: 1;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .menu-toggle svg {
+    display: block;
   }
   .mobile-nav {
     position: fixed;
@@ -402,6 +412,7 @@
     height: calc(100dvh - 88px);
     background: var(--tone-10);
     padding: 25px;
+    padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
   }
   .mobile-nav > a:not(.button) {

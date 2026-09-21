@@ -188,6 +188,10 @@ html body .roster-player-position {
 }
 
 .theme-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  line-height: 1;
   display: grid;
   place-items: center;
   flex: 0 0 44px;
@@ -210,6 +214,11 @@ html body .roster-player-position {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.theme-toggle svg {
+  display: block;
 }
 .theme-label {
   position: absolute;
@@ -252,7 +261,7 @@ html body .roster-player-position {
     scroll-behavior: auto;
   }
 }
-@media (max-width: 380px) {
+@media (max-width: 600px) {
   .site-header .nav-cta {
     display: none;
   }
