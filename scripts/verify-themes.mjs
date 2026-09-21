@@ -74,5 +74,9 @@ try {
     "Mobile menu, theme switching, focus restoration and contact form passed.",
   );
 } finally {
-  run("close");
+  // Closing a borrowed session can time out on Windows after the browser exits.
+  // Keep completed assertions independent of optional browser cleanup.
+  if (!process.env.THEME_TEST_SESSION) {
+    try { run("close"); } catch { console.warn("Browser cleanup timed out; assertions above remain authoritative."); }
+  }
 }
