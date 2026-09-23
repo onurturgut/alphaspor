@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { getMatchData, getContent } from "@/lib/content";
 import { Reveal } from "@/components/motion";
-import { SectionHeading, NewsCards } from "@/components/ui";
+import { NewsShowcase } from "@/components/news-showcase";
 import { CoachingTeam } from "@/components/coaching-team";
 import { TrainingPrograms } from "@/components/training-programs";
 import { formatMatchDate, selectMatches } from "@/lib/matches";
@@ -224,25 +224,15 @@ export default async function Home() {
           </Reveal>
         </div>
       </section>
-      <section className="section container">
-        <Reveal>
-          <SectionHeading
-            number="02"
-            eyebrow="KULÜPTEN, SAHADAN, BİZDEN"
-            title={content.home.newsTitle}
-            href="/haberler"
-            linkText="Tüm duyurular"
-          />
-          <NewsCards
-            news={content.news
-              .filter(
-                (n, i, items) =>
-                  items.findIndex((item) => item.category === n.category) === i,
-              )
-              .slice(0, 3)}
-          />
-        </Reveal>
-      </section>
+      <NewsShowcase
+        title={content.home.newsTitle}
+        news={content.news
+          .filter(
+            (n, i, items) =>
+              items.findIndex((item) => item.category === n.category) === i,
+          )
+          .slice(0, 3)}
+      />
       <section className="join-section container">
         <Reveal>
           <div className="join-top">
