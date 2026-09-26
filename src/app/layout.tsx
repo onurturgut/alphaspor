@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "./themes.css";
+import "./motif.css";
 const aldrich = localFont({
   src: "../../public/fonts/aldrich.woff2",
   variable: "--font-aldrich",

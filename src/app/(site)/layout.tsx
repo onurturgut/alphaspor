@@ -1,11 +1,14 @@
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { OpeningScreen } from "@/components/opening-screen";
-export default function SiteLayout({
+import { QuickSupport } from "@/components/quick-support";
+import { getContent } from "@/lib/content";
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { contact } = await getContent();
   return (
     <>
       <OpeningScreen />
@@ -16,6 +19,7 @@ export default function SiteLayout({
       <SiteHeader />
       <main id="main">{children}</main>
       <SiteFooter />
+      <QuickSupport instagram={contact.instagram} />
       </div>
     </>
   );
