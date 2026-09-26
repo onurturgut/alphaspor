@@ -1,6 +1,11 @@
 "use client";
 
-import { ArrowUpRight, Check, Mail } from "lucide-react";
+import Image from "next/image";
+import {
+  FiArrowUpRight as ArrowUpRight,
+  FiCheck as Check,
+  FiMail as Mail,
+} from "react-icons/fi";
 import { useId, useState, type FormEvent } from "react";
 import "./utility.css";
 
@@ -11,13 +16,17 @@ type ContactFormProps = {
 
 export function ContactForm({
   email = "Fethiyealfask@gmail.com",
-  heading = "Birlikte başlayalım.",
+  heading = "İlk adımı birlikte atalım.",
 }: ContactFormProps) {
   const id = useId();
-  const [draftUrl, setDraftUrl] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
+  const [error, setError] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === "sending") return;
     const form = event.currentTarget;
     const data = new FormData(form);
     const name = String(data.get("name") ?? "").trim();
@@ -41,37 +50,58 @@ export function ContactForm({
     );
     if (!form.reportValidity()) return;
 
-    const subject = `Fethiye Alfa Spor · ${name}`;
-    const body = [
-      `Ad soyad: ${name}`,
-      `E-posta: ${senderEmail}`,
-      ...(phone ? [`Telefon: ${phone}`] : []),
-      "",
-      message,
-    ].join("\n");
-    const url = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-    setDraftUrl(url);
-    window.location.assign(url);
+    setStatus("sending");
+    setError("");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          phone,
+          email: senderEmail,
+          message,
+          website: data.get("website"),
+        }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Mesaj gönderilemedi.");
+      setStatus("sent");
+      form.reset();
+    } catch (failure) {
+      setStatus("error");
+      setError(
+        failure instanceof Error && failure.name !== "TimeoutError"
+          ? failure.message
+          : "Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.",
+      );
+    }
   }
 
   return (
     <form
       className="contact-form"
       onSubmit={handleSubmit}
-      onChange={() => setDraftUrl("")}
       aria-labelledby={`${id}-heading`}
     >
       <div className="contact-form__heading">
         <span className="contact-form__eyebrow">
           <Mail size={15} aria-hidden="true" /> BİZE ULAŞIN
         </span>
-        <h2 id={`${id}-heading`}>{heading}</h2>
+        <div className="contact-form__title">
+          <Image src="/media/logo.webp" alt="" width={42} height={58} />
+          <h2 id={`${id}-heading`}>{heading}</h2>
+        </div>
         <p>
           Futbol eğitimleri, takımlarımız ve başvuru süreci hakkında bize yazın.
         </p>
       </div>
 
+      <label className="contact-honeypot" aria-hidden="true">
+        Web sitesi
+        <input name="website" tabIndex={-1} autoComplete="off" />
+      </label>
       <div className="contact-form__fields">
         <div className="contact-form__field">
           <label htmlFor={`${id}-name`}>
@@ -135,25 +165,29 @@ export function ContactForm({
       </div>
 
       <p className="contact-form__note" id={`${id}-note`}>
-        Bu form e-posta uygulamanızda bir taslak açar. Mesajı o uygulamadan
-        gönderebilirsiniz. * İşaretli alanlar zorunludur.
+        Mesajınız doğrudan kulübümüze iletilir. * İşaretli alanlar zorunludur.
       </p>
       <button
         className="contact-form__submit"
         type="submit"
+        disabled={status === "sending"}
         aria-describedby={`${id}-note`}
       >
-        E-posta taslağı oluştur <ArrowUpRight size={19} aria-hidden="true" />
+        {status === "sending" ? "Gönderiliyor…" : "Mesajı gönder"}{" "}
+        <ArrowUpRight size={19} aria-hidden="true" />
       </button>
       <div aria-live="polite" aria-atomic="true">
-        {draftUrl && (
+        {status === "error" && (
+          <p className="contact-form__error" role="alert">
+            {error} <a href={`mailto:${email}`}>{email}</a>
+          </p>
+        )}
+        {status === "sent" && (
           <div className="contact-form__status" role="status">
             <Check size={18} aria-hidden="true" />
             <p>
-              E-posta uygulamanızda açılan taslağı göndererek bize
-              ulaşabilirsiniz. Uygulama açılmadıysa{" "}
-              <a href={draftUrl}>taslağı tekrar açın</a> veya{" "}
-              <a href={`mailto:${email}`}>{email}</a> adresine yazın.
+              Mesajınız iletildi. Bizimle iletişime geçtiğiniz için teşekkür
+              ederiz.
             </p>
           </div>
         )}

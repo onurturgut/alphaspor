@@ -4,6 +4,7 @@ import type { z } from "zod";
 import { schemas, type Section } from "@/lib/admin/schema";
 import { Field, MediaField, type FieldProps } from "./fields";
 import { coachLicense } from "@/lib/coach-license";
+import { PlayerProfileFields } from "./player-profile-fields";
 type Data = z.infer<typeof schemas.news> &
   z.infer<typeof schemas.teams> &
   z.infer<typeof schemas.matches> &
@@ -27,9 +28,11 @@ export function Editor({
   onSaved: () => Promise<void>;
   onDirty: () => void;
 }) {
-  const [draft, setDraft] = useState<Draft>(() => section === "staff"
-    ? { ...initial, license: coachLicense(initial) }
-    : initial);
+  const [draft, setDraft] = useState<Draft>(() =>
+    section === "staff"
+      ? { ...initial, license: coachLicense(initial) }
+      : initial,
+  );
   const [saving, setSaving] = useState(false),
     [uploads, setUploads] = useState(0),
     [error, setError] = useState("");
@@ -293,6 +296,16 @@ export function Editor({
                     Temsili fotoğraf
                   </label>
                 </div>
+                <PlayerProfileFields
+                  player={player}
+                  season={draft.season ?? ""}
+                  onChange={(updated) =>
+                    set(
+                      "players",
+                      players.map((p, i) => (i === index ? updated : p)),
+                    )
+                  }
+                />
               </div>
             ))}
           </>

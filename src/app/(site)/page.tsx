@@ -61,10 +61,6 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-          <a href="#sonuclar" className="hero-scroll">
-            <ArrowDown size={16} />
-            <span>KEŞFETMEYE DEVAM ET</span>
-          </a>
         </div>
       </section>
       <section

@@ -67,3 +67,51 @@ final result: passed
 - P0/P1/P2 açık bulgu yok. Odaklı kontroller: küçük fotoğraflar, mobil vizyon/misyon kartları, okunabilir metin genişliği ve bölüm gezinmesi.
 
 final result: passed
+
+# Takımlar — üç panel akademi deneyimi (23 Eylül 2026)
+
+- Görsel referans: public/media/club içindeki sekiz WhatsApp Image 2026-09-23 at 16.51.29 / 16.51.30 JPEG (720×1600). Kaynak profil, kart ve istatistik düzeni Alfa Spor kimliğine uyarlandı; ekran görüntüsü birebir kopyalanmadı. Kullanıcı tarafından kararlaştırılan masaüstü üç panel yapısı uygulandı.
+- Saha ve gümüş kart çerçevesi yerleşik image_gen ile üretildi. Kaynak promptları ve dosyalar docs/academy.md içinde.
+- Masaüstü kanıt: audit/screenshots/academy-desktop.png (açık tema, 1600 px genişlikte tam sayfa); academy-desktop-final.png (koyu tema, 1600×1300 CSS px).
+- Mobil kanıt: academy-mobile.png (390×844 CSS viewport, tam sayfa); academy-mobile-pitch.png (320×740 CSS viewport, tam sayfa). Yoğunluk 1×. Tablet taşma kontrolü 820×1180. Kaynak mobilken hedef masaüstü üç panel olduğundan piksel eşleştirmesi yapılmadı.
+- Durum: U10 takımı, Batu / Cesur / Emir seçimleri; boş U9 kadrosu ayrıca kontrol edildi.
+- Tipografi: okunabilir sans-serif, belirgin ana başlık, kompakt profil ve kadro etiketleri; kullanıcı istekleri doğrultusunda bilgilendirici detaylar sekmelere ayrıldı.
+- Yerleşim: saha / kart ve profil / kadro; tablet iki sütun + kadro, mobil Oyuncu/Saha/Kadro sekmeleri. 320, 390, 820 ve 1600 px yatay taşma yok.
+- Renkler: mevcut açık/koyu gri gradyan değişkenleri, doğal yeşil saha ve sabit siyah/gümüş kart. Referansın neon yeşili yerine siteyle uyumlu beyaz vurgular.
+- Görseller: gerçek oyuncu fotoğrafları kullanıldı; temsili/eksik fotoğraflar açıkça hazır olmadığı belirtilerek gösteriliyor. Görsel çerçeve ve saha toplam yaklaşık 250 KB WebP. Alanlar, isimler, mevki ve istatistikler canlı metin.
+- İçerik: kulüp verileri kullanıldı; örnek OVR veya gol/asist üretilmedi. Genel mevki gösterimi maç dizilişi olarak sunulmuyor. Eksik değerler ve kayıtlı sıfır ayrılıyor.
+- Etkileşim: arama, sonuçsuz arama/sıfırlama, kaleci filtresi, oyuncu seçimi ve mobil profil odağı, saha işaretinin güncellenmesi, profil sekmeleri, U9 boş kadro ve yaş grubu bağlantıları çalıştırıldı. Kaleciye özgü alanlar görünür. Konsolda çalışma hatası yok; mevcut global smooth-scroll özniteliği uyarısı yeni değişikliklerle ilgili değil.
+- Otomatik kontroller: npm run verify:academy, npm run lint ve npm run build geçti. Hesaplama ve admin şeması JSON döngüsü test edildi. Gerçek admin oturumuyla canlı veri tabanına kayıt yazma testi yapılmadı; gerçek oyunculara test verisi eklenmedi.
+- İyileştirme geçmişi: mobil kadro seçiminden sonra odağın gizlenen düğmede kalması düzeltildi; oyuncu sekmesine odak taşınıyor. İstatistik kutularına sezon/tür kapsam etiketi eklendi. Kullanılmayan import kaldırıldı.
+- P0/P1/P2 görsel/etkileşim bulgusu kalmadı. P3: mevcut portrelerin arka planları farklı; standart akademi portre çekimi veya ayrı kullanıcı talebiyle arka plan düzenlemesi kartları daha tutarlı yapabilir.
+
+final result: passed
+# Oyuncu kartı — 25 Eylül 2026
+
+- Kaynak: `C:/Users/onurt/Downloads/ChatGPT Image 24 Eyl 2026 15_33_21.png`, 1024 × 1536 px.
+- Uygulama: `/takimlar` ve `/takimlar/u10`; Cesur Armağan ÜNAL seçili, 2026/2027, tüm maçlar. Kaynaktaki örnek kişi yerine gerçek kayıt kullanılıyor.
+- Masaüstü: 1440 × 1080 CSS px, `audit/screenshots/wolf-card-desktop-final.png`.
+- Mobil: 390 × 844 CSS px, `audit/screenshots/wolf-card-mobile-final.png`; dar ekran 320 × 760, `audit/screenshots/wolf-card-mobile-320-final.png`.
+- Normalize karşılaştırma: `audit/screenshots/wolf-card-comparison-final.png`. Referans 360 × 540 px; mobil kart (x=25, y=219, 340 × 510 CSS px, 1×) aynı 360 × 540 px boyuta ölçeklendi. İki kart tek görselde birlikte değerlendirildi.
+
+## Bulgular ve düzeltmeler
+
+- [Düzeltildi P1] İlk çerçevede dama deseni ve köşelerde kırpma hatası vardı. Kalkan dışı Image Gen ile koyu zemine dönüştürüldü; son karşılaştırmada dama deseni yok.
+- [Düzeltildi P2] Fotoğrafın üst sınırında sert geçiş vardı. Dikey ve eliptik maske birlikte uygulanarak üst sınır yumuşatıldı. Son mobil kayıt ve karşılaştırma bu düzeltmeden sonra alındı.
+- Tipografi: İlk ad fırça karakterli Permanent Marker, soyadı ve istatistikler Barlow Condensed. Özel illüstrasyon yazısının birebir kopyası değil, değişken oyuncu adına uygun canlı metin. Türkçe karakterler ve uzun adlar görülebiliyor.
+- Yerleşim: 2:3 oran, gümüş çerçeve, üstte logo/kurt gözleri, solda numara/mevki, altta isim ve dört istatistik alanı. Mobilde taşma yok.
+- Renkler: Siyah/gümüş/beyaz kart; açık ve koyu site temalarında koyu kart zemini korunuyor.
+- Görsel kalite: 800 × 1200 WebP çerçeve, metal/kurt/orman/dağ ayrıntıları. Fotoğraflar gerçek kayıtlardan korunuyor. Arka planlı fotoğraftaki açık alan referanstaki dekupe portreden farklı; bu veri/varlık sınırı kullanıcıya bildirildi. Birebir fotoğraf eşleşmesi iddia edilmiyor.
+- İçerik: Referanstaki Arda ve örnek sayılar kullanılmadı. Eksik numara ve istatistikler `—`. Seçim değiştiğinde isim, mevki, takım ve istatistikler birlikte güncelleniyor.
+
+## Kontroller
+
+- Önceki/sonraki oyuncu, listeden oyuncu seçimi, mobil Kadro → Oyuncu geçişi çalıştı.
+- Fotoğrafsız görünüm: `audit/screenshots/wolf-card-mobile-no-photo.png`.
+- 320 px genişlikte yatay taşma yok; kart görselleri yüklenmiş.
+- Tarayıcı hata listesi boş. ESLint, TypeScript ve akademi doğrulama betiği geçti.
+- Yayına alma yapılmadı; mevcut geliştirme sunucusu açık.
+
+Kapsam: Gerçek kadro verileriyle referans tasarımın uygulanması. Fotoğraf çekimi/dekupe üretimi ve özel harf çiziminin birebir kopyası bu uygulamada yapılmadı.
+
+final result: passed

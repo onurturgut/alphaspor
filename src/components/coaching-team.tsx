@@ -1,9 +1,16 @@
 import Image from "next/image";
-import { ChevronDown, Camera } from "lucide-react";
+import { FiChevronDown as ChevronDown } from "react-icons/fi";
+import { FaInstagram } from "react-icons/fa6";
 import "./coaching-team.css";
 import { coachLicense } from "@/lib/coach-license";
 
-type Coach = { name: string; role: string; photo?: string; bio?: string; license?: string };
+type Coach = {
+  name: string;
+  role: string;
+  photo?: string;
+  bio?: string;
+  license?: string;
+};
 
 export function CoachingTeam({
   staff,
@@ -51,7 +58,14 @@ export function CoachingTeam({
                     <span className="coach-role">{person.role}</span>
                     <div className="coach-name-row">
                       <h3>{person.name}</h3>
-                      {license && <span className="coach-license" aria-label={`Lisans: ${license}`}>{license}</span>}
+                      {license && (
+                        <span
+                          className="coach-license"
+                          aria-label={`Lisans: ${license}`}
+                        >
+                          {license}
+                        </span>
+                      )}
                     </div>
                     {paragraphs[0] && (
                       <p className="coach-summary">{paragraphs[0]}</p>
@@ -83,7 +97,7 @@ export function CoachingTeam({
                         rel="noopener noreferrer"
                         aria-label="Fethiye Alfa Spor Instagram hesabı"
                       >
-                        <Camera size={17} aria-hidden="true" />
+                        <FaInstagram size={17} aria-hidden="true" />
                       </a>
                     )}
                   </div>

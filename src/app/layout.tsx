@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "./themes.css";
+import "./refinements.css";
 import "./motif.css";
 const aldrich = localFont({
   src: "../../public/fonts/aldrich.woff2",
@@ -21,10 +22,21 @@ export const metadata: Metadata = {
     "Fethiye Alfa Spor: oyun temelli eğitim, bireysel gelişim ve takım ruhu. Takımlarımızı keşfedin, geleceğe birlikte adım atalım.",
   icons: {
     icon: mediaUrl("/media/logo.webp"),
-    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
   },
 };
-export const viewport: Viewport = { themeColor: "#171717" };
+export const viewport: Viewport = {
+  themeColor: "#171717",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 export default function RootLayout({
   children,
 }: {

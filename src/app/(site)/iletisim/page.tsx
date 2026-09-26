@@ -11,7 +11,7 @@ export default async function Contact() {
   const content = await getContent();
   return (
     <>
-      <PageIntro {...content.pages.contact} />
+      <PageIntro {...content.pages.contact} logo />
       <section className="container page-content">
         <ContactSection />
       </section>

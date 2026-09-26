@@ -103,14 +103,16 @@ export function NewsCards({
       {news.map((item) => (
         <Link className="news-card" href={`/haberler/${item.id}`} key={item.id}>
           <div className="news-visual">
-            {item.image && (
+            {item.image ? (
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
                 sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                style={{ objectFit: "contain" }}
+                style={{ objectFit: "cover" }}
               />
+            ) : (
+              <Image src="/media/logo.webp" alt="Alfa Spor" width={72} height={96} className="news-fallback-logo" />
             )}
           </div>
           <div className="news-meta">

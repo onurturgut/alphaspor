@@ -6,6 +6,7 @@ import type seed from "@/data/content.json";
 import defaultHeroVideo from "@/data/hero-video.json";
 import type sourceSeed from "@/data/match-sources.json";
 import type { Match } from "./matches";
+import type { AcademyPlayer } from "./academy";
 import type { HeroVideoAssets } from "@/components/hero-video";
 import {
   defaultHome,
@@ -14,8 +15,15 @@ import {
   defaultValues,
 } from "./site-settings";
 
-type Content = Omit<typeof seed, "staff"> & {
-  staff: ((typeof seed.staff)[number] & { photo?: string; bio?: string; license?: string })[];
+type Content = Omit<typeof seed, "staff" | "teams"> & {
+  teams: (Omit<(typeof seed.teams)[number], "players"> & {
+    players: AcademyPlayer[];
+  })[];
+  staff: ((typeof seed.staff)[number] & {
+    photo?: string;
+    bio?: string;
+    license?: string;
+  })[];
   heroVideo?: HeroVideoAssets;
   home: typeof defaultHome;
   pages: typeof defaultPages;

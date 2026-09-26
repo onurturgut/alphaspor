@@ -4,7 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import {
+  FiArrowUpRight as ArrowUpRight,
+  FiMenu as Menu,
+  FiX as X,
+} from "react-icons/fi";
 import { ThemeToggle } from "./theme-toggle";
 const links = [
   ["/", "Ana Sayfa"],
@@ -79,13 +83,7 @@ export function SiteHeader() {
           aria-label="Fethiye Alfa Spor ana sayfa"
           onClick={() => setOpen(false)}
         >
-          <Image
-            src="/media/logo.webp"
-            alt=""
-            width={40}
-            height={60}
-            preload
-          />
+          <Image src="/media/logo.webp" alt="" width={40} height={60} preload />
           <span>
             ALFA SPOR<small>FETHİYE · 2024</small>
           </span>

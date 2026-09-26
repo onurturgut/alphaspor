@@ -27,13 +27,53 @@ const date = required(10)
     const d = new Date(`${v}T12:00:00Z`);
     return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === v;
   }, "Geçerli tarih girin.");
-export const playerSchema = z.object({
+const optionalCount = (max: number) =>
+  z.number().int().min(0).max(max).nullable();
+export const appearanceSchema = z.object({
   id: required(100),
-  name: required(120),
-  position: required(100),
-  photo: safeUrl,
-  placeholder: z.boolean().default(false),
+  season,
+  date,
+  opponent: required(150),
+  kind: z.enum(["official", "friendly", "tournament"]),
+  goals: optionalCount(99),
+  assists: optionalCount(99),
+  minutes: optionalCount(150),
+  started: z.boolean().nullable(),
+  saves: optionalCount(150).optional(),
+  cleanSheet: z.boolean().nullable().optional(),
 });
+export const playerSchema = z
+  .object({
+    id: required(100),
+    name: required(120),
+    position: required(100),
+    photo: safeUrl,
+    placeholder: z.boolean().default(false),
+    shirtNumber: optionalCount(99).optional(),
+    foot: z.enum(["right", "left", "both", ""]).optional(),
+    goal: text(500).optional(),
+    strength: text(500).optional(),
+    appearances: z.array(appearanceSchema).max(400).optional(),
+  })
+  .superRefine((player, ctx) => {
+    const rows = player.appearances ?? [];
+    if (new Set(rows.map((row) => row.id)).size !== rows.length)
+      ctx.addIssue({
+        code: "custom",
+        path: ["appearances"],
+        message: "Maç kayıt kimlikleri benzersiz olmalı.",
+      });
+    const keys = rows.map(
+      (row) =>
+        `${row.season}|${row.date}|${row.kind}|${row.opponent.toLocaleLowerCase("tr-TR")}`,
+    );
+    if (new Set(keys).size !== keys.length)
+      ctx.addIssue({
+        code: "custom",
+        path: ["appearances"],
+        message: "Aynı tarih, rakip ve maç türü için tekrar kayıt eklemeyin.",
+      });
+  });
 const intro = z.object({
   title: required(),
   eyebrow: text(),
@@ -50,13 +90,31 @@ export const settingsSchema = z
       instagram: safeUrl,
     }),
     home: z.object({
-      eyebrow: text(), title: required(), titleAccent: text(), description: text(1500),
-      primaryLabel: required(), primaryHref: safeUrl, secondaryLabel: required(), secondaryHref: safeUrl,
-      aboutTitle: required(), aboutSubtitle: text(), teamsTitle: required(), newsTitle: required(), staffTitle: required(),
-      joinTitle: required(), joinSubtitle: text(), joinDescription: text(1500),
+      eyebrow: text(),
+      title: required(),
+      titleAccent: text(),
+      description: text(1500),
+      primaryLabel: required(),
+      primaryHref: safeUrl,
+      secondaryLabel: required(),
+      secondaryHref: safeUrl,
+      aboutTitle: required(),
+      aboutSubtitle: text(),
+      teamsTitle: required(),
+      newsTitle: required(),
+      staffTitle: required(),
+      joinTitle: required(),
+      joinSubtitle: text(),
+      joinDescription: text(1500),
       resultsSeason: season,
     }),
-    pages: z.object({ club: intro, teams: intro, news: intro, matches: intro, contact: intro }),
+    pages: z.object({
+      club: intro,
+      teams: intro,
+      news: intro,
+      matches: intro,
+      contact: intro,
+    }),
     values: z.array(z.object({ title: required(), text: text(500) })).length(3),
     gallery: z
       .array(

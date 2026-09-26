@@ -1,6 +1,11 @@
-import { ArrowUpRight, Clock3, Mail, MapPin, Phone } from "lucide-react";
+import {
+  FiArrowUpRight as ArrowUpRight,
+  FiClock as Clock3,
+  FiMail as Mail,
+  FiMapPin as MapPin,
+  FiPhone as Phone,
+} from "react-icons/fi";
 import { ContactForm } from "./contact-form";
-import { Visual } from "./ui";
 import { getContent } from "@/lib/content";
 export async function ContactSection() {
   const content = await getContent();
@@ -26,11 +31,17 @@ export async function ContactSection() {
           <Clock3 size={17} />
           {content.contact.hours}
         </p>
-        <Visual className="map-placeholder" />
+        <iframe
+          className="contact-map"
+          title="Alfa Spor kulüp konumu"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          src={`https://www.google.com/maps?q=${encodeURIComponent(content.contact.address)}&output=embed`}
+        />
         <div className="map-caption">
           <span>Fethiye, Muğla</span>
           <a
-            href="https://www.google.com/maps/search/?api=1&query=Fethiye%2C%20Mu%C4%9Fla"
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(content.contact.address)}`}
             target="_blank"
             rel="noreferrer"
             className="text-link"

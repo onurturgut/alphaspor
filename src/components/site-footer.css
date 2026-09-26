@@ -1,5 +1,5 @@
 ﻿.club-footer {
-  background: var(--tone-5);
+  background: radial-gradient(ellipse at 10% 0%, color-mix(in srgb, var(--white) 12%, transparent), transparent 65%), linear-gradient(135deg, var(--surface), var(--background));
   color: var(--white);
   border-top: 1px solid var(--line);
 }

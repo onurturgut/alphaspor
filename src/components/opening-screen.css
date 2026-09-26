@@ -28,8 +28,11 @@
 .opening-panel--top .opening-scene { top: 0; }
 .opening-panel--bottom .opening-scene { bottom: 0; }
 .opening-artwork {
-  position: relative;
-  width: min(100vw, 66.666667dvh);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100vw, 66.666667dvh);
   aspect-ratio: 2 / 3;
   background: url('/media/club/ChatGPT Image 21 Eyl 2026 23_47_05.png') center / 100% 100% no-repeat;
 }

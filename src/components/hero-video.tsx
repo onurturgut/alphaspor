@@ -1,6 +1,5 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 export type HeroVideoAssets = {
@@ -17,7 +16,6 @@ export function HeroVideo({
   mobilePoster,
 }: HeroVideoAssets) {
   const video = useRef<HTMLVideoElement>(null);
-  const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -44,19 +42,6 @@ export function HeroVideo({
     };
   }, [desktop, mobile, poster, mobilePoster]);
 
-  async function toggle() {
-    const element = video.current;
-    if (!element) return;
-    if (!element.paused) element.pause();
-    else {
-      try {
-        await element.play();
-      } catch {
-        /* Autoplay restrictions keep the poster visible. */
-      }
-    }
-  }
-
   return (
     <>
       <div
@@ -77,34 +62,12 @@ export function HeroVideo({
           playsInline
           preload="none"
           aria-hidden="true"
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
           onError={() => {
             setFailed(true);
-            setPlaying(false);
           }}
           style={failed ? { visibility: "hidden" } : undefined}
         />
       </div>
-      {!failed && (
-        <button
-          className="hero-video-toggle"
-          type="button"
-          onClick={toggle}
-          aria-label={
-            playing
-              ? "Arka plan videosunu duraklat"
-              : "Arka plan videosunu oynat"
-          }
-        >
-          {playing ? (
-            <Pause size={15} aria-hidden="true" />
-          ) : (
-            <Play size={15} aria-hidden="true" />
-          )}
-          <span>{playing ? "Duraklat" : "Oynat"}</span>
-        </button>
-      )}
     </>
   );
 }

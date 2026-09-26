@@ -1,6 +1,12 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
-import { Camera, Clock3, Mail, MapPin, Phone } from "lucide-react";
+import {
+  FiClock as Clock3,
+  FiMail as Mail,
+  FiMapPin as MapPin,
+  FiPhone as Phone,
+} from "react-icons/fi";
+import { FaInstagram } from "react-icons/fa6";
 import { getContent } from "@/lib/content";
 import { PwaControls } from "./pwa-controls";
 import "./site-footer.css";
@@ -33,7 +39,7 @@ export async function SiteFooter() {
               rel="noopener noreferrer"
               aria-label="Alfa Spor Instagram (yeni sekmede açılır)"
             >
-              <Camera size={22} aria-hidden="true" />
+              <FaInstagram size={22} aria-hidden="true" />
             </a>
           )}
           <PwaControls />

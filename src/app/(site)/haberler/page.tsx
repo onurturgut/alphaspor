@@ -23,7 +23,7 @@ export default async function News({
   return (
     <>
       <PageIntro {...content.pages.news} />
-      <section className="container page-content">
+      <section className="container page-content news-pattern">
         <nav className="filter-bar" aria-label="Haber kategorileri">
           <Link href="/haberler" aria-current={!category ? "true" : undefined}>
             Tümü
