@@ -10,6 +10,8 @@ export type Appearance = {
   started: boolean | null;
   saves?: number | null;
   cleanSheet?: boolean | null;
+  competitionId?: string;
+  competitionName?: string;
 };
 
 export type AcademyPlayer = {
@@ -87,10 +89,14 @@ export function playerAppearances(
   player: AcademyPlayer,
   season: string,
   kind: string = "all",
+  competitionId: string = "all",
 ) {
   return (player.appearances ?? [])
     .filter(
-      (row) => row.season === season && (kind === "all" || row.kind === kind),
+      (row) =>
+        row.season === season &&
+        (kind === "all" || row.kind === kind) &&
+        (competitionId === "all" || row.competitionId === competitionId),
     )
     .sort((a, b) => b.date.localeCompare(a.date));
 }

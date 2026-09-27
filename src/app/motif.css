@@ -53,3 +53,49 @@ html body #site-content footer.club-footer {
   :root { --motif-size: auto 203%; --motif-position: left bottom; --motif-wash: #10101060; }
   :root[data-theme="light"] { --motif-size: auto 198%; --motif-position: left top; --motif-wash: #ffffff55; }
 }
+
+/* Supplied geometric wolf texture, confined to card interiors. */
+:root {
+  --card-motif-filter: grayscale(1);
+  --card-motif-opacity: .3;
+}
+:root[data-theme="light"] {
+  --card-motif-filter: grayscale(1) invert(1);
+  --card-motif-opacity: .42;
+}
+#site-content :is(
+  .coach-content, .training-panel, .training-tabs button,
+  .news-showcase-copy, .news-card, .team-card-info,
+  .latest-result-card, .match-summary, .match-row, .match-standings,
+  .contact-form, .academy-team-links a, .card-motif
+) {
+  position: relative;
+  isolation: isolate;
+}
+#site-content :is(
+  .coach-content, .training-panel, .training-tabs button,
+  .news-showcase-copy, .news-card, .team-card-info,
+  .latest-result-card, .match-summary, .match-row, .match-standings,
+  .contact-form, .academy-team-links a, .card-motif
+)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: url('/media/card-wolf-motif.webp') right center / auto 480px repeat;
+  filter: var(--card-motif-filter);
+  opacity: var(--card-motif-opacity);
+  mask-image: linear-gradient(100deg, transparent, #0004 35%, #000);
+}
+@media (max-width: 600px) {
+  #site-content :is(
+    .coach-content, .training-panel, .training-tabs button,
+    .news-showcase-copy, .news-card, .team-card-info,
+    .latest-result-card, .match-summary, .match-row, .match-standings,
+    .contact-form, .academy-team-links a, .card-motif
+  )::after {
+    background-size: auto 340px;
+  }
+}

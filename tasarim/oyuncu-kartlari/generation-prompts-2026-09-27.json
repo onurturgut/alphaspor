@@ -1,0 +1,70 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "barin-kaptan-v1.png",
+  "cards": [
+    {
+      "key": "muhammet-hamza-yalcin",
+      "prompt": "Match the reference ALFA wolf shield card; preserve identity, age, hair and jersey from source photo. Name MUHAMMET HAMZA YALÇIN; ORTA SAHA; AKADEMİ; source jersey number 2. MAÇ GOL ASİST DK all —. 1024x1536."
+    },
+    {
+      "key": "asil-cengiz",
+      "prompt": "Use case: identity-preserve. Make one 1024x1536 ALFA football card matching image 1 template exactly (silver shield, wolf eyes, forest mist mountains, crest, layout). Image 2 is the new player: faithfully preserve face, age, hair and black white jersey. Replace template player and all personal text. Name \"ASİL CENGİZ\", position \"FORVET\", AKADEMİ. Number 8 on card and jersey, confirmed from source photo. Bottom MAÇ GOL ASİST DK values all —. No invented statistics. Preserve full shield with margins."
+    },
+    {
+      "key": "aren-sogut",
+      "prompt": "Use case: identity-preserve. Make one 1024x1536 ALFA football card matching image 1 template exactly (silver shield, wolf eyes, forest mist mountains, crest, layout). Image 2 is the new player: faithfully preserve face, age, hair and black white jersey. Replace template player and all personal text. Name \"AREN SÖĞÜT\", position \"ORTA SAHA\", AKADEMİ. Number 18 on card and jersey, confirmed from source photo. Bottom MAÇ GOL ASİST DK values all —. No invented statistics. Preserve full shield with margins."
+    },
+    {
+      "key": "vedat-can-yasar",
+      "prompt": "Use case: identity-preserve. Make one 1024x1536 ALFA football card matching image 1 template exactly (silver shield, wolf eyes, forest mist mountains, crest, layout). Image 2 is the new player: faithfully preserve face, age, hair and black white jersey. Replace template player and all personal text. Name \"VEDAT CAN YAŞAR\", position \"DEFANS\", AKADEMİ. Number 5 on card and jersey, confirmed from source photo. Bottom MAÇ GOL ASİST DK values all —. No invented statistics. Preserve full shield with margins."
+    },
+    {
+      "key": "bekir-aras-ozdemir",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football player card. Image 1 template: preserve silver shield, wolf eyes, misty forest mountains, crest, typography and layout. Image 2 new player: preserve facial identity, age, hair, natural face details and black white ALFA jersey. Replace previous player/name/number. Exact name \"BEKİR ARAS ÖZDEMİR\", position \"ORTA SAHA\", AKADEMİ. Number 34 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield inside margins."
+    },
+    {
+      "key": "demir-kurt",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football player card. Image 1 template: preserve silver shield, wolf eyes, misty forest mountains, crest, typography and layout. Image 2 new player: preserve facial identity, age, hair, natural face details and black white ALFA jersey. Replace previous player/name/number. Exact name \"DEMİR KURT\", position \"ORTA SAHA\", AKADEMİ. Number 11 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield inside margins."
+    },
+    {
+      "key": "cemil-gursoy",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football player card. Image 1 template: preserve silver shield, wolf eyes, misty forest mountains, crest, typography and layout. Image 2 new player: preserve facial identity, age, hair, natural face details and black white ALFA jersey. Replace previous player/name/number. Exact name \"CEMİL GÜRSOY\", position \"ORTA SAHA\", AKADEMİ. Number 9 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield inside margins."
+    },
+    {
+      "key": "baris-ali-altinok",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football player card. Image 1 template: preserve silver shield, wolf eyes, misty forest mountains, crest, typography and layout. Image 2 new player: preserve facial identity, age, hair, natural face details and black white ALFA jersey. Replace previous player/name/number. Exact name \"BARIŞ ALİ ALTINOK\", position \"DEFANS\", AKADEMİ. Number 35 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield inside margins."
+    },
+    {
+      "key": "ruzgar-saat",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football card. Image 1 template: same silver shield, wolf eyes, forest mist mountains, crest, typography layout. Image 2 new player: faithfully preserve face, age, hair, expression and actual jersey colors/patterns (black and white). Replace old player and personal text. Exact name \"RÜZGAR SAAT\", position \"DEFANS\", AKADEMİ. Number 33 on card and jersey from photo. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield with margins."
+    },
+    {
+      "key": "selahattin-badur",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football card. Image 1 template: same silver shield, wolf eyes, forest mist mountains, crest, typography layout. Image 2 new player: faithfully preserve face, age, hair, expression and actual jersey colors/patterns (black and white). Replace old player and personal text. Exact name \"SELAHATTİN BADUR\", position \"DEFANS\", AKADEMİ. Number 73 on card and jersey from photo. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield with margins."
+    },
+    {
+      "key": "ulas-doruk-deniz",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football card. Image 1 template: same silver shield, wolf eyes, forest mist mountains, crest, typography layout. Image 2 new player: faithfully preserve face, age, hair, expression and actual jersey colors/patterns (dark goalkeeper jersey with pink accents). Replace old player and personal text. Exact name \"ULAŞ DORUK DENİZ\", position \"KALECİ\", AKADEMİ. Number 1 on card and jersey from photo. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield with margins."
+    },
+    {
+      "key": "sarp-dolek",
+      "prompt": "Use case identity-preserve. Create one 1024x1536 ALFA football card. Image 1 template: same silver shield, wolf eyes, forest mist mountains, crest, typography layout. Image 2 new player: faithfully preserve face, age, hair, expression and actual jersey colors/patterns (black and white). Replace old player and personal text. Exact name \"SARP DÖLEK\", position \"ORTA SAHA\", AKADEMİ. Number unknown: use — in left number field; no invented jersey number. Bottom MAÇ GOL ASİST DK values —. No invented stats. Full shield with margins."
+    },
+    {
+      "key": "eymen-bulut",
+      "prompt": "Use case identity-preserve. One ALFA football card 1024x1536. Image 1 card template: preserve silver shield, wolf eyes, mist forest mountains, crest, typography and layout. Image 2 actual new player: faithfully preserve facial identity, age, hair, face details and actual black white jersey. Replace old player/name/number. Exact name \"EYMEN BULUT\", position \"ORTA SAHA\", AKADEMİ. Number 80 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK all values —. No invented statistics. Full shield inside margins."
+    },
+    {
+      "key": "nevzat-ruzgar-unal",
+      "prompt": "Use case identity-preserve. One ALFA football card 1024x1536. Image 1 card template: preserve silver shield, wolf eyes, mist forest mountains, crest, typography and layout. Image 2 actual new player: faithfully preserve facial identity, age, hair, face details and actual black white jersey. Replace old player/name/number. Exact name \"NEVZAT RÜZGAR ÜNAL\", position \"ORTA SAHA\", AKADEMİ. Number 64 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK all values —. No invented statistics. Full shield inside margins."
+    },
+    {
+      "key": "cayan-biten",
+      "prompt": "Use case identity-preserve. One ALFA football card 1024x1536. Image 1 card template: preserve silver shield, wolf eyes, mist forest mountains, crest, typography and layout. Image 2 actual new player: faithfully preserve facial identity, age, hair, face details and actual black white jersey. Replace old player/name/number. Exact name \"ÇAYAN BİTEN\", position \"ORTA SAHA\", AKADEMİ. Number 17 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK all values —. No invented statistics. Full shield inside margins."
+    },
+    {
+      "key": "emir-turgay",
+      "prompt": "Use case identity-preserve. One ALFA football card 1024x1536. Image 1 card template: preserve silver shield, wolf eyes, mist forest mountains, crest, typography and layout. Image 2 actual new player: faithfully preserve facial identity, age, hair, face details and actual black white jersey. Replace old player/name/number. Exact name \"EMİR TURĞAY\", position \"FORVET\", AKADEMİ. Number 77 on card and jersey confirmed from photo. Bottom MAÇ GOL ASİST DK all values —. No invented statistics. Full shield inside margins."
+    }
+  ]
+}

@@ -168,8 +168,14 @@
     min-height: 44px;
   }
   .club-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
     font-size: 11px;
     padding-block: 22px;
+    padding-right: calc(88px + env(safe-area-inset-right));
+  }
+  .club-footer-bottom p + p {
+    text-align: left;
   }
 }
 @media (prefers-reduced-motion: reduce) {

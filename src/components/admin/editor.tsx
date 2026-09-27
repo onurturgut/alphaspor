@@ -5,18 +5,34 @@ import { schemas, type Section } from "@/lib/admin/schema";
 import { Field, MediaField, type FieldProps } from "./fields";
 import { coachLicense } from "@/lib/coach-license";
 import { PlayerProfileFields } from "./player-profile-fields";
-type Data = z.infer<typeof schemas.news> &
+import { MatchFields } from "./match-fields";
+import { CompetitionFields } from "./competition-fields";
+import type { Competition, Opponent, Match } from "@/lib/matches";
+import type { AcademyPlayer } from "@/lib/academy";
+import { playerStats, playerAppearances } from "@/lib/academy";
+import { withMatchAppearances } from "@/lib/matches";
+type Data = z.infer<typeof schemas.competitions> &
+  z.infer<typeof schemas.opponents> &
+  z.infer<typeof schemas.news> &
   z.infer<typeof schemas.teams> &
   z.infer<typeof schemas.matches> &
   z.infer<typeof schemas.staff> &
   z.infer<typeof schemas.settings>;
 export type Draft = Partial<Data> & { _id?: string; _rev?: number };
-export type TeamOption = { slug: string; name: string; season: string };
+export type TeamOption = {
+  slug: string;
+  name: string;
+  season: string;
+  players: AcademyPlayer[];
+};
 
 export function Editor({
   section,
   initial,
   teams,
+  competitions,
+  opponents,
+  matches,
   onClose,
   onSaved,
   onDirty,
@@ -24,6 +40,9 @@ export function Editor({
   section: Section;
   initial: Draft;
   teams: TeamOption[];
+  competitions: Competition[];
+  opponents: Opponent[];
+  matches: Match[];
   onClose: () => void;
   onSaved: () => Promise<void>;
   onDirty: () => void;
@@ -39,6 +58,10 @@ export function Editor({
   const [tab, setTab] = useState("home");
   const set = (key: keyof Draft, value: unknown) => {
     setDraft((d) => ({ ...d, [key]: value }));
+    onDirty();
+  };
+  const update = (changes: Partial<Draft>) => {
+    setDraft((d) => ({ ...d, ...changes }));
     onDirty();
   };
   const uploadBusy = (busy: boolean) =>
@@ -104,6 +127,19 @@ export function Editor({
     }
   }
   const players = draft.players ?? [];
+  const computedPlayers =
+    section === "teams"
+      ? withMatchAppearances(
+          [{ slug: draft.slug ?? "", players }],
+          matches.filter(
+            (m) =>
+              !m.competitionId ||
+              competitions.some(
+                (c) => c._id === m.competitionId && c.published,
+              ),
+          ),
+        )[0].players
+      : [];
   const homeLabels: Record<string, string> = {
     eyebrow: "Üst etiket",
     title: "Ana başlık",
@@ -306,39 +342,47 @@ export function Editor({
                     )
                   }
                 />
+                {computedPlayers[index] && (
+                  <p className="admin-stats-hint">
+                    {(() => {
+                      const stats = playerStats(
+                        playerAppearances(
+                          computedPlayers[index],
+                          draft.season ?? "",
+                        ),
+                      );
+                      return `Yayımlanan maç kayıtları dahil: ${stats.matches ?? "—"} maç · ${stats.goals ?? "—"} gol · ${stats.assists ?? "—"} asist · ${stats.minutes ?? "—"} dakika. Otomatik kayıtları Maçlar bölümünden düzenleyin; aynı maçı ayrıca elle eklemeyin.`;
+                    })()}
+                  </p>
+                )}
               </div>
             ))}
           </>
         )}
         {section === "matches" && (
+          <MatchFields
+            draft={draft}
+            update={update}
+            teams={teams}
+            competitions={competitions}
+            opponents={opponents}
+            matches={matches}
+          />
+        )}
+        {section === "opponents" && (
           <div className="admin-form-grid">
-            {field("teamSlug", "Takım", {
-              required: true,
-              options: [
-                { value: "", label: "Takım seçin" },
-                ...teams.map((t) => ({ value: t.slug, label: t.name })),
-              ],
-            })}
-            {field("league", "Lig / yaş grubu", { required: true })}
-            {field("season", "Sezon", { required: true, hint: "2026/2027" })}
-            {field("week", "Hafta", { type: "number", required: true })}
-            {field("date", "Tarih", { type: "date", required: true })}
-            {field("time", "Saat", { type: "time" })}
-            {field("homeTeam", "Ev sahibi", { required: true })}
-            {field("awayTeam", "Deplasman", { required: true })}
-            {field("status", "Maç durumu", {
-              options: [
-                { value: "unreported", label: "Skor açıklanmadı / oynanacak" },
-                { value: "played", label: "Oynandı" },
-                { value: "awarded", label: "Hükmen" },
-                { value: "withdrawn", label: "Çekilme / iptal" },
-              ],
-            })}
-            {field("homeScore", "Ev sahibi skoru", { type: "number" })}
-            {field("awayScore", "Deplasman skoru", { type: "number" })}
-            {field("venue", "Saha")}
-            {field("note", "Maç notu", { multiline: true })}
+            {field("name", "Rakip takım adı", { required: true })}
           </div>
+        )}
+        {section === "competitions" && (
+          <CompetitionFields
+            draft={draft}
+            update={update}
+            teams={teams}
+            opponents={opponents}
+            onGenerated={onSaved}
+            canGenerate={JSON.stringify(draft) === JSON.stringify(initial)}
+          />
         )}
         {section === "staff" && (
           <div className="admin-form-grid">

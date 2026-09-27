@@ -29,6 +29,37 @@ const date = required(10)
   }, "Geçerli tarih girin.");
 const optionalCount = (max: number) =>
   z.number().int().min(0).max(max).nullable();
+const minute = z.number().int().min(0).max(150);
+const matchReportSchema = z.object({
+  clubSide: z.enum(["home", "away"]),
+  duration: z.number().int().min(1).max(150),
+  starterCount: z.number().int().min(1).max(11),
+  allowReentry: z.boolean(),
+  starters: z.array(required(100)).max(11),
+  bench: z.array(required(100)).max(50),
+  events: z
+    .array(
+      z.discriminatedUnion("type", [
+        z.object({
+          id: required(100),
+          type: z.literal("goal"),
+          minute,
+          side: z.enum(["home", "away"]),
+          playerId: required(100).nullable(),
+          assistId: required(100).nullable(),
+          kind: z.enum(["normal", "penalty", "own"]),
+        }),
+        z.object({
+          id: required(100),
+          type: z.literal("substitution"),
+          minute,
+          outId: required(100),
+          inId: required(100),
+        }),
+      ]),
+    )
+    .max(300),
+});
 export const appearanceSchema = z.object({
   id: required(100),
   season,
@@ -147,6 +178,30 @@ export const settingsSchema = z
     }
   });
 export const schemas = {
+  opponents: z.object({ name: required(150), order }),
+  competitions: z.object({
+    name: required(100),
+    teamSlug: slug,
+    season,
+    kind: z.enum(["official", "friendly", "tournament"]),
+    clubName: required(150),
+    opponentIds: z
+      .array(required(100))
+      .min(1)
+      .max(24)
+      .refine(
+        (ids) => new Set(ids).size === ids.length && !ids.includes("club"),
+        "Rakipler benzersiz olmalı.",
+      ),
+    duration: z.number().int().min(1).max(150),
+    starterCount: z.number().int().min(1).max(11),
+    allowReentry: z.boolean(),
+    winPoints: z.number().int().min(0).max(10),
+    drawPoints: z.number().int().min(0).max(10),
+    lossPoints: z.number().int().min(0).max(10),
+    published: z.boolean().default(false),
+    order,
+  }),
   news: z.object({
     title: required(),
     category: required(100),
@@ -180,6 +235,12 @@ export const schemas = {
   }),
   matches: z
     .object({
+      competitionId: required(100).nullable().optional(),
+      homeId: required(100).nullable().optional(),
+      awayId: required(100).nullable().optional(),
+      kind: z.enum(["official", "friendly", "tournament"]).default("official"),
+      published: z.boolean().default(true),
+      report: matchReportSchema.nullable().optional(),
       teamSlug: slug,
       league: required(100),
       season,
@@ -198,6 +259,21 @@ export const schemas = {
       order,
     })
     .superRefine((v, ctx) => {
+      if (
+        v.homeTeam.toLocaleLowerCase("tr") ===
+        v.awayTeam.toLocaleLowerCase("tr")
+      )
+        ctx.addIssue({
+          code: "custom",
+          path: ["awayTeam"],
+          message: "Ev sahibi ve deplasman farklı olmalı.",
+        });
+      if (v.competitionId && (!v.homeId || !v.awayId || v.homeId === v.awayId))
+        ctx.addIssue({
+          code: "custom",
+          path: ["homeId"],
+          message: "Organizasyondan iki farklı takım seçin.",
+        });
       const hasBoth = v.homeScore !== null && v.awayScore !== null;
       if (
         v.status === "played" || v.status === "awarded"
@@ -215,6 +291,8 @@ export const schemas = {
 };
 export type Section = keyof typeof schemas;
 export const sectionNames: Record<Section, string> = {
+  opponents: "Rakipler",
+  competitions: "Organizasyonlar",
   news: "Haberler",
   teams: "Takımlar ve oyuncular",
   matches: "Maçlar",

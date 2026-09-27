@@ -552,7 +552,8 @@
   place-items: center;
   padding: 30px;
   background:
-    radial-gradient(ellipse at top left, var(--tone-10), transparent 70%), var(--tone-5);
+    radial-gradient(ellipse at top left, var(--tone-10), transparent 70%),
+    var(--tone-5);
 }
 .admin-login-card {
   width: min(100%, 430px);
@@ -731,8 +732,138 @@
   }
 }
 
-.admin-player-profile { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px; }
-.admin-player-profile > summary { cursor: pointer; padding: 8px 0; font-weight: 700; }
-.admin-player-profile > summary span { font-size: 12px; color: var(--muted); font-weight: 400; }
-.admin-player-profile[open] > summary { margin-bottom: 18px; }
-.admin-stats-hint { color: var(--muted); font-size: 13px; line-height: 1.7; max-width: 800px; }
+.admin-player-profile {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.admin-player-profile > summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-weight: 700;
+}
+.admin-player-profile > summary span {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.admin-player-profile[open] > summary {
+  margin-bottom: 18px;
+}
+.admin-stats-hint {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 800px;
+}
+.admin-match-editor {
+  display: grid;
+  gap: 22px;
+}
+.admin-match-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.admin-match-banner p {
+  margin-top: 8px;
+  color: var(--muted);
+}
+.admin-roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 10px;
+  max-height: 420px;
+  overflow: auto;
+  padding: 4px;
+}
+.admin-root .admin-roster-player {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.admin-roster-player span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.admin-roster-player small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.admin-root .admin-roster-player select {
+  width: 125px;
+  flex-shrink: 0;
+}
+.admin-event-form,
+.admin-fixture-generator {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+.admin-player-select {
+  display: grid;
+  gap: 8px;
+}
+.admin-tabs button[aria-pressed="true"] {
+  background: var(--tone-85);
+  color: var(--tone-5);
+}
+.admin-match-events {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+.admin-match-events li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+.admin-match-events li > span {
+  flex: 1 1 220px;
+  line-height: 1.6;
+}
+.admin-fixture-preview {
+  max-height: 260px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+}
+.admin-fixture-generator summary {
+  cursor: pointer;
+  padding: 10px 0;
+  font-weight: 700;
+}
+.admin-fixture-generator[open] > * + * {
+  margin-top: 14px;
+}
+.admin-match-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 600px) {
+  .admin-event-form,
+  .admin-fixture-generator {
+    padding: 12px;
+  }
+  .admin-match-banner h3 {
+    font-size: 17px;
+  }
+}

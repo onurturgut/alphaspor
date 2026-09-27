@@ -23,6 +23,9 @@ import {
 import type { MatchSource } from "@/lib/content";
 import "./utility.css";
 import "./matches.css";
+import { MatchDetails } from "./match-details";
+import { CompetitionStandings } from "./competition-standings";
+import type { Competition, Opponent } from "@/lib/matches";
 
 type MatchTab = "fixtures" | "results";
 
@@ -30,6 +33,8 @@ type MatchCenterProps = {
   teamOptions: { slug: string; name: string; season: string }[];
   matches: Match[];
   matchSources: MatchSource[];
+  competitions?: Competition[];
+  opponents?: Opponent[];
   initialTeam?: string;
   initialSeason?: string;
   initialTab?: MatchTab;
@@ -118,6 +123,7 @@ function MatchRow({ match }: { match: Match }) {
         </span>
       </div>
       {match.note && <p className="match-row__note">{match.note}</p>}
+      <MatchDetails match={match} />
     </li>
   );
 }
@@ -129,6 +135,8 @@ export function MatchCenter({
   initialTeam,
   initialSeason,
   initialTab,
+  competitions = [],
+  opponents = [],
 }: MatchCenterProps) {
   const teams = [
     { value: "all", label: "Tüm takımlar", slug: "" },
@@ -451,37 +459,48 @@ export function MatchCenter({
             ))}
         </div>
       ))}
-      {allMatches.length > 0 && (
-        <details className="match-sources">
-          <summary>
-            Fikstür kaynakları ve sezon notu
-            <ChevronDown size={16} aria-hidden="true" />
-          </summary>
-          <p>
-            Bu kayıtlar kulübümüzün yayımladığı fikstür görsellerinden
-            aktarılmıştır. Sezon, karşılaşma tarihlerine göre 2025/2026 olarak
-            sınıflandırılmıştır. Skoru açıklanmayan maçlar sonuçlara dahil
-            edilmez. U14 karşılaşmaları U14 / U15 takım sayfasına bağlıdır.
-          </p>
-          <div className="match-sources__links">
-            {sources.map((source) => (
-              <div key={source.league}>
-                <span>
-                  {source.league} · {source.group} grubu
-                </span>
-                <a href={source.image} target="_blank" rel="noreferrer">
-                  Fikstür görseli
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </a>
-                <a href={source.page} target="_blank" rel="noreferrer">
-                  Kulüp kaynağı
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </a>
-              </div>
-            ))}
-          </div>
-        </details>
-      )}
+      <CompetitionStandings
+        competitions={competitions.filter(
+          (c) =>
+            c.season === season &&
+            (!selectedTeam.slug || c.teamSlug === selectedTeam.slug),
+        )}
+        opponents={opponents}
+        matches={matches}
+      />
+      {allMatches.length > 0 &&
+        season === archiveSeason &&
+        sources.length > 0 && (
+          <details className="match-sources">
+            <summary>
+              Fikstür kaynakları ve sezon notu
+              <ChevronDown size={16} aria-hidden="true" />
+            </summary>
+            <p>
+              Bu kayıtlar kulübümüzün yayımladığı fikstür görsellerinden
+              aktarılmıştır. Sezon, karşılaşma tarihlerine göre 2025/2026 olarak
+              sınıflandırılmıştır. Skoru açıklanmayan maçlar sonuçlara dahil
+              edilmez. U14 karşılaşmaları U14 / U15 takım sayfasına bağlıdır.
+            </p>
+            <div className="match-sources__links">
+              {sources.map((source) => (
+                <div key={source.league}>
+                  <span>
+                    {source.league} · {source.group} grubu
+                  </span>
+                  <a href={source.image} target="_blank" rel="noreferrer">
+                    Fikstür görseli
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </a>
+                  <a href={source.page} target="_blank" rel="noreferrer">
+                    Kulüp kaynağı
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </details>
+        )}
       <div className="match-center__footnote">
         <span aria-hidden="true" />
         {allMatches.length > 0

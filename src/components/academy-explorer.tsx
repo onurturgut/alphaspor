@@ -29,6 +29,7 @@ import {
   type AcademyTeam,
 } from "@/lib/academy";
 import styles from "./academy-explorer.module.css";
+import { playerCardArt } from "@/lib/player-card-art";
 
 const cardBrush = localFont({
   src: "../../public/fonts/permanent-marker.ttf",
@@ -115,6 +116,7 @@ export function AcademyExplorer({
   const [zoneFilter, setZoneFilter] = useState("all");
   const [season, setSeason] = useState(team?.season ?? "");
   const [kind, setKind] = useState("all");
+  const [competitionId, setCompetitionId] = useState("all");
   const [tab, setTab] = useState(0);
   const [mobile, setMobile] = useState(0);
   if (!team)
@@ -143,9 +145,24 @@ export function AcademyExplorer({
         .includes(query.toLocaleLowerCase("tr-TR").trim()) &&
       (zoneFilter === "all" || positionZone(p.position).key === zoneFilter),
   );
-  const rows = player ? playerAppearances(player, season, kind) : [];
+  const competitionOptions = [
+    ...new Map(
+      (player?.appearances ?? [])
+        .filter((a) => a.competitionId && a.season === season)
+        .map((a) => [a.competitionId!, a.competitionName ?? a.competitionId!]),
+    ).entries(),
+  ];
+  const selectedCompetition = competitionOptions.some(
+    ([id]) => id === competitionId,
+  )
+    ? competitionId
+    : "all";
+  const rows = player
+    ? playerAppearances(player, season, kind, selectedCompetition)
+    : [];
   const stats = playerStats(rows);
   const zone = positionZone(player?.position ?? "");
+  const cardArt = playerCardArt(player?.name ?? "");
   const nameParts = player?.name.trim().split(/\s+/) ?? [];
   const surname = nameParts.length > 1 ? nameParts.at(-1) : "";
   const givenName = (surname ? nameParts.slice(0, -1) : nameParts).join(" ");
@@ -333,51 +350,74 @@ export function AcademyExplorer({
                 </div>
               </div>
               <div className={styles.cardStage}>
-                <div
-                  className={`${styles.collectible} ${cardBrush.variable} ${cardCondensed.variable}`}
-                  aria-label={`${player.name} oyuncu kartı`}
-                >
-                  <Image
-                    className={styles.cardFrame}
-                    src="/media/academy/wolf-card-frame-final.webp"
-                    alt=""
-                    fill
-                    sizes="(max-width: 700px) 90vw, 360px"
-                  />
-                  <div className={styles.cardMeta}>
-                    <strong aria-label={`Forma numarası: ${player.shirtNumber ?? "belirtilmemiş"}`}>
-                      {player.shirtNumber ?? "—"}
-                    </strong>
-                    <span>{zone.short} · {team.name}</span>
+                {cardArt ? (
+                  <div className={styles.collectible}>
+                    <Image
+                      key={cardArt}
+                      src={cardArt}
+                      alt={`${player.name} oyuncu kartı`}
+                      fill
+                      sizes="(max-width: 700px) 90vw, 360px"
+                      style={{ objectFit: "contain" }}
+                    />
                   </div>
-                  <div className={styles.cardPortrait}>
-                    <Portrait key={player.id} player={player} large />
-                  </div>
-                  <div className={styles.cardIdentity}>
-                    <h2 aria-label={player.name}>
-                      <span
-                        className={styles.cardGivenName}
-                        style={{ fontSize: `${Math.min(17, 110 / Math.max(givenName.length, 1))}cqw` }}
+                ) : (
+                  <div
+                    className={`${styles.collectible} ${cardBrush.variable} ${cardCondensed.variable}`}
+                    aria-label={`${player.name} oyuncu kartı`}
+                  >
+                    <Image
+                      className={styles.cardFrame}
+                      src="/media/academy/wolf-card-frame-final.webp"
+                      alt=""
+                      fill
+                      sizes="(max-width: 700px) 90vw, 360px"
+                    />
+                    <div className={styles.cardMeta}>
+                      <strong
+                        aria-label={`Forma numarası: ${player.shirtNumber ?? "belirtilmemiş"}`}
                       >
-                        {givenName.toLocaleUpperCase("tr-TR")}
+                        {player.shirtNumber ?? "—"}
+                      </strong>
+                      <span>
+                        {zone.short} · {team.name}
                       </span>
-                      {surname && <span className={styles.cardSurname}>{surname.toLocaleUpperCase("tr-TR")}</span>}
-                    </h2>
+                    </div>
+                    <div className={styles.cardPortrait}>
+                      <Portrait key={player.id} player={player} large />
+                    </div>
+                    <div className={styles.cardIdentity}>
+                      <h2 aria-label={player.name}>
+                        <span
+                          className={styles.cardGivenName}
+                          style={{
+                            fontSize: `${Math.min(17, 110 / Math.max(givenName.length, 1))}cqw`,
+                          }}
+                        >
+                          {givenName.toLocaleUpperCase("tr-TR")}
+                        </span>
+                        {surname && (
+                          <span className={styles.cardSurname}>
+                            {surname.toLocaleUpperCase("tr-TR")}
+                          </span>
+                        )}
+                      </h2>
+                    </div>
+                    <dl className={styles.cardStats}>
+                      {[
+                        ["MAÇ", stats.matches],
+                        ["GOL", stats.goals],
+                        ["ASİST", stats.assists],
+                        ["DK", stats.minutes],
+                      ].map(([label, value]) => (
+                        <div key={label as string}>
+                          <dt>{label}</dt>
+                          <dd>{formatNumber(value as number | null)}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
-                  <dl className={styles.cardStats}>
-                    {[
-                      ["MAÇ", stats.matches],
-                      ["GOL", stats.goals],
-                      ["ASİST", stats.assists],
-                      ["DK", stats.minutes],
-                    ].map(([label, value]) => (
-                      <div key={label as string}>
-                        <dt>{label}</dt>
-                        <dd>{formatNumber(value as number | null)}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
+                )}
                 <p className={styles.cardTagline}>BİR OYUNCU. BİR HİKÂYE.</p>
               </div>
               <p className={styles.statsScope}>
@@ -458,6 +498,22 @@ export function AcademyExplorer({
                       {Object.entries(matchKinds).map(([value, label]) => (
                         <option key={value} value={value}>
                           {label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                {(tab === 1 || tab === 2) && competitionOptions.length > 0 && (
+                  <label className={styles.kindFilter}>
+                    Organizasyon
+                    <select
+                      value={selectedCompetition}
+                      onChange={(e) => setCompetitionId(e.target.value)}
+                    >
+                      <option value="all">Tüm organizasyonlar</option>
+                      {competitionOptions.map(([id, name]) => (
+                        <option key={id} value={id}>
+                          {name}
                         </option>
                       ))}
                     </select>
@@ -634,8 +690,8 @@ export function AcademyExplorer({
                 )}
               </div>
               <p className={styles.rosterHint}>
-                Her oyuncunun katkısı, takımın gücü. Bir oyuncu seç,
-                hikâyesini keşfet.
+                Her oyuncunun katkısı, takımın gücü. Bir oyuncu seç, hikâyesini
+                keşfet.
               </p>
             </section>
           </div>

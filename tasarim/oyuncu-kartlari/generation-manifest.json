@@ -1,0 +1,524 @@
+[
+  {
+    "key": "haluk-arda-yavuz",
+    "name": "Haluk Arda YAVUZ",
+    "position": "Orta Saha",
+    "photo": "/media/70f0a6242d69a762b95b.jpg",
+    "placeholder": true,
+    "shirtNumber": null,
+    "teams": [
+      "U10"
+    ],
+    "ids": [
+      "u10-69d2b85f215fd"
+    ]
+  },
+  {
+    "key": "serdest-yildirim",
+    "name": "Serdest YILDIRIM",
+    "position": "Orta Saha",
+    "photo": "/media/70f0a6242d69a762b95b.jpg",
+    "placeholder": true,
+    "shirtNumber": null,
+    "teams": [
+      "U10"
+    ],
+    "ids": [
+      "u10-69d2b85f07fd2"
+    ]
+  },
+  {
+    "key": "yigitcan-yasar",
+    "name": "Yiğitcan YAŞAR",
+    "position": "Forvet",
+    "photo": "/media/847c4a758a7d86181dce.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U11",
+      "U12",
+      "U13"
+    ],
+    "ids": [
+      "u11-69d2bdaa34e60",
+      "u12-69d2baa0e9eaf",
+      "u13-69d2b70444fe9"
+    ]
+  },
+  {
+    "key": "emirhan-alicioglu",
+    "name": "Emirhan ALICIOĞLU",
+    "position": "Orta Saha",
+    "photo": "/media/5c2be433c95cf1a36561.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U11",
+      "U12",
+      "U13"
+    ],
+    "ids": [
+      "u11-69d2bdaa31bdd",
+      "u12-69d2baa0f2323",
+      "u13-69d2bd6528a61"
+    ]
+  },
+  {
+    "key": "adil-badur",
+    "name": "Adil BADUR",
+    "position": "Defans",
+    "photo": "/media/65dff75f89f62d87308c.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U11",
+      "U12",
+      "U13"
+    ],
+    "ids": [
+      "u11-69d2bdaa23685",
+      "u12-69d2baa106064",
+      "u13-69d2b3825ddd5"
+    ]
+  },
+  {
+    "key": "adnan-asrin-calik",
+    "name": "Adnan Asrın ÇALIK",
+    "position": "Defans",
+    "photo": "/media/45fd39ed723f6fb9a4e9.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U11",
+      "U12"
+    ],
+    "ids": [
+      "u11-69d2bdaa24e0e",
+      "u12-69d2baa0f39c7"
+    ]
+  },
+  {
+    "key": "deniz-aynaci",
+    "name": "Deniz AYNACI",
+    "position": "Kaleci",
+    "photo": "/media/40dbc9d4c3a5b45ea1fe.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U11",
+      "U12"
+    ],
+    "ids": [
+      "u11-69d2bdaa2eba1",
+      "u12-69d2baa10467d"
+    ]
+  },
+  {
+    "key": "ahmet-eren-sener",
+    "name": "Ahmet Eren ŞENER",
+    "position": "Forvet",
+    "photo": "/media/9490fa94a4ea204aeba7.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U11",
+      "U12"
+    ],
+    "ids": [
+      "u11-69d2bdaa26642",
+      "u12-69d2baa0e655f"
+    ]
+  },
+  {
+    "key": "efe-hasbi",
+    "name": "Efe Hasbi",
+    "position": "Orta Saha",
+    "photo": "/media/e9a38d482471d59f074e.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U11",
+      "U12"
+    ],
+    "ids": [
+      "u11-69d2bdaa305e6",
+      "u12-69d2baa10105e"
+    ]
+  },
+  {
+    "key": "atahan-cil",
+    "name": "Atahan ÇİL",
+    "position": "Forvet",
+    "photo": "/media/70f0a6242d69a762b95b.jpg",
+    "placeholder": true,
+    "shirtNumber": null,
+    "teams": [
+      "U11"
+    ],
+    "ids": [
+      "u11-69d2bdaa292e2"
+    ]
+  },
+  {
+    "key": "mirac-eymen-kuscu",
+    "name": "Miraç Eymen KUŞCU",
+    "position": "Defans",
+    "photo": "/media/5ebd81c86473e1bb7d97.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U12",
+      "U13",
+      "U14/U15"
+    ],
+    "ids": [
+      "u12-69d2baa0f0510",
+      "u13-69d2b5a4d2e38",
+      "u14-u15-69d2bc4fdc681"
+    ]
+  },
+  {
+    "key": "hasan-pehlivan",
+    "name": "Hasan PEHLİVAN",
+    "position": "Orta Saha",
+    "photo": "/media/7500e95bbfcf4fa6a7b7.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U12",
+      "U13",
+      "U14/U15"
+    ],
+    "ids": [
+      "u12-69d2baa0eec1c",
+      "u13-69d2b5f0dbc09",
+      "u14-u15-69d2bc4fda874"
+    ]
+  },
+  {
+    "key": "cesur-kurt",
+    "name": "Cesur KURT",
+    "position": "Orta Saha",
+    "photo": "/media/17e1bd6353fd1ad04b85.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U12",
+      "U13"
+    ],
+    "ids": [
+      "u12-69d2baa0eb9c6",
+      "u13-6a857d1d370b9"
+    ]
+  },
+  {
+    "key": "ayaz-uysal",
+    "name": "Ayaz UYSAL",
+    "position": "Orta Saha",
+    "photo": "/media/92c1c3891ed47fab145d.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U12",
+      "U13"
+    ],
+    "ids": [
+      "u12-69d2baa1078d6",
+      "u13-69d2b51579ffd"
+    ]
+  },
+  {
+    "key": "ali-eren-tuncay",
+    "name": "Ali Eren TUNCAY",
+    "position": "Orta Saha",
+    "photo": "/media/b9bf379cfe09cf413228.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U12",
+      "U13",
+      "U14/U15"
+    ],
+    "ids": [
+      "u12-69d2baa0e86f3",
+      "u13-69d2b5cf9bd6b",
+      "u14-u15-69d2bc4fc995a"
+    ]
+  },
+  {
+    "key": "barin-kaptan",
+    "name": "Barın KAPTAN",
+    "position": "Defans",
+    "photo": "/media/7818d5e0e45c475a4f37.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U12",
+      "U13"
+    ],
+    "ids": [
+      "u12-69d2baa1028ee",
+      "u13-6a85cd26da0a1"
+    ]
+  },
+  {
+    "key": "muhammet-hamza-yalcin",
+    "name": "Muhammet Hamza YALÇIN",
+    "position": "Orta Saha",
+    "photo": "/media/5a44dbcbcf3ddad9a547.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U12",
+      "U13"
+    ],
+    "ids": [
+      "u12-69d2baa0ed19e",
+      "u13-6a86b3ba1c1e9"
+    ]
+  },
+  {
+    "key": "asil-cengiz",
+    "name": "Asil CENGİZ",
+    "position": "Forvet",
+    "photo": "/media/3c94b6f4cbfd2baaaa84.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U13",
+      "U14/U15"
+    ],
+    "ids": [
+      "u13-69d2b3358b871",
+      "u14-u15-69d2bc4fcd264"
+    ]
+  },
+  {
+    "key": "aren-sogut",
+    "name": "Aren Söğüt",
+    "position": "Orta Saha",
+    "photo": "/media/cd044975884744bd06f8.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U13",
+      "U14/U15"
+    ],
+    "ids": [
+      "u13-6a8587da197b8",
+      "u14-u15-6a85879d5ac8a"
+    ]
+  },
+  {
+    "key": "vedat-can-yasar",
+    "name": "Vedat Can YAŞAR",
+    "position": "Defans",
+    "photo": "/media/f5d53ea1cffdb304359d.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U13",
+      "U14/U15"
+    ],
+    "ids": [
+      "u13-69d2b4d615fc2",
+      "u14-u15-69d2bc4fe9264"
+    ]
+  },
+  {
+    "key": "bekir-aras-ozdemir",
+    "name": "Bekir Aras ÖZDEMİR",
+    "position": "Orta Saha",
+    "photo": "/media/e6ea381199e212a84ee1.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U13"
+    ],
+    "ids": [
+      "u13-6a981d0d89f50"
+    ]
+  },
+  {
+    "key": "sedat-kerem-caner",
+    "name": "Sedat Kerem CANER",
+    "position": "Kaleci",
+    "photo": "/media/70f0a6242d69a762b95b.jpg",
+    "placeholder": true,
+    "shirtNumber": null,
+    "teams": [
+      "U13"
+    ],
+    "ids": [
+      "u13-69d2b10153d7a"
+    ]
+  },
+  {
+    "key": "rodi-seven-biten",
+    "name": "Rodi Seven BİTEN",
+    "position": "Kaleci",
+    "photo": "/media/70f0a6242d69a762b95b.jpg",
+    "placeholder": true,
+    "shirtNumber": null,
+    "teams": [
+      "U13"
+    ],
+    "ids": [
+      "u13-69d2b101562cf"
+    ]
+  },
+  {
+    "key": "demir-kurt",
+    "name": "Demir KURT",
+    "position": "Orta Saha",
+    "photo": "/media/63c845c098d2667c262f.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fd4d8b"
+    ]
+  },
+  {
+    "key": "cemil-gursoy",
+    "name": "Cemil GÜRSOY",
+    "position": "Orta Saha",
+    "photo": "/media/d7983c8d1ae3785bf2e7.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fd2a38"
+    ]
+  },
+  {
+    "key": "baris-ali-altinok",
+    "name": "Barış Ali ALTINOK",
+    "position": "Defans",
+    "photo": "/media/0dc6bdfa1b218794b879.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fd0d56"
+    ]
+  },
+  {
+    "key": "ruzgar-saat",
+    "name": "Rüzgar SAAT",
+    "position": "Defans",
+    "photo": "/media/fc414549aa343668f559.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fe00f1"
+    ]
+  },
+  {
+    "key": "selahattin-badur",
+    "name": "Selahattin BADUR",
+    "position": "Defans",
+    "photo": "/media/a4c4da482066d783cfc3.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fe57f1"
+    ]
+  },
+  {
+    "key": "ulas-doruk-deniz",
+    "name": "Ulaş Doruk DENİZ",
+    "position": "Kaleci",
+    "photo": "/media/631bcad4578512c1c164.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fe74d1"
+    ]
+  },
+  {
+    "key": "sarp-dolek",
+    "name": "Sarp DÖLEK",
+    "position": "Orta Saha",
+    "photo": "/media/9bf00f7db33da93264ca.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fe3b25"
+    ]
+  },
+  {
+    "key": "eymen-bulut",
+    "name": "Eymen BULUT",
+    "position": "Orta Saha",
+    "photo": "/media/be45521864c13e934ce8.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fd8b9b"
+    ]
+  },
+  {
+    "key": "nevzat-ruzgar-unal",
+    "name": "Nevzat Rüzgar ÜNAL",
+    "position": "Orta Saha",
+    "photo": "/media/c474067d590ddff8823c.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fde3c3"
+    ]
+  },
+  {
+    "key": "cayan-biten",
+    "name": "Çayan BİTEN",
+    "position": "Orta Saha",
+    "photo": "/media/25fecbaa65552f1575e9.jpg",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-69d2bc4fc741d"
+    ]
+  },
+  {
+    "key": "emir-turgay",
+    "name": "Emir TURĞAY",
+    "position": "Forvet",
+    "photo": "/media/b8eddd02a80a1c9ffeb9.png",
+    "placeholder": false,
+    "shirtNumber": null,
+    "teams": [
+      "U14/U15"
+    ],
+    "ids": [
+      "u14-u15-6a86f62c3a694"
+    ]
+  }
+]

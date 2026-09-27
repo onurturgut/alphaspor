@@ -16,18 +16,27 @@ import {
 } from "lucide-react";
 import { sectionNames, type Section } from "@/lib/admin/schema";
 import { Editor, type Draft, type TeamOption } from "./editor";
+import type { Competition, Opponent, Match } from "@/lib/matches";
 type View = Section | "overview" | "account";
 const sections = Object.keys(sectionNames) as Section[];
 const icons = {
   overview: LayoutDashboard,
   news: Newspaper,
   matches: Trophy,
+  competitions: Trophy,
+  opponents: Shield,
   teams: Users,
   staff: Users,
   settings: Settings,
   account: Shield,
 };
-export function AdminPanel({ email, initialData }: { email: string; initialData: Partial<Record<Section, Draft[]>> }) {
+export function AdminPanel({
+  email,
+  initialData,
+}: {
+  email: string;
+  initialData: Partial<Record<Section, Draft[]>>;
+}) {
   const router = useRouter();
   const [view, setView] = useState<View>("overview"),
     [data, setData] = useState<Partial<Record<Section, Draft[]>>>(initialData);
@@ -39,6 +48,15 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
   const [page, setPage] = useState(1);
+  const [matchFilters, setMatchFilters] = useState({
+    team: "",
+    season: "",
+    competition: "",
+    status: "",
+    published: "",
+    from: "",
+    to: "",
+  });
   async function load() {
     setLoading(true);
     setError("");
@@ -49,7 +67,8 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
             cache: "no-store",
           });
           if (response.status === 401) {
-            router.replace("/admin/giris"); router.refresh();
+            router.replace("/admin/giris");
+            router.refresh();
             throw new Error("Oturum sona erdi.");
           }
           const result = await response.json();
@@ -91,12 +110,15 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
     slug: t.slug!,
     name: t.name!,
     season: t.season!,
+    players: t.players ?? [],
   })) satisfies TeamOption[];
   async function logout() {
     if (!leave()) return;
     const r = await fetch("/api/admin/logout", { method: "POST" });
-    if (r.ok) { router.replace("/admin/giris"); router.refresh(); }
-    else setError("Çıkış yapılamadı.");
+    if (r.ok) {
+      router.replace("/admin/giris");
+      router.refresh();
+    } else setError("Çıkış yapılamadı.");
   }
   function newRecord() {
     const base = {
@@ -137,8 +159,28 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
         homeScore: null,
         awayScore: null,
         status: "unreported",
+        kind: "official",
+        published: false,
+        report: null,
         venue: null,
         note: null,
+      },
+      opponents: { ...base, name: "" },
+      competitions: {
+        ...base,
+        name: "",
+        teamSlug: teams[0]?.slug ?? "",
+        season: teams[0]?.season ?? "2026/2027",
+        kind: "official",
+        clubName: "FETHİYE ALFA SPOR",
+        opponentIds: [],
+        duration: 90,
+        starterCount: 11,
+        allowReentry: false,
+        winPoints: 3,
+        drawPoints: 1,
+        lossPoints: 0,
+        published: false,
       },
       staff: { ...base, name: "", role: "", bio: "", photo: "" },
     };
@@ -171,12 +213,58 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
       setBusy(false);
     }
   }
-  const records = (data[view as Section] ?? []).filter((r) =>
-    `${r.title ?? ""} ${r.name ?? ""} ${r.category ?? ""} ${r.homeTeam ?? ""} ${r.awayTeam ?? ""} ${r.season ?? ""} ${r.date ?? ""}`
-      .toLocaleLowerCase("tr")
-      .includes(query.toLocaleLowerCase("tr")),
+  const records = (data[view as Section] ?? []).filter(
+    (r) =>
+      (view !== "matches" ||
+        ((!matchFilters.team || r.teamSlug === matchFilters.team) &&
+          (!matchFilters.season || r.season === matchFilters.season) &&
+          (!matchFilters.competition ||
+            r.competitionId === matchFilters.competition) &&
+          (!matchFilters.status || r.status === matchFilters.status) &&
+          (!matchFilters.published ||
+            (r.published !== false) === (matchFilters.published === "yes")) &&
+          (!matchFilters.from || (r.date ?? "") >= matchFilters.from) &&
+          (!matchFilters.to || (r.date ?? "") <= matchFilters.to))) &&
+      `${r.title ?? ""} ${r.name ?? ""} ${r.category ?? ""} ${r.homeTeam ?? ""} ${r.awayTeam ?? ""} ${r.season ?? ""} ${r.date ?? ""} ${r.league ?? ""} ${r.teamSlug ?? ""}`
+        .toLocaleLowerCase("tr")
+        .includes(query.toLocaleLowerCase("tr")),
   );
   const shown = records.slice((page - 1) * 15, page * 15);
+  async function publishPage() {
+    const drafts = shown.filter((m) => m.published === false);
+    if (
+      !drafts.length ||
+      !confirm(`Bu sayfadaki ${drafts.length} taslak maç yayımlansın mı?`)
+    )
+      return;
+    setBusy(true);
+    setError("");
+    let completed = 0,
+      failure = "";
+    try {
+      for (const record of drafts) {
+        const response = await fetch("/api/admin/data/matches", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: record._id,
+            version: record._rev ?? null,
+            data: { ...record, published: true },
+          }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error);
+        completed++;
+      }
+    } catch (error) {
+      failure =
+        error instanceof Error ? error.message : "Yayınlama tamamlanamadı.";
+    }
+    await load();
+    setMessage(`${completed} maç yayımlandı.`);
+    setError(failure);
+    setBusy(false);
+  }
   const titles: Record<View, string> = {
     ...sectionNames,
     overview: "Genel bakış",
@@ -195,6 +283,8 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
               "overview",
               "news",
               "matches",
+              "competitions",
+              "opponents",
               "teams",
               "staff",
               "settings",
@@ -335,7 +425,8 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
                     });
                     const result = await r.json();
                     if (!r.ok) throw new Error(result.error);
-                    router.replace("/admin/giris"); router.refresh();
+                    router.replace("/admin/giris");
+                    router.refresh();
                   } catch (err) {
                     setError(
                       err instanceof Error
@@ -395,6 +486,14 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
                   section={view as Section}
                   initial={editing ?? data.settings?.[0] ?? {}}
                   teams={teams}
+                  competitions={(data.competitions ?? []) as Competition[]}
+                  opponents={(data.opponents ?? []) as Opponent[]}
+                  matches={
+                    (data.matches ?? []).map((m) => ({
+                      ...m,
+                      id: m._id!,
+                    })) as Match[]
+                  }
                   onDirty={() => setDirty(true)}
                   onClose={() => {
                     if (leave()) {
@@ -433,9 +532,126 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
                           ? "Takım ekle"
                           : view === "matches"
                             ? "Maç ekle"
-                            : "Ekip üyesi ekle"}
+                            : view === "opponents"
+                              ? "Rakip ekle"
+                              : view === "competitions"
+                                ? "Organizasyon ekle"
+                                : "Ekip üyesi ekle"}
                     </button>
+                    {view === "matches" && (
+                      <button
+                        disabled={
+                          busy || !shown.some((m) => m.published === false)
+                        }
+                        onClick={() => void publishPage()}
+                      >
+                        {busy
+                          ? "Yayımlanıyor…"
+                          : "Bu sayfadaki taslakları yayımla"}
+                      </button>
+                    )}
                   </div>
+                  {view === "matches" && (
+                    <div className="admin-match-filters">
+                      {(
+                        [
+                          ["team", "Takım", teams.map((t) => [t.slug, t.name])],
+                          [
+                            "season",
+                            "Sezon",
+                            [
+                              ...new Set(
+                                (data.matches ?? []).map((m) => m.season!),
+                              ),
+                            ]
+                              .sort()
+                              .reverse()
+                              .map((s) => [s, s]),
+                          ],
+                          [
+                            "competition",
+                            "Organizasyon",
+                            (data.competitions ?? []).map((c) => [
+                              c._id!,
+                              c.name + " · " + c.season,
+                            ]),
+                          ],
+                          [
+                            "status",
+                            "Durum",
+                            [
+                              ["unreported", "Oynanacak"],
+                              ["played", "Oynandı"],
+                              ["awarded", "Hükmen"],
+                              ["withdrawn", "İptal"],
+                            ],
+                          ],
+                          [
+                            "published",
+                            "Yayın",
+                            [
+                              ["yes", "Yayında"],
+                              ["no", "Taslak"],
+                            ],
+                          ],
+                        ] as [keyof typeof matchFilters, string, string[][]][]
+                      ).map(([key, label, options]) => (
+                        <label key={key}>
+                          {label}
+                          <select
+                            value={matchFilters[key]}
+                            onChange={(e) => {
+                              setMatchFilters((f) => ({
+                                ...f,
+                                [key]: e.target.value,
+                              }));
+                              setPage(1);
+                            }}
+                          >
+                            <option value="">Tümü</option>
+                            {options.map(([value, text]) => (
+                              <option key={value} value={value}>
+                                {text}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      ))}
+                      {(["from", "to"] as const).map((key) => (
+                        <label key={key}>
+                          {key === "from" ? "İlk tarih" : "Son tarih"}
+                          <input
+                            type="date"
+                            value={matchFilters[key]}
+                            onChange={(e) => {
+                              setMatchFilters((f) => ({
+                                ...f,
+                                [key]: e.target.value,
+                              }));
+                              setPage(1);
+                            }}
+                          />
+                        </label>
+                      ))}
+                      <button
+                        onClick={() => {
+                          setMatchFilters({
+                            team: "",
+                            season: "",
+                            competition: "",
+                            status: "",
+                            published: "",
+                            from: "",
+                            to: "",
+                          });
+                          setQuery("");
+                          setPage(1);
+                        }}
+                      >
+                        Filtreleri temizle
+                      </button>
+                    </div>
+                  )}
                   <div className="admin-table-wrap">
                     <table>
                       <thead>
@@ -470,7 +686,7 @@ export function AdminPanel({ email, initialData }: { email: string; initialData:
                               ) : view === "teams" ? (
                                 `${r.players?.length ?? 0} oyuncu`
                               ) : view === "matches" ? (
-                                `${r.homeScore ?? "–"} : ${r.awayScore ?? "–"}`
+                                `${r.homeScore ?? "–"} : ${r.awayScore ?? "–"} · ${r.published === false ? "Taslak" : "Yayında"}`
                               ) : (
                                 "Aktif"
                               )}

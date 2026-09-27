@@ -122,6 +122,9 @@
   gap: 18px;
   align-items: start;
 }
+.pitchPanel { composes: card-motif from global; }
+.profilePanel { composes: card-motif from global; }
+.rosterPanel { composes: card-motif from global; }
 .pitchPanel,
 .profilePanel,
 .rosterPanel {

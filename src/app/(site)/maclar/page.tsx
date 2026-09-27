@@ -13,7 +13,7 @@ export default async function Matches({
 }: {
   searchParams: Promise<{ takim?: string; sezon?: string; gorunum?: string }>;
 }) {
-  const [{ matches, matchSources }, content] = await Promise.all([
+  const [{ matches, matchSources, competitions, opponents }, content] = await Promise.all([
     getMatchData(),
     getContent(),
   ]);
@@ -27,6 +27,8 @@ export default async function Matches({
         <MatchCenter
           matches={matches}
           matchSources={matchSources}
+          competitions={competitions}
+          opponents={opponents}
           teamOptions={content.teams.map((t) => ({
             slug: t.slug,
             name: t.name,

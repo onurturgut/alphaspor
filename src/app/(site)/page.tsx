@@ -177,8 +177,8 @@ export default async function Home() {
                 </figure>
                 <figure>
                   <Image
-                    src="/media/club/ChatGPT Image 21 Eyl 2026 02_41_49.png"
-                    alt="Onur için hazırlanmış Alfa SK oyuncu kartı"
+                    src="/media/academy/player-cards/barin-kaptan-v1.webp"
+                    alt="Barın Kaptan’ın güncel kurt temalı Alfa Spor oyuncu kartı"
                     width={1024}
                     height={1536}
                     sizes="(max-width: 640px) 50vw, 240px"
