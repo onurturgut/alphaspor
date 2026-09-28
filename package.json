@@ -6,7 +6,7 @@
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
     "check": "npm run lint && npm run verify:matches && npm run verify:academy && npm run verify:match-management && npm run build",
-    "verify:match-management": "node scripts/verify-match-management.mjs",
+    "verify:match-management": "node scripts/verify-match-management.mjs && node scripts/verify-standings.mjs",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",

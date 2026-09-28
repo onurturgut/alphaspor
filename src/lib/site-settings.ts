@@ -19,7 +19,7 @@ export const defaultHome = {
   joinSubtitle: "Alfa’ya katıl.",
   joinDescription:
     "Sahaya ilk adımını atmak ve kulübümüzü tanımak için bizimle iletişime geç.",
-  resultsSeason: "2025/2026",
+  resultsSeason: "2026/2027",
 };
 export const defaultPages = {
   club: {

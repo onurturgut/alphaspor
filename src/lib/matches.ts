@@ -42,6 +42,9 @@ export type Competition = {
   drawPoints: number;
   lossPoints: number;
   published: boolean;
+  standingsEnabled?: boolean;
+  standingsRule?: "general" | "tff";
+  headToHeadMeetings?: number;
 };
 export type Opponent = { _id: string; name: string };
 export type Match = {
@@ -282,6 +285,8 @@ export function standings(
   opponents: Opponent[],
   matches: Match[],
 ) {
+  if (competition.standingsEnabled === false || competition.kind === "friendly")
+    return [];
   const entries = [
     { _id: "club", name: competition.clubName },
     ...opponents.filter((o) => competition.opponentIds.includes(o._id)),
@@ -300,6 +305,10 @@ export function standings(
         conceded: 0,
         difference: 0,
         points: 0,
+        awardedLoss: false,
+        rank: 0,
+        tied: false,
+        provisional: false,
       },
     ]),
   );
@@ -330,17 +339,97 @@ export function standings(
         row.points += competition.drawPoints;
       } else {
         row.lost++;
+        if (match.status === "awarded") row.awardedLoss = true;
         row.points += competition.lossPoints;
       }
     }
   }
-  return [...rows.values()].sort(
-    (a, b) =>
-      b.points - a.points ||
-      b.difference - a.difference ||
-      b.scored - a.scored ||
-      a.name.localeCompare(b.name, "tr"),
-  );
+  const ordered = [...rows.values()].sort((a, b) => b.points - a.points);
+  type Row = (typeof ordered)[number];
+  const result: Row[] = [];
+  const fixtures = matches.filter((m) => m.competitionId === competition._id);
+  const completed = (m: Match) =>
+    m.published !== false &&
+    (m.status === "played" || m.status === "awarded") &&
+    hasScore(m);
+  for (let start = 0; start < ordered.length;) {
+    let end = start + 1;
+    while (
+      end < ordered.length &&
+      ordered[end].points === ordered[start].points
+    )
+      end++;
+    const group = ordered.slice(start, end);
+    const ids = new Set(group.map((r) => r.id));
+    const mutual = fixtures.filter(
+      (m) => ids.has(m.homeId ?? "") && ids.has(m.awayId ?? ""),
+    );
+    const meetings = competition.headToHeadMeetings ?? 2;
+    // Do not infer a completed head-to-head from a partially entered fixture list.
+    const mutualComplete = group.every((a, i) =>
+      group.slice(i + 1).every((b) => {
+        const pair = mutual.filter(
+          (m) =>
+            (m.homeId === a.id && m.awayId === b.id) ||
+            (m.homeId === b.id && m.awayId === a.id),
+        );
+        return pair.length === meetings && pair.every(completed);
+      }),
+    );
+    const useMutual =
+      competition.standingsRule === "tff" && group.length > 1 && mutualComplete;
+    const mini = new Map(
+      group.map((r) => [r.id, { points: 0, difference: 0, scored: 0 }]),
+    );
+    if (useMutual)
+      for (const m of mutual) {
+        for (const [id, scored, conceded] of [
+          [m.homeId!, m.homeScore!, m.awayScore!],
+          [m.awayId!, m.awayScore!, m.homeScore!],
+        ] as const) {
+          const row = mini.get(id)!;
+          row.scored += scored;
+          row.difference += scored - conceded;
+          row.points +=
+            scored > conceded
+              ? competition.winPoints
+              : scored === conceded
+                ? competition.drawPoints
+                : competition.lossPoints;
+        }
+      }
+    // TFF Article 9: one mini-table for the entire tied group, never recursive.
+    // Away goals have no special weight; mini-table goals apply only to 3+ teams.
+    const compare = (a: Row, b: Row) => {
+      const ma = mini.get(a.id)!,
+        mb = mini.get(b.id)!;
+      return (
+        (useMutual
+          ? mb.points - ma.points ||
+            mb.difference - ma.difference ||
+            (group.length > 2 ? mb.scored - ma.scored : 0)
+          : 0) ||
+        b.difference - a.difference ||
+        b.scored - a.scored ||
+        (useMutual ? Number(a.awardedLoss) - Number(b.awardedLoss) : 0)
+      );
+    };
+    group.sort((a, b) => compare(a, b) || a.name.localeCompare(b.name, "tr"));
+    group.forEach((row, i) => {
+      row.provisional =
+        competition.standingsRule === "tff" &&
+        group.length > 1 &&
+        !mutualComplete;
+      const equalPrevious = i > 0 && compare(group[i - 1], row) === 0;
+      row.rank = equalPrevious ? group[i - 1].rank : start + i + 1;
+      row.tied =
+        equalPrevious ||
+        (i + 1 < group.length && compare(row, group[i + 1]) === 0);
+    });
+    result.push(...group);
+    start = end;
+  }
+  return result;
 }
 
 /** Circle method: one game per participant per round, odd counts receive a bye. */
@@ -401,6 +490,7 @@ export function generateFixtures(
 }
 
 export function formatMatchDate(date: string) {
+  if (!date) return "Tarih henüz açıklanmadı";
   return new Intl.DateTimeFormat("tr-TR", {
     day: "numeric",
     month: "short",
@@ -423,6 +513,10 @@ export function selectMatches(
         (!resultsOnly || hasScore(match)),
     )
     .sort((a, b) => {
+      if (!a.date || !b.date) {
+        if (!a.date && !b.date) return a.week - b.week;
+        return a.date ? -1 : 1;
+      }
       const chronological = `${a.date}${a.time ?? "00:00"}`.localeCompare(
         `${b.date}${b.time ?? "00:00"}`,
       );

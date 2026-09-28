@@ -284,10 +284,10 @@ export function AcademyExplorer({
               </div>
               <div className={styles.pitch}>
                 <Image
-                  src="/media/academy/cinematic-pitch.webp"
-                  alt="Gece projektörlerle aydınlatılmış perspektifli futbol sahası"
-                  width={1000}
-                  height={1500}
+                  src="/media/academy/alfa-wolf-pitch.webp"
+                  alt="Kurt figürünün altında, ALFA tribünlü ve projektörlerle aydınlatılmış futbol sahası"
+                  width={1536}
+                  height={1024}
                   sizes="(max-width: 700px) 95vw, 40vw"
                   preload
                 />
@@ -298,7 +298,7 @@ export function AcademyExplorer({
                 {zone.key !== "unknown" && (
                   <div
                     className={styles.marker}
-                    style={{ top: `${zone.top}%` }}
+                    style={{ top: `${59 + ((zone.top - 37) / 36) * 25}%` }}
                   >
                     <div className={styles.markerPortrait}>
                       <Portrait key={player.id} player={player} />
@@ -307,12 +307,12 @@ export function AcademyExplorer({
                     <small>{player.position}</small>
                   </div>
                 )}
-                <div className={styles.pitchCaption}>
-                  <MapPin size={17} />
-                  <div>
-                    <strong>{zone.label}</strong>
-                    <span>Seçili oyuncunun genel mevki bölgesi</span>
-                  </div>
+              </div>
+              <div className={styles.pitchCaption}>
+                <MapPin size={17} />
+                <div>
+                  <strong>{zone.label}</strong>
+                  <span>Seçili oyuncunun genel mevki bölgesi</span>
                 </div>
               </div>
               <div className={styles.pitchFooter}>

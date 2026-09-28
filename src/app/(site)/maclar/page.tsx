@@ -13,13 +13,16 @@ export default async function Matches({
 }: {
   searchParams: Promise<{ takim?: string; sezon?: string; gorunum?: string }>;
 }) {
-  const [{ matches, matchSources, competitions, opponents }, content] = await Promise.all([
-    getMatchData(),
-    getContent(),
-  ]);
+  const [{ matches, matchSources, competitions, opponents }, content] =
+    await Promise.all([getMatchData(), getContent()]);
   const { takim, sezon, gorunum } = await searchParams;
   const initialSeason = sezon || content.home.resultsSeason || archiveSeason;
-  const initialTab = gorunum === "sonuclar" ? "results" : "fixtures";
+  const initialTab =
+    gorunum === "puan-durumu"
+      ? "standings"
+      : gorunum === "sonuclar"
+        ? "results"
+        : "fixtures";
   return (
     <>
       <PageIntro {...content.pages.matches} />

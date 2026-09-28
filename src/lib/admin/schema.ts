@@ -199,6 +199,9 @@ export const schemas = {
     winPoints: z.number().int().min(0).max(10),
     drawPoints: z.number().int().min(0).max(10),
     lossPoints: z.number().int().min(0).max(10),
+    standingsEnabled: z.boolean().default(true),
+    standingsRule: z.enum(["general", "tff"]).default("general"),
+    headToHeadMeetings: z.number().int().min(1).max(4).default(2),
     published: z.boolean().default(false),
     order,
   }),
@@ -245,7 +248,7 @@ export const schemas = {
       league: required(100),
       season,
       week: z.number().int().min(1).max(100),
-      date,
+      date: z.union([date, z.literal("")]),
       time: text(5)
         .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
         .nullable(),
@@ -275,6 +278,12 @@ export const schemas = {
           message: "Organizasyondan iki farklı takım seçin.",
         });
       const hasBoth = v.homeScore !== null && v.awayScore !== null;
+      if (!v.date && (v.status === "played" || v.status === "awarded"))
+        ctx.addIssue({
+          code: "custom",
+          path: ["date"],
+          message: "Sonucu girilen maçın tarihini belirtin.",
+        });
       if (
         v.status === "played" || v.status === "awarded"
           ? !hasBoth

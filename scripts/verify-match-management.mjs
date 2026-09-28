@@ -7,6 +7,8 @@ import {
   standings,
   withMatchAppearances,
   matchOutcome,
+  formatMatchDate,
+  selectMatches,
 } from "../src/lib/matches.ts";
 import { schemas } from "../src/lib/admin/schema.ts";
 
@@ -314,6 +316,25 @@ assert.equal(
   schemas.competitions.safeParse({ ...competition, opponentIds: ["r1", "r1"] })
     .success,
   false,
+);
+assert.deepEqual(
+  standings({ ...competition, standingsEnabled: false }, opponents, [match]),
+  [],
+);
+const undated = { ...fixtures[0], date: "" };
+assert.equal(schemas.matches.safeParse(undated).success, true);
+assert.equal(schemas.matches.safeParse({ ...match, date: "" }).success, false);
+assert.equal(formatMatchDate(""), "Tarih henüz açıklanmadı");
+assert.deepEqual(
+  selectMatches(
+    [
+      { ...undated, week: 3 },
+      { ...undated, week: 1 },
+    ],
+    "u11",
+    "2026/2027",
+  ).map((m) => m.week),
+  [1, 3],
 );
 console.log(
   "PASS: fixtures, byes, return legs, scores, lineups, substitutions, reentry, minutes, assists, own goals, unused substitutes, standings, drafts, edits, deletion and legacy statistics.",

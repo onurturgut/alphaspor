@@ -81,9 +81,42 @@ export function CompetitionFields({
         />
         {field("duration", "Normal maç süresi (dakika)", "number")}
         {field("starterCount", "Başlangıç oyuncu sayısı (1–11)", "number")}
-        {field("winPoints", "Galibiyet puanı", "number")}
-        {field("drawPoints", "Beraberlik puanı", "number")}
-        {field("lossPoints", "Mağlubiyet puanı", "number")}
+        <label className="admin-check">
+          <input
+            type="checkbox"
+            checked={draft.standingsEnabled !== false}
+            onChange={(e) => update({ standingsEnabled: e.target.checked })}
+          />
+          Puan tablosunu etkinleştir
+        </label>
+        {draft.standingsEnabled !== false && (
+          <>
+            {field("winPoints", "Galibiyet puanı", "number")}
+            {field("drawPoints", "Beraberlik puanı", "number")}
+            {field("lossPoints", "Mağlubiyet puanı", "number")}
+            <Field
+              label="Eşit puan sıralaması"
+              value={draft.standingsRule ?? "general"}
+              options={[
+                { value: "general", label: "Genel averaj → atılan gol" },
+                { value: "tff", label: "TFF: ikili / çoklu averaj öncelikli" },
+              ]}
+              onChange={(value) =>
+                update({ standingsRule: value as Competition["standingsRule"] })
+              }
+            />
+            {draft.standingsRule === "tff" && (
+              <Field
+                label="Her rakiple oynanacak maç sayısı"
+                type="number"
+                value={draft.headToHeadMeetings ?? 2}
+                onChange={(value) =>
+                  update({ headToHeadMeetings: Number(value) })
+                }
+              />
+            )}
+          </>
+        )}
         <label className="admin-check">
           <input
             type="checkbox"
@@ -98,14 +131,15 @@ export function CompetitionFields({
             checked={draft.published ?? false}
             onChange={(e) => update({ published: e.target.checked })}
           />
-          Organizasyonu ve puan tablosunu yayımla
+          Organizasyonu yayımla
         </label>
       </div>
       <h3>Katılımcı rakipler ({draft.opponentIds?.length ?? 0})</h3>
       <p className="admin-help">
         Kulübümüz otomatik katılır. Eksik rakipleri önce Rakipler bölümünden
-        ekleyin. Maçlar oluşturulduktan sonra katılımcılar ve oyun kuralları
-        kilitlenir.
+        ekleyin. Maçlar oluşturulduktan sonra katılımcılar; ilk maç raporu
+        kaydedildikten sonra oyun kuralları kilitlenir. Kadro girmeden önce maç
+        süresini ve başlangıç oyuncu sayısını kontrol edin.
       </p>
       <label>
         Rakip ara
@@ -139,10 +173,15 @@ export function CompetitionFields({
             </label>
           ))}
       </div>
-      <p className="admin-help">
-        Sıralama: puan → genel averaj → atılan gol → takım adı. Tam puan tablosu
-        için rakiplerin kendi aralarındaki sonuçlarını da girin.
-      </p>
+      {draft.standingsEnabled !== false && (
+        <p className="admin-help">
+          Tam puan tablosu için rakiplerin kendi aralarındaki sonuçlarını da
+          girin. TFF seçeneğinde eşit puanlı takımların aralarındaki tüm maçlar
+          bitince ikili / çoklu averaj uygulanır; o zamana kadar genel averajla
+          geçici sıralama yapılır. Eşitliği bozulmayan takımlar aynı sırayı
+          paylaşır.
+        </p>
+      )}
       {draft._id && canGenerate ? (
         <details className="admin-fixture-generator">
           <summary>Otomatik fikstür oluştur</summary>

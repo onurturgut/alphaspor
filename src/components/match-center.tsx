@@ -5,10 +5,9 @@ import {
   ArrowUpRight,
   CalendarDays,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   MapPin,
   Trophy,
+  ListOrdered,
 } from "lucide-react";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import {
@@ -27,7 +26,8 @@ import { MatchDetails } from "./match-details";
 import { CompetitionStandings } from "./competition-standings";
 import type { Competition, Opponent } from "@/lib/matches";
 
-type MatchTab = "fixtures" | "results";
+type MatchTab = "fixtures" | "results" | "standings";
+const tabOrder: MatchTab[] = ["fixtures", "results", "standings"];
 
 type MatchCenterProps = {
   teamOptions: { slug: string; name: string; season: string }[];
@@ -46,7 +46,6 @@ type MatchFilters = {
   tab: MatchTab;
 };
 
-const pageSize = 12;
 const outcomeLabels = {
   win: "Galibiyet",
   draw: "Beraberlik",
@@ -64,12 +63,19 @@ function MatchRow({ match }: { match: Match }) {
           ? "Maç sona erdi"
           : "Sonuç açıklanmadı";
   return (
-    <li className="match-row" data-match-id={match.id}>
+    <li
+      className={`match-row ${isAlfa(match.homeTeam) || isAlfa(match.awayTeam) ? "match-row--alfa" : ""}`}
+      data-match-id={match.id}
+    >
       <div className="match-row__date">
         <span className="match-row__league">
           {match.league} <span>· {match.week}. hafta</span>
         </span>
-        <time dateTime={match.date}>{formatMatchDate(match.date)}</time>
+        {match.date ? (
+          <time dateTime={match.date}>{formatMatchDate(match.date)}</time>
+        ) : (
+          <span>{formatMatchDate(match.date)}</span>
+        )}
         <span>{match.time ?? "Saat belirtilmedi"}</span>
       </div>
       <div className="match-row__game">
@@ -144,7 +150,6 @@ export function MatchCenter({
   ];
   const seasons = [
     ...new Set([
-      archiveSeason,
       ...teamOptions.map((t) => t.season),
       ...matches.map((m) => m.season),
     ]),
@@ -162,14 +167,13 @@ export function MatchCenter({
     season:
       initialSeason && seasons.includes(initialSeason)
         ? initialSeason
-        : archiveSeason,
-    tab: initialTab === "results" ? "results" : "fixtures",
+        : (seasons[0] ?? archiveSeason),
+    tab: initialTab ?? "fixtures",
   });
   const { teamValue, season, tab } = filters;
-  const [page, setPage] = useState(1);
   const fixturesRef = useRef<HTMLButtonElement>(null);
   const resultsRef = useRef<HTMLButtonElement>(null);
-  const listHeadingRef = useRef<HTMLDivElement>(null);
+  const standingsRef = useRef<HTMLButtonElement>(null);
   const selectedTeam =
     teams.find((team) => team.value === teamValue) ?? teams[0];
   const teamDescription =
@@ -184,23 +188,21 @@ export function MatchCenter({
     season,
     tab === "results",
   );
-  const pageCount = Math.max(1, Math.ceil(visibleMatches.length / pageSize));
-  const pageMatches = visibleMatches.slice(
-    (page - 1) * pageSize,
-    page * pageSize,
+  const weekGroups = new Map<string, Match[]>();
+  for (const match of visibleMatches) {
+    const key = `${match.teamSlug}-${match.competitionId ?? match.league}-${match.week}`;
+    const group = weekGroups.get(key) ?? [];
+    group.push(match);
+    weekGroups.set(key, group);
+  }
+  const weeks = [...weekGroups.entries()].sort(
+    ([, a], [, b]) =>
+      (tab === "results" ? b[0].week - a[0].week : a[0].week - b[0].week) ||
+      a[0].league.localeCompare(b[0].league, "tr"),
   );
   const sources = matchSources.filter(
     (source) => !selectedTeam.slug || source.teamSlug === selectedTeam.slug,
   );
-
-  function changePage(nextPage: number) {
-    setPage(nextPage);
-    listHeadingRef.current?.focus({ preventScroll: true });
-    listHeadingRef.current?.scrollIntoView({
-      behavior: "instant",
-      block: "start",
-    });
-  }
 
   function updateFilters(changes: Partial<MatchFilters>) {
     const next = { ...filters, ...changes };
@@ -212,7 +214,11 @@ export function MatchCenter({
     url.searchParams.set("sezon", next.season);
     url.searchParams.set(
       "gorunum",
-      next.tab === "results" ? "sonuclar" : "fikstur",
+      next.tab === "standings"
+        ? "puan-durumu"
+        : next.tab === "results"
+          ? "sonuclar"
+          : "fikstur",
     );
     window.history.replaceState(
       null,
@@ -220,22 +226,27 @@ export function MatchCenter({
       `${url.pathname}${url.search}${url.hash}`,
     );
     setFilters(next);
-    setPage(1);
   }
 
   function handleTabKey(event: KeyboardEvent<HTMLButtonElement>) {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
+    const index = tabOrder.indexOf(tab);
     const next =
-      event.key === "Home"
-        ? "fixtures"
-        : event.key === "End"
-          ? "results"
-          : tab === "fixtures"
-            ? "results"
-            : "fixtures";
+      tabOrder[
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? 2
+            : (index +
+                (event.key === "ArrowRight" ? 1 : -1) +
+                tabOrder.length) %
+              tabOrder.length
+      ];
     updateFilters({ tab: next });
-    (next === "fixtures" ? fixturesRef : resultsRef).current?.focus();
+    ({ fixtures: fixturesRef, results: resultsRef, standings: standingsRef })[
+      next
+    ].current?.focus();
   }
 
   return (
@@ -271,6 +282,19 @@ export function MatchCenter({
             onKeyDown={handleTabKey}
           >
             <Trophy size={17} aria-hidden="true" /> Sonuçlar
+          </button>
+          <button
+            ref={standingsRef}
+            id={`${id}-standings-tab`}
+            type="button"
+            role="tab"
+            aria-selected={tab === "standings"}
+            aria-controls={`${id}-standings-panel`}
+            tabIndex={tab === "standings" ? 0 : -1}
+            onClick={() => updateFilters({ tab: "standings" })}
+            onKeyDown={handleTabKey}
+          >
+            <ListOrdered size={17} aria-hidden="true" /> Puan durumu
           </button>
         </div>
 
@@ -341,8 +365,8 @@ export function MatchCenter({
                     </h2>
                     <p>
                       {panel === "fixtures"
-                        ? "Sezonun tüm haftaları, tarih sırasıyla."
-                        : "Skoru yayımlanan karşılaşmalar, en yeniden eskiye."}
+                        ? "Maçları görmek için bir hafta seç."
+                        : "Sonuçları görmek için bir hafta seç."}
                     </p>
                   </div>
                   <dl className="match-summary__stats">
@@ -360,11 +384,7 @@ export function MatchCenter({
                     </div>
                   </dl>
                 </div>
-                <div
-                  className="match-list-heading"
-                  ref={listHeadingRef}
-                  tabIndex={-1}
-                >
+                <div className="match-list-heading">
                   <span>
                     {selectedTeam.value === "all"
                       ? "TÜM TAKIMLAR"
@@ -372,48 +392,42 @@ export function MatchCenter({
                     · {panel === "results" ? "SONUÇLAR" : "FİKSTÜR"}
                   </span>
                   <span role="status" aria-live="polite">
-                    {visibleMatches.length} karşılaşma · Sayfa {page} /{" "}
-                    {pageCount}
+                    {visibleMatches.length} karşılaşma · {weeks.length} hafta
                   </span>
                 </div>
-                <ol
-                  className="match-list"
-                  aria-label={
-                    panel === "results" ? "Maç sonuçları" : "Sezon fikstürü"
-                  }
+                <div
+                  className="match-weeks"
+                  key={`${teamValue}-${season}-${panel}`}
                 >
-                  {pageMatches.map((match) => (
-                    <MatchRow key={match.id} match={match} />
+                  {weeks.map(([key, group]) => (
+                    <details
+                      className="match-week"
+                      key={key}
+                      name={`${id}-weeks`}
+                    >
+                      <summary>
+                        <span className="match-week__number">
+                          {group[0].week}. HAFTA
+                        </span>
+                        <span className="match-week__league">
+                          {group[0].league}
+                        </span>
+                        <span className="match-week__count">
+                          {group.length} maç
+                        </span>
+                        <ChevronDown size={18} aria-hidden="true" />
+                      </summary>
+                      <ol
+                        className="match-list"
+                        aria-label={`${group[0].league} ${group[0].week}. hafta maçları`}
+                      >
+                        {group.map((match) => (
+                          <MatchRow key={match.id} match={match} />
+                        ))}
+                      </ol>
+                    </details>
                   ))}
-                </ol>
-                {pageCount > 1 && (
-                  <nav
-                    className="match-pagination"
-                    aria-label="Maç listesi sayfaları"
-                  >
-                    <button
-                      type="button"
-                      disabled={page === 1}
-                      onClick={() => changePage(page - 1)}
-                    >
-                      <ChevronLeft size={16} aria-hidden="true" />
-                      Önceki
-                    </button>
-                    <span>
-                      {(page - 1) * pageSize + 1}–
-                      {Math.min(page * pageSize, visibleMatches.length)} /{" "}
-                      {visibleMatches.length} maç
-                    </span>
-                    <button
-                      type="button"
-                      disabled={page === pageCount}
-                      onClick={() => changePage(page + 1)}
-                    >
-                      Sonraki
-                      <ChevronRight size={16} aria-hidden="true" />
-                    </button>
-                  </nav>
-                )}
+                </div>
               </>
             ) : (
               <div className="match-center__empty">
@@ -459,15 +473,26 @@ export function MatchCenter({
             ))}
         </div>
       ))}
-      <CompetitionStandings
-        competitions={competitions.filter(
-          (c) =>
-            c.season === season &&
-            (!selectedTeam.slug || c.teamSlug === selectedTeam.slug),
+      <div
+        id={`${id}-standings-panel`}
+        className="match-center__panel"
+        role="tabpanel"
+        aria-labelledby={`${id}-standings-tab`}
+        hidden={tab !== "standings"}
+        tabIndex={0}
+      >
+        {tab === "standings" && (
+          <CompetitionStandings
+            competitions={competitions.filter(
+              (c) =>
+                c.season === season &&
+                (!selectedTeam.slug || c.teamSlug === selectedTeam.slug),
+            )}
+            opponents={opponents}
+            matches={matches}
+          />
         )}
-        opponents={opponents}
-        matches={matches}
-      />
+      </div>
       {allMatches.length > 0 &&
         season === archiveSeason &&
         sources.length > 0 && (
@@ -501,12 +526,14 @@ export function MatchCenter({
             </div>
           </details>
         )}
-      <div className="match-center__footnote">
-        <span aria-hidden="true" />
-        {allMatches.length > 0
-          ? "Skorlar ev sahibi – deplasman sırasındadır. Galibiyet, beraberlik ve mağlubiyet Alfa Spor açısından gösterilir."
-          : "Bu takım ve sezon için yayımlanmış maç kaydı bulunmuyor."}
-      </div>
+      {tab !== "standings" && (
+        <div className="match-center__footnote">
+          <span aria-hidden="true" />
+          {allMatches.length > 0
+            ? "Skorlar ev sahibi – deplasman sırasındadır. Galibiyet, beraberlik ve mağlubiyet Alfa Spor açısından gösterilir."
+            : "Bu takım ve sezon için yayımlanmış maç kaydı bulunmuyor."}
+        </div>
+      )}
     </section>
   );
 }

@@ -257,7 +257,11 @@
   min-height: 380px;
   padding: 56px 24px 48px;
   text-align: center;
-  background: radial-gradient(ellipse at 50% 20%, color-mix(in srgb, var(--tone-15) 50.2%, transparent), transparent 65%);
+  background: radial-gradient(
+    ellipse at 50% 20%,
+    color-mix(in srgb, var(--tone-15) 50.2%, transparent),
+    transparent 65%
+  );
 }
 .match-center__empty-icon {
   display: grid;
@@ -341,6 +345,14 @@
   }
   .match-center__tabs button {
     flex: 1;
+    min-width: 0;
+    gap: 5px;
+    padding: 12px 6px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .match-center__tabs button svg {
+    flex-shrink: 0;
   }
   .match-center__filters {
     display: grid;

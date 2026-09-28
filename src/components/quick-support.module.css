@@ -62,6 +62,13 @@
 .bubble:hover { background: #f2f2f2; }
 .trigger:focus-visible, .bubble:focus-visible { outline: 3px solid #777; outline-offset: 5px; }
 @media (max-width: 600px) {
+  :global(body:has(.match-center)) .support {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: max-content;
+    margin: 16px 16px 16px auto;
+  }
   .support { right: max(16px, env(safe-area-inset-right)); bottom: calc(16px + env(safe-area-inset-bottom)); }
   .trigger { width: 72px; height: 72px; }
   .bubbles { max-width: calc(100vw - 32px); }

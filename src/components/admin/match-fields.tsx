@@ -311,7 +311,7 @@ export function MatchFields({
           </>
         )}
         {field("week", "Hafta", "number", true)}
-        {field("date", "Tarih", "date", true)}
+        {field("date", "Tarih (açıklanmadıysa boş bırakın)", "date")}
         {field("time", "Saat", "time")}
         {(["home", "away"] as const).map((s) =>
           competition ? (
@@ -399,6 +399,13 @@ export function MatchFields({
           {competition.name} · {competition.season} · {competition.duration}{" "}
           dakika · {competition.starterCount} kişilik başlangıç. Organizasyonun
           da yayında olması gerekir.
+        </p>
+      )}
+      {!report && (
+        <p className="admin-help">
+          Sonuç girmek için maç tarihini belirtin, “Oynandı” durumunu seçin ve
+          iki takımın skorunu yazıp kaydedin. Yayımlanan sonuç puan tablosuna
+          otomatik yansır. Yalnızca skor girmek için kadro açmanız gerekmez.
         </p>
       )}
       {!report &&

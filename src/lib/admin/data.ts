@@ -140,15 +140,26 @@ export async function saveAdmin(
         "kind",
         "clubName",
         "opponentIds",
-        "duration",
-        "starterCount",
-        "allowReentry",
       ]) {
         if (JSON.stringify(existing?.[key]) !== JSON.stringify(fields[key]))
           throw new AdminError(
-            "Maçları olan organizasyonun takım ve oyun kuralları değiştirilemez. Yeni organizasyon oluşturun veya önce maçlarını kaldırın.",
+            "Maçları olan organizasyonun takım ve katılımcı bilgileri değiştirilemez. Yeni organizasyon oluşturun veya önce maçlarını kaldırın.",
           );
       }
+      const hasReports = await db.collection("matches").countDocuments({
+        competitionId: recordId,
+        _deleted: { $ne: true },
+        report: { $ne: null },
+      });
+      if (
+        hasReports &&
+        ["duration", "starterCount", "allowReentry"].some(
+          (key) => existing?.[key] !== fields[key],
+        )
+      )
+        throw new AdminError(
+          "Maç raporu olan organizasyonun oyun kuralları değiştirilemez.",
+        );
     }
   }
   if (section === "matches") {

@@ -142,6 +142,114 @@
   padding: 0;
   margin: 0;
 }
+.match-weeks {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px 20px;
+}
+.match-week {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.match-week > summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 16px 22px;
+  background: var(--surface);
+  color: var(--white);
+  cursor: pointer;
+  list-style: none;
+}
+.match-week > summary::-webkit-details-marker {
+  display: none;
+}
+.match-week > summary:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: -4px;
+}
+.match-week__number {
+  font-size: 13px;
+  font-weight: 700;
+}
+.match-week__league {
+  font-size: 11px;
+  color: var(--muted);
+}
+.match-week__count {
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--muted);
+}
+.match-week > summary > svg {
+  flex-shrink: 0;
+}
+.match-week[open] > summary > svg {
+  transform: rotate(180deg);
+}
+
+/* Alfa's whole match row uses the opposite palette, including its motif. */
+.match-row--alfa {
+  --background: #f0f0f0;
+  --white: #161616;
+  --muted: #454545;
+  --line: #c5c5c5;
+  --surface: #e3e3e3;
+  --tone-0: #fff;
+  --tone-5: #f5f5f5;
+  --tone-10: #eaeaea;
+  --tone-15: #dedede;
+  --tone-20: #d2d2d2;
+  --tone-25: #c6c6c6;
+  --tone-30: #bababa;
+  --tone-80: #363636;
+  --tone-95: #161616;
+  --tone-100: #101010;
+  --card-motif-filter: grayscale(1) invert(1);
+  --card-motif-opacity: 0.18;
+}
+:root[data-theme="light"] .match-row--alfa {
+  --background: #171717;
+  --white: #fafafa;
+  --muted: #d0d0d0;
+  --line: #505050;
+  --surface: #272727;
+  --tone-0: #101010;
+  --tone-5: #171717;
+  --tone-10: #202020;
+  --tone-15: #292929;
+  --tone-20: #333;
+  --tone-25: #404040;
+  --tone-30: #505050;
+  --tone-80: #ddd;
+  --tone-95: #f5f5f5;
+  --tone-100: #fff;
+  --card-motif-filter: grayscale(1);
+}
+#site-content .match-row--alfa {
+  background: var(--background);
+  color: var(--white);
+}
+@media (max-width: 600px) {
+  .match-weeks {
+    padding-inline: 8px;
+  }
+  .match-week > summary {
+    padding: 15px 12px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .match-week__league {
+    font-size: 9px;
+  }
+  .match-week__number {
+    font-size: 11px;
+  }
+}
 .match-row {
   display: grid;
   grid-template-columns: 135px minmax(0, 1fr) 150px;
@@ -386,6 +494,86 @@
   }
 }
 @media (max-width: 760px) {
+  .match-center .match-center__toolbar {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+  .match-center .match-center__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    gap: 3px;
+  }
+  .match-center .match-center__tabs button {
+    flex-direction: column;
+    gap: 6px;
+    min-height: 60px;
+    padding: 8px 2px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+  .match-center .match-center__filter,
+  .match-center .match-center__select-wrap {
+    min-width: 0;
+    width: 100%;
+  }
+  .match-center .match-center__select-wrap select {
+    min-width: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .match-standings {
+    margin-top: 12px;
+    padding: 10px 6px;
+    min-width: 0;
+  }
+  .match-standings label {
+    margin: 8px 4px 12px;
+    min-width: 0;
+  }
+  .match-standings select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+  }
+  .match-standings__scroll {
+    overflow: visible;
+  }
+  .match-standings table {
+    min-width: 0;
+    table-layout: fixed;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(9px, 2.7vw, 12px);
+    font-variant-numeric: tabular-nums;
+  }
+  .match-standings th,
+  .match-standings td {
+    padding: 10px 1px;
+    text-align: center;
+    letter-spacing: 0;
+  }
+  .match-standings th:first-child,
+  .match-standings td:first-child {
+    width: 6%;
+  }
+  .match-standings th:nth-child(2) {
+    width: 30%;
+    padding-inline: 3px;
+    text-align: left;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+  }
+  .match-standings caption {
+    padding: 10px 3px;
+    font-size: 12px;
+  }
+  .match-standings p {
+    padding-inline: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
   .match-summary {
     padding: 28px 20px;
   }
@@ -459,11 +647,13 @@
   }
 }
 @media (max-width: 480px) {
-  .match-center__filters {
+  .match-center .match-center__filters {
+    display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
-  .match-center__filter {
+  .match-center .match-center__filter {
+    display: grid;
     grid-template-columns: 44px minmax(0, 1fr);
     align-items: center;
     gap: 12px;

@@ -53,7 +53,8 @@ export function playerCardArt(name: string): string | null {
     .replace(/\s+/g, "-");
   // The roster also contains the single-m spelling for the same player.
   const cardKey = key === "muhamet-hamza-yalcin" ? "muhammet-hamza-yalcin" : key;
+  const version = cardKey === "batu-boce" ? "v2" : "v1";
   return cardNames.has(cardKey)
-    ? `/media/academy/player-cards/${cardKey}-v1.webp`
+    ? `/media/academy/player-cards/${cardKey}-${version}.webp`
     : null;
 }
