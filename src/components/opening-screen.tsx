@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import "./opening-screen.css";
 
-const artwork = "/media/club/ChatGPT Image 21 Eyl 2026 23_47_05.png";
+const artwork = "/media/club/opening-mobile.webp";
 
 export function OpeningScreen() {
   const screenRef = useRef<HTMLDivElement>(null);
@@ -34,7 +34,7 @@ export function OpeningScreen() {
       if (cancelled || opening) return;
       opening = true;
       screen.dataset.state = "opening";
-      finishTimer = setTimeout(finish, reducedMotion ? 180 : 1150);
+      finishTimer = setTimeout(finish, reducedMotion ? 0 : 450);
     };
 
     const image = new window.Image();
@@ -42,29 +42,18 @@ export function OpeningScreen() {
       image.onload = () => resolve();
       image.onerror = () => resolve();
       image.src = window.matchMedia("(min-width: 768px) and (orientation: landscape)").matches
-        ? "/media/club/opening-desktop-wide.png"
+        ? "/media/club/opening-desktop-wide.webp"
         : artwork;
     });
-    let onLoad: () => void = () => {};
-    const pageReady = new Promise<void>((resolve) => {
-      onLoad = resolve;
-      if (document.readyState === "complete") resolve();
-      else window.addEventListener("load", onLoad, { once: true });
-    });
-    let minimumTimer: ReturnType<typeof setTimeout>;
-    const minimumDisplay = new Promise<void>((resolve) => {
-      minimumTimer = setTimeout(resolve, reducedMotion ? 0 : 1800);
-    });
-    // A failed or stalled resource must never trap visitors behind the intro.
-    const safetyTimer = setTimeout(reveal, 8000);
-    void Promise.all([imageReady, pageReady, minimumDisplay]).then(reveal);
+    // Unrelated page resources must not hold the intro open after hydration.
+    const safetyTimer = setTimeout(reveal, 1200);
+    if (reducedMotion) finish();
+    else void imageReady.then(reveal);
 
     return () => {
       cancelled = true;
-      clearTimeout(minimumTimer);
       clearTimeout(safetyTimer);
       clearTimeout(finishTimer);
-      window.removeEventListener("load", onLoad);
       image.onload = null;
       image.onerror = null;
       restore();

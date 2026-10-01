@@ -178,7 +178,7 @@ export const settingsSchema = z
     }
   });
 export const schemas = {
-  opponents: z.object({ name: required(150), order }),
+  opponents: z.object({ name: required(150), teamSlugs: z.array(slug).max(30).default([]), order }),
   competitions: z.object({
     name: required(100),
     teamSlug: slug,

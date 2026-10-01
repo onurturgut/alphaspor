@@ -11,7 +11,7 @@
   height: 50%;
   overflow: hidden;
   background: #e8e8e8;
-  transition: transform 1100ms cubic-bezier(.76, 0, .24, 1);
+  transition: transform 400ms cubic-bezier(.76, 0, .24, 1);
   will-change: transform;
 }
 .opening-panel--top { top: 0; }
@@ -34,7 +34,7 @@
   transform: translate(-50%, -50%);
   width: max(100vw, 66.666667dvh);
   aspect-ratio: 2 / 3;
-  background: url('/media/club/ChatGPT Image 21 Eyl 2026 23_47_05.png') center / 100% 100% no-repeat;
+  background: url('/media/club/opening-mobile.webp') center / 100% 100% no-repeat;
 }
 .opening-ring {
   position: absolute;
@@ -43,7 +43,7 @@
   top: 15.885417%;
   width: 34.375%;
   aspect-ratio: 1;
-  background: url('/media/club/ChatGPT Image 21 Eyl 2026 23_47_05.png') 50% 20.608108% / 290.909091% 436.363636% no-repeat;
+  background: url('/media/club/opening-mobile.webp') 50% 20.608108% / 290.909091% 436.363636% no-repeat;
   mask-image: radial-gradient(circle, transparent 62.8%, #000 63.4%, #000 69.2%, transparent 69.8%);
   animation: opening-ring-turn 1600ms linear infinite;
 }
@@ -58,14 +58,14 @@
     transform: translate(-50%, -50%);
     width: max(100vw, 222.35434dvh);
     aspect-ratio: 1870 / 841;
-    background-image: url('/media/club/opening-desktop-wide.png');
+    background-image: url('/media/club/opening-desktop-wide.webp');
   }
   .opening-ring {
     /* Landscape artwork: ring center (930, 226), radius 90. */
     left: 44.59893%;
     top: 15.457788%;
     width: 10.26738%;
-    background-image: url('/media/club/opening-desktop-wide.png');
+    background-image: url('/media/club/opening-desktop-wide.webp');
     background-position: 49.702026% 20.030817%;
     background-size: 973.958333% 438.020833%;
     mask-image: radial-gradient(circle, transparent 61.5%, #000 62.2%, #000 69.5%, transparent 70.2%);

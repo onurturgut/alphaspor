@@ -64,7 +64,7 @@ export function CompetitionFields({
         <Field
           label="Takım / yaş grubu"
           value={draft.teamSlug ?? ""}
-          onChange={(teamSlug) => update({ teamSlug })}
+          onChange={(teamSlug) => update({ teamSlug, season: teams.find(t => t.slug === teamSlug)?.season ?? draft.season, opponentIds: [] })}
           options={teams.map((t) => ({ value: t.slug, label: t.name }))}
         />
         {field("season", "Sezon")}
@@ -151,6 +151,7 @@ export function CompetitionFields({
       </label>
       <div className="admin-roster-grid">
         {opponents
+          .filter(o => o.teamSlugs?.includes(draft.teamSlug ?? "") || draft.opponentIds?.includes(o._id))
           .filter((o) =>
             o.name
               .toLocaleLowerCase("tr")

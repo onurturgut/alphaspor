@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/takimlar/u14", destination: "/takimlar/u14-u15", permanent: true },
+      { source: "/u14", destination: "/takimlar/u14-u15", permanent: true },
       { source: "/ekiplerimiz", destination: "/takimlar", permanent: true },
       { source: "/duyurular", destination: "/haberler", permanent: true },
       { source: "/hakkında", destination: "/kulubumuz", permanent: true },
@@ -42,7 +44,7 @@ const nextConfig: NextConfig = {
       { source: "/u12-1", destination: "/takimlar/u12", permanent: true },
       ...["u11", "u12", "u13", "u14"].map((team) => ({
         source: `/${team}-lİgİ`,
-        destination: `/maclar?takim=${team}`,
+        destination: `/maclar?takim=${team === "u14" ? "u14-u15" : team}`,
         permanent: true,
       })),
     ].map((rule) => ({ ...rule, source: encodeURI(rule.source) }));

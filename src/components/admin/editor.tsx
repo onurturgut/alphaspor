@@ -6,6 +6,7 @@ import { Field, MediaField, type FieldProps } from "./fields";
 import { coachLicense } from "@/lib/coach-license";
 import { PlayerProfileFields } from "./player-profile-fields";
 import { MatchFields } from "./match-fields";
+import { SettingsWorkspace } from "./settings-workspace";
 import { CompetitionFields } from "./competition-fields";
 import type { Competition, Opponent, Match } from "@/lib/matches";
 import type { AcademyPlayer } from "@/lib/academy";
@@ -36,6 +37,7 @@ export function Editor({
   onClose,
   onSaved,
   onDirty,
+  dirty,
 }: {
   section: Section;
   initial: Draft;
@@ -46,6 +48,7 @@ export function Editor({
   onClose: () => void;
   onSaved: () => Promise<void>;
   onDirty: () => void;
+  dirty: boolean;
 }) {
   const [draft, setDraft] = useState<Draft>(() =>
     section === "staff"
@@ -56,6 +59,10 @@ export function Editor({
     [uploads, setUploads] = useState(0),
     [error, setError] = useState("");
   const [tab, setTab] = useState("home");
+  const [selectedPlayer, setSelectedPlayer] = useState("");
+  const [playerQuery, setPlayerQuery] = useState("");
+  const [homeSection, setHomeSection] = useState("hero");
+  const [selectedPage, setSelectedPage] = useState("club");
   const set = (key: keyof Draft, value: unknown) => {
     setDraft((d) => ({ ...d, [key]: value }));
     onDirty();
@@ -188,7 +195,19 @@ export function Editor({
             {field("title", "Haber başlığı", { required: true })}
             {field("category", "Kategori", {
               required: true,
-              hint: "Örn. U11, Kulüp, Duyuru",
+              options: [
+                ...new Set([
+                  draft.category || "Kulüp",
+                  "Kulüp",
+                  "Duyuru",
+                  "Ana sayfa",
+                  "İletişim",
+                  "Haberler",
+                  "Maçlar",
+                  "Teknik ekip",
+                  ...teams.map((t) => t.name),
+                ]),
+              ].map((value) => ({ value, label: value })),
             })}
             {field("subtitle", "Kısa açıklama", { multiline: true })}
             {image("image", "Haber görseli")}
@@ -231,18 +250,20 @@ export function Editor({
               </h3>
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
+                  const id = crypto.randomUUID();
+                  setSelectedPlayer(id);
                   set("players", [
                     ...players,
                     {
-                      id: crypto.randomUUID(),
+                      id,
                       name: "",
                       position: "",
                       photo: "",
                       placeholder: false,
                     },
-                  ])
-                }
+                  ]);
+                }}
               >
                 + Oyuncu ekle
               </button>
@@ -250,113 +271,162 @@ export function Editor({
             {!players.length && (
               <p className="admin-empty">Bu takımda henüz oyuncu yok.</p>
             )}
-            {players.map((player, index) => (
-              <div className="admin-subcard" key={player.id}>
-                <div className="admin-section-heading">
-                  <strong>
-                    {index + 1}. {player.name || "Yeni oyuncu"}
-                  </strong>
-                  <button
-                    type="button"
-                    className="admin-danger-text"
-                    onClick={() => {
-                      if (
-                        confirm(
-                          "Oyuncuyu kadrodan kaldırmak istiyor musunuz? Kaydettiğinizde uygulanır.",
-                        )
-                      )
+            <div className="admin-roster-picker">
+              <Field
+                label="Oyuncu ara"
+                value={playerQuery}
+                onChange={setPlayerQuery}
+              />
+              <Field
+                label="Düzenlenecek oyuncu"
+                value={selectedPlayer || players[0]?.id || ""}
+                onChange={setSelectedPlayer}
+                options={players
+                  .filter(
+                    (p) =>
+                      p.id === (selectedPlayer || players[0]?.id) ||
+                      p.name
+                        .toLocaleLowerCase("tr")
+                        .includes(playerQuery.toLocaleLowerCase("tr")),
+                  )
+                  .map((p) => ({
+                    value: p.id,
+                    label:
+                      (p.shirtNumber ? "#" + p.shirtNumber + " · " : "") +
+                      (p.name || "Yeni oyuncu") +
+                      " · " +
+                      (p.position || "Mevki seçilmedi"),
+                  }))}
+              />
+            </div>
+            {players.map(
+              (player, index) =>
+                player.id === (selectedPlayer || players[0]?.id) && (
+                  <div className="admin-subcard" key={player.id}>
+                    <div className="admin-section-heading">
+                      <strong>
+                        {index + 1}. {player.name || "Yeni oyuncu"}
+                      </strong>
+                      <button
+                        type="button"
+                        className="admin-danger-text"
+                        onClick={() => {
+                          if (
+                            confirm(
+                              "Oyuncuyu kadrodan kaldırmak istiyor musunuz? Kaydettiğinizde uygulanır.",
+                            )
+                          ) {
+                            setSelectedPlayer("");
+                            set(
+                              "players",
+                              players.filter((_, i) => i !== index),
+                            );
+                          }
+                        }}
+                      >
+                        Kaldır
+                      </button>
+                    </div>
+                    <div className="admin-form-grid">
+                      <Field
+                        label="Ad soyad"
+                        value={player.name}
+                        required
+                        onChange={(name) =>
+                          set(
+                            "players",
+                            players.map((p, i) =>
+                              i === index ? { ...p, name } : p,
+                            ),
+                          )
+                        }
+                      />
+                      <Field
+                        label="Mevki"
+                        options={[
+                          ...new Set([
+                            player.position,
+                            "Kaleci",
+                            "Stoper",
+                            "Sağ bek",
+                            "Sol bek",
+                            "Orta saha",
+                            "Sağ kanat",
+                            "Sol kanat",
+                            "Forvet",
+                          ]),
+                        ].map((value) => ({
+                          value,
+                          label: value || "Mevki seçin",
+                        }))}
+                        value={player.position}
+                        required
+                        onChange={(position) =>
+                          set(
+                            "players",
+                            players.map((p, i) =>
+                              i === index ? { ...p, position } : p,
+                            ),
+                          )
+                        }
+                      />
+                      <MediaField
+                        label="Oyuncu fotoğrafı"
+                        value={player.photo}
+                        onBusy={uploadBusy}
+                        onChange={(photo) =>
+                          set(
+                            "players",
+                            players.map((p, i) =>
+                              i === index ? { ...p, photo } : p,
+                            ),
+                          )
+                        }
+                      />
+                      <label className="admin-check">
+                        <input
+                          type="checkbox"
+                          checked={player.placeholder}
+                          onChange={(e) =>
+                            set(
+                              "players",
+                              players.map((p, i) =>
+                                i === index
+                                  ? { ...p, placeholder: e.target.checked }
+                                  : p,
+                              ),
+                            )
+                          }
+                        />
+                        Temsili fotoğraf
+                      </label>
+                    </div>
+                    <PlayerProfileFields
+                      player={player}
+                      season={draft.season ?? ""}
+                      onChange={(updated) =>
                         set(
                           "players",
-                          players.filter((_, i) => i !== index),
-                        );
-                    }}
-                  >
-                    Kaldır
-                  </button>
-                </div>
-                <div className="admin-form-grid">
-                  <Field
-                    label="Ad soyad"
-                    value={player.name}
-                    required
-                    onChange={(name) =>
-                      set(
-                        "players",
-                        players.map((p, i) =>
-                          i === index ? { ...p, name } : p,
-                        ),
-                      )
-                    }
-                  />
-                  <Field
-                    label="Mevki"
-                    value={player.position}
-                    required
-                    onChange={(position) =>
-                      set(
-                        "players",
-                        players.map((p, i) =>
-                          i === index ? { ...p, position } : p,
-                        ),
-                      )
-                    }
-                  />
-                  <MediaField
-                    label="Oyuncu fotoğrafı"
-                    value={player.photo}
-                    onBusy={uploadBusy}
-                    onChange={(photo) =>
-                      set(
-                        "players",
-                        players.map((p, i) =>
-                          i === index ? { ...p, photo } : p,
-                        ),
-                      )
-                    }
-                  />
-                  <label className="admin-check">
-                    <input
-                      type="checkbox"
-                      checked={player.placeholder}
-                      onChange={(e) =>
-                        set(
-                          "players",
-                          players.map((p, i) =>
-                            i === index
-                              ? { ...p, placeholder: e.target.checked }
-                              : p,
-                          ),
+                          players.map((p, i) => (i === index ? updated : p)),
                         )
                       }
                     />
-                    Temsili fotoğraf
-                  </label>
-                </div>
-                <PlayerProfileFields
-                  player={player}
-                  season={draft.season ?? ""}
-                  onChange={(updated) =>
-                    set(
-                      "players",
-                      players.map((p, i) => (i === index ? updated : p)),
-                    )
-                  }
-                />
-                {computedPlayers[index] && (
-                  <p className="admin-stats-hint">
-                    {(() => {
-                      const stats = playerStats(
-                        playerAppearances(
-                          computedPlayers[index],
-                          draft.season ?? "",
-                        ),
-                      );
-                      return `Yayımlanan maç kayıtları dahil: ${stats.matches ?? "—"} maç · ${stats.goals ?? "—"} gol · ${stats.assists ?? "—"} asist · ${stats.minutes ?? "—"} dakika. Otomatik kayıtları Maçlar bölümünden düzenleyin; aynı maçı ayrıca elle eklemeyin.`;
-                    })()}
-                  </p>
-                )}
-              </div>
-            ))}
+                    {computedPlayers[index] && (
+                      <p className="admin-stats-hint">
+                        {(() => {
+                          const stats = playerStats(
+                            playerAppearances(
+                              computedPlayers[index],
+                              draft.season ?? "",
+                            ),
+                          );
+                          return `Yayımlanan maç kayıtları dahil: ${stats.matches ?? "—"} maç · ${stats.goals ?? "—"} gol · ${stats.assists ?? "—"} asist · ${stats.minutes ?? "—"} dakika. Otomatik kayıtları Maçlar bölümünden düzenleyin; aynı maçı ayrıca elle eklemeyin.`;
+                        })()}
+                      </p>
+                    )}
+                  </div>
+                ),
+            )}
           </>
         )}
         {section === "matches" && (
@@ -372,6 +442,33 @@ export function Editor({
         {section === "opponents" && (
           <div className="admin-form-grid">
             {field("name", "Rakip takım adı", { required: true })}
+            <div className="wide">
+              <h3>Yaş grupları</h3>
+              <p className="admin-help">
+                Rakibin mücadele ettiği takımları seçin.
+              </p>
+              <div className="admin-roster-grid">
+                {teams.map((t) => (
+                  <label className="admin-check" key={t.slug}>
+                    <input
+                      type="checkbox"
+                      checked={draft.teamSlugs?.includes(t.slug) ?? false}
+                      onChange={(e) =>
+                        set(
+                          "teamSlugs",
+                          e.target.checked
+                            ? [...(draft.teamSlugs ?? []), t.slug]
+                            : draft.teamSlugs?.filter(
+                                (slug) => slug !== t.slug,
+                              ),
+                        )
+                      }
+                    />
+                    {t.name}
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
         )}
         {section === "competitions" && (
@@ -396,247 +493,282 @@ export function Editor({
         )}
         {section === "settings" && (
           <>
-            <nav className="admin-tabs" aria-label="Ayar bölümleri">
-              {Object.entries({
-                home: "Ana sayfa",
-                pages: "Sayfa başlıkları",
-                about: "Kulüp yazısı",
-                contact: "İletişim",
-                gallery: "Galeri",
-                heroVideo: "Hero videosu",
-              }).map(([key, label]) => (
-                <button
-                  key={key}
-                  type="button"
-                  aria-current={tab === key ? "page" : undefined}
-                  onClick={() => setTab(key)}
-                >
-                  {label}
-                </button>
-              ))}
-            </nav>
-            {tab === "home" && (
-              <div className="admin-form-grid">
-                {draft.home &&
-                  Object.entries(draft.home).map(([key, value]) => (
-                    <Field
-                      key={key}
-                      label={homeLabels[key] ?? key}
-                      value={value}
-                      multiline={key.toLowerCase().includes("description")}
-                      onChange={(value) =>
-                        set("home", { ...draft.home, [key]: value })
-                      }
-                    />
-                  ))}
-                <div className="wide">
-                  <h3>Eğitim yaklaşımı</h3>
-                  {draft.values?.map((value, index) => (
-                    <div className="admin-subcard admin-form-grid" key={index}>
-                      <Field
-                        label="Başlık"
-                        value={value.title}
-                        onChange={(title) =>
-                          set(
-                            "values",
-                            draft.values?.map((v, i) =>
-                              i === index ? { ...v, title } : v,
-                            ),
-                          )
-                        }
-                      />
-                      <Field
-                        label="Açıklama"
-                        value={value.text}
-                        onChange={(text) =>
-                          set(
-                            "values",
-                            draft.values?.map((v, i) =>
-                              i === index ? { ...v, text } : v,
-                            ),
-                          )
-                        }
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {tab === "pages" &&
-              draft.pages &&
-              Object.entries(draft.pages).map(([key, page]) => (
-                <div className="admin-subcard" key={key}>
-                  <h3>
-                    {
-                      {
-                        club: "Kulübümüz",
-                        teams: "Takımlar",
-                        news: "Haberler",
-                        matches: "Maçlar",
-                        contact: "İletişim",
-                      }[key]
-                    }
-                  </h3>
-                  <div className="admin-form-grid">
-                    {Object.entries(page).map(([field, value]) => (
-                      <Field
-                        key={field}
-                        label={
-                          {
-                            title: "Başlık",
-                            eyebrow: "Üst etiket",
-                            description: "Açıklama",
-                          }[field] ?? field
-                        }
-                        value={value}
-                        multiline={field === "description"}
-                        onChange={(value) =>
-                          set("pages", {
-                            ...draft.pages,
-                            [key]: { ...page, [field]: value },
-                          })
-                        }
-                      />
+            <SettingsWorkspace
+              draft={draft}
+              tab={tab}
+              onTab={setTab}
+              page={selectedPage}
+              onPage={setSelectedPage}
+            >
+              {tab === "home" && (
+                <div className="admin-form-grid">
+                  <Field
+                    label="Ana sayfa bölümü"
+                    value={homeSection}
+                    onChange={setHomeSection}
+                    options={Object.entries({
+                      hero: "Karşılama",
+                      about: "Kulüp",
+                      teams: "Takımlar",
+                      news: "Haberler",
+                      staff: "Teknik ekip",
+                      join: "Katılım",
+                      results: "Maç sonuçları",
+                    }).map(([value, label]) => ({ value, label }))}
+                  />
+                  {draft.home &&
+                    Object.entries(draft.home)
+                      .filter(([key]) =>
+                        (
+                          ({
+                            hero: [
+                              "eyebrow",
+                              "title",
+                              "titleAccent",
+                              "description",
+                              "primaryLabel",
+                              "primaryHref",
+                              "secondaryLabel",
+                              "secondaryHref",
+                            ],
+                            about: ["aboutTitle", "aboutSubtitle"],
+                            teams: ["teamsTitle"],
+                            news: ["newsTitle"],
+                            staff: ["staffTitle"],
+                            join: [
+                              "joinTitle",
+                              "joinSubtitle",
+                              "joinDescription",
+                            ],
+                            results: ["resultsSeason"],
+                          })[homeSection] ?? []
+                        ).includes(key),
+                      )
+                      .map(([key, value]) => (
+                        <Field
+                          key={key}
+                          label={homeLabels[key] ?? key}
+                          value={value}
+                          multiline={key.toLowerCase().includes("description")}
+                          onChange={(value) =>
+                            set("home", { ...draft.home, [key]: value })
+                          }
+                        />
+                      ))}
+                  <div className="wide" hidden={homeSection !== "about"}>
+                    <h3>Eğitim yaklaşımı</h3>
+                    {draft.values?.map((value, index) => (
+                      <div
+                        className="admin-subcard admin-form-grid"
+                        key={index}
+                      >
+                        <Field
+                          label="Başlık"
+                          value={value.title}
+                          onChange={(title) =>
+                            set(
+                              "values",
+                              draft.values?.map((v, i) =>
+                                i === index ? { ...v, title } : v,
+                              ),
+                            )
+                          }
+                        />
+                        <Field
+                          label="Açıklama"
+                          value={value.text}
+                          onChange={(text) =>
+                            set(
+                              "values",
+                              draft.values?.map((v, i) =>
+                                i === index ? { ...v, text } : v,
+                              ),
+                            )
+                          }
+                        />
+                      </div>
                     ))}
                   </div>
                 </div>
-              ))}
-            {tab === "about" &&
-              field("about", "Hakkımızda / kulüp yazısı", {
-                multiline: true,
-                required: true,
-              })}
-            {tab === "contact" && (
-              <div className="admin-form-grid">
-                {draft.contact &&
-                  Object.entries(draft.contact).map(([key, value]) => (
-                    <Field
-                      key={key}
-                      label={
+              )}
+              {tab === "pages" &&
+                draft.pages &&
+                Object.entries(draft.pages)
+                  .filter(([key]) => key === selectedPage)
+                  .map(([key, page]) => (
+                    <div className="admin-subcard" key={key}>
+                      <h3>
                         {
-                          email: "E-posta",
-                          phone: "Telefon",
-                          address: "Adres",
-                          hours: "Çalışma saatleri",
-                          instagram: "Instagram bağlantısı",
-                        }[key] ?? key
-                      }
-                      type={key === "email" ? "email" : "text"}
-                      value={value}
-                      onChange={(value) =>
-                        set("contact", { ...draft.contact, [key]: value })
-                      }
-                    />
+                          {
+                            club: "Kulübümüz",
+                            teams: "Takımlar",
+                            news: "Haberler",
+                            matches: "Maçlar",
+                            contact: "İletişim",
+                          }[key]
+                        }
+                      </h3>
+                      <div className="admin-form-grid">
+                        {Object.entries(page).map(([field, value]) => (
+                          <Field
+                            key={field}
+                            label={
+                              {
+                                title: "Başlık",
+                                eyebrow: "Üst etiket",
+                                description: "Açıklama",
+                              }[field] ?? field
+                            }
+                            value={value}
+                            multiline={field === "description"}
+                            onChange={(value) =>
+                              set("pages", {
+                                ...draft.pages,
+                                [key]: { ...page, [field]: value },
+                              })
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
                   ))}
-              </div>
-            )}
-            {tab === "gallery" && (
-              <>
-                <div className="admin-section-heading">
-                  <h3>Kulüp galerisi</h3>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      set("gallery", [
-                        ...(draft.gallery ?? []),
-                        {
-                          id: crypto.randomUUID(),
-                          src: "",
-                          alt: "",
-                          width: 1200,
-                          height: 800,
-                        },
-                      ])
-                    }
-                  >
-                    + Görsel ekle
-                  </button>
+              {tab === "about" &&
+                field("about", "Hakkımızda / kulüp yazısı", {
+                  multiline: true,
+                  required: true,
+                })}
+              {tab === "contact" && (
+                <div className="admin-form-grid">
+                  {draft.contact &&
+                    Object.entries(draft.contact).map(([key, value]) => (
+                      <Field
+                        key={key}
+                        label={
+                          {
+                            email: "E-posta",
+                            phone: "Telefon",
+                            address: "Adres",
+                            hours: "Çalışma saatleri",
+                            instagram: "Instagram bağlantısı",
+                          }[key] ?? key
+                        }
+                        type={key === "email" ? "email" : "text"}
+                        value={value}
+                        onChange={(value) =>
+                          set("contact", { ...draft.contact, [key]: value })
+                        }
+                      />
+                    ))}
                 </div>
-                {draft.gallery?.map((item, index) => (
-                  <div className="admin-subcard" key={item.id}>
-                    <div className="admin-section-heading">
-                      <strong>Görsel {index + 1}</strong>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (
-                            confirm(
-                              "Görseli galeriden kaldırmak istiyor musunuz?",
-                            )
-                          )
-                            set(
-                              "gallery",
-                              draft.gallery?.filter((_, i) => i !== index),
-                            );
-                        }}
-                      >
-                        Kaldır
-                      </button>
-                    </div>
-                    <MediaField
-                      label="Galeri görseli"
-                      value={item.src}
-                      onBusy={uploadBusy}
-                      onChange={(src, size) =>
-                        set(
-                          "gallery",
-                          draft.gallery?.map((v, i) =>
-                            i === index ? { ...v, src, ...(size ?? {}) } : v,
-                          ),
-                        )
+              )}
+              {tab === "gallery" && (
+                <>
+                  <div className="admin-section-heading">
+                    <h3>Kulüp galerisi</h3>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        set("gallery", [
+                          ...(draft.gallery ?? []),
+                          {
+                            id: crypto.randomUUID(),
+                            src: "",
+                            alt: "",
+                            width: 1200,
+                            height: 800,
+                          },
+                        ])
                       }
-                    />
-                    <Field
-                      label="Görsel açıklaması"
-                      value={item.alt}
-                      required
-                      onChange={(alt) =>
-                        set(
-                          "gallery",
-                          draft.gallery?.map((v, i) =>
-                            i === index ? { ...v, alt } : v,
-                          ),
-                        )
-                      }
-                    />
-                    <div className="admin-inline">
-                      <button
-                        type="button"
-                        disabled={index === 0}
-                        onClick={() => {
-                          const items = [...(draft.gallery ?? [])];
-                          [items[index - 1], items[index]] = [
-                            items[index],
-                            items[index - 1],
-                          ];
-                          set("gallery", items);
-                        }}
-                      >
-                        ↑ Yukarı
-                      </button>
-                      <button
-                        type="button"
-                        disabled={index === (draft.gallery?.length ?? 0) - 1}
-                        onClick={() => {
-                          const items = [...(draft.gallery ?? [])];
-                          [items[index + 1], items[index]] = [
-                            items[index],
-                            items[index + 1],
-                          ];
-                          set("gallery", items);
-                        }}
-                      >
-                        ↓ Aşağı
-                      </button>
-                    </div>
+                    >
+                      + Görsel ekle
+                    </button>
                   </div>
-                ))}
-              </>
-            )}
-            {tab === "heroVideo" && (
-              <div className="admin-form-grid">
-                {(["desktop", "mobile", "poster", "mobilePoster"] as const).map(
-                  (key) => (
+                  {draft.gallery?.map((item, index) => (
+                    <div className="admin-subcard" key={item.id}>
+                      <div className="admin-section-heading">
+                        <strong>Görsel {index + 1}</strong>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (
+                              confirm(
+                                "Görseli galeriden kaldırmak istiyor musunuz?",
+                              )
+                            )
+                              set(
+                                "gallery",
+                                draft.gallery?.filter((_, i) => i !== index),
+                              );
+                          }}
+                        >
+                          Kaldır
+                        </button>
+                      </div>
+                      <MediaField
+                        label="Galeri görseli"
+                        value={item.src}
+                        onBusy={uploadBusy}
+                        onChange={(src, size) =>
+                          set(
+                            "gallery",
+                            draft.gallery?.map((v, i) =>
+                              i === index ? { ...v, src, ...(size ?? {}) } : v,
+                            ),
+                          )
+                        }
+                      />
+                      <Field
+                        label="Görsel açıklaması"
+                        value={item.alt}
+                        required
+                        onChange={(alt) =>
+                          set(
+                            "gallery",
+                            draft.gallery?.map((v, i) =>
+                              i === index ? { ...v, alt } : v,
+                            ),
+                          )
+                        }
+                      />
+                      <div className="admin-inline">
+                        <button
+                          type="button"
+                          disabled={index === 0}
+                          onClick={() => {
+                            const items = [...(draft.gallery ?? [])];
+                            [items[index - 1], items[index]] = [
+                              items[index],
+                              items[index - 1],
+                            ];
+                            set("gallery", items);
+                          }}
+                        >
+                          ↑ Yukarı
+                        </button>
+                        <button
+                          type="button"
+                          disabled={index === (draft.gallery?.length ?? 0) - 1}
+                          onClick={() => {
+                            const items = [...(draft.gallery ?? [])];
+                            [items[index + 1], items[index]] = [
+                              items[index],
+                              items[index + 1],
+                            ];
+                            set("gallery", items);
+                          }}
+                        >
+                          ↓ Aşağı
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+              {tab === "heroVideo" && (
+                <div className="admin-form-grid">
+                  {(
+                    ["desktop", "mobile", "poster", "mobilePoster"] as const
+                  ).map((key) => (
                     <MediaField
                       key={key}
                       label={
@@ -661,10 +793,10 @@ export function Editor({
                         })
                       }
                     />
-                  ),
-                )}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </SettingsWorkspace>
           </>
         )}
       </fieldset>
@@ -674,10 +806,14 @@ export function Editor({
         </p>
       )}
       <div className="admin-savebar">
-        <p>
+        <p role="status" className={dirty ? "admin-unsaved" : ""}>
           {uploads
             ? "Dosyanın yüklenmesi bekleniyor…"
-            : "Kaydettiğiniz değişiklikler sitede hemen görünür."}
+            : saving
+              ? "Değişiklikler kaydediliyor…"
+              : dirty
+                ? "Kaydedilmemiş değişiklikleriniz var."
+                : "Değişiklik yaptığınızda buradan kaydedin."}
         </p>
         <button className="admin-primary" disabled={saving || uploads > 0}>
           {saving ? "Kaydediliyor…" : "Değişiklikleri kaydet"}

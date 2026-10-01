@@ -46,7 +46,7 @@ export type Competition = {
   standingsRule?: "general" | "tff";
   headToHeadMeetings?: number;
 };
-export type Opponent = { _id: string; name: string };
+export type Opponent = { _id: string; name: string; teamSlugs?: string[] };
 export type Match = {
   id: string;
   teamSlug: string;

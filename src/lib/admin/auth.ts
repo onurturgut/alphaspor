@@ -10,6 +10,8 @@ export type AdminUser = {
   email: string;
   passwordHash: string;
   active: boolean;
+  role?: "admin" | "editor";
+  name?: string;
 };
 type Session = { _id: string; userId: string; expiresAt: Date };
 export class AdminError extends Error {
@@ -31,12 +33,17 @@ export async function getAdmin() {
   const user = await db
     .collection<AdminUser>("adminUsers")
     .findOne({ _id: session.userId, active: true });
-  return user ? { id: user._id, email: user.email } : null;
+  return user ? { id: user._id, email: user.email, role: user.role ?? "admin" } : null;
 }
 export async function requireAdmin() {
   const user = await getAdmin();
   if (!user)
     throw new AdminError("Oturumunuz sona erdi. Yeniden giriş yapın.", 401);
+  return user;
+}
+export async function requireUserManager() {
+  const user = await requireAdmin();
+  if (user.role !== "admin") throw new AdminError("Kullanıcı yönetimi için yönetici yetkisi gerekir.", 403);
   return user;
 }
 export function checkOrigin(request: Request) {

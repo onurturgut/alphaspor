@@ -14,6 +14,7 @@
     "verify:matches": "node scripts/verify-matches.mjs",
     "verify:academy": "node scripts/verify-academy.mjs",
     "verify:services": "node --conditions=react-server scripts/verify-services.mjs",
+    "verify:admin-workspace": "node --conditions=react-server scripts/verify-admin-workspace.mjs",
     "migrate:mongodb": "node --conditions=react-server scripts/migrate-mongodb.mjs",
     "migrate:r2": "node --conditions=react-server scripts/migrate-r2.mjs",
     "publish:hero-video": "node --conditions=react-server scripts/publish-hero-video.mjs",

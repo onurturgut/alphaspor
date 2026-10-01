@@ -1,6 +1,7 @@
 "use client";
 import { useId, useState } from "react";
 import Image from "next/image";
+import { mediaPresets, type MediaPreset } from "@/lib/admin/media-presets";
 export type FieldProps = {
   label: string;
   value: string | number | null | undefined;
@@ -77,6 +78,7 @@ export function MediaField({
   onChange,
   video = false,
   onBusy,
+  preset,
 }: {
   label: string;
   value: string;
@@ -86,7 +88,9 @@ export function MediaField({
   ) => void;
   video?: boolean;
   onBusy: (busy: boolean) => void;
+  preset?: MediaPreset;
 }) {
+  const format = preset ?? (label.includes("Oyuncu") || label.includes("üyesi") ? "portrait" : label.includes("Mobil") ? "mobile" : label.includes("Galeri") ? "gallery" : "landscape");
   const [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const id = useId();
@@ -98,6 +102,7 @@ export function MediaField({
     try {
       const form = new FormData();
       form.append("file", file);
+      form.append("preset", format);
       const response = await fetch("/api/admin/upload", {
         method: "POST",
         body: form,
@@ -153,7 +158,7 @@ export function MediaField({
       <small>
         {video
           ? "MP4 · En fazla 25 MB · Web için sıkıştırılmış video kullanın."
-          : "JPEG, PNG, WebP, AVIF · En fazla 10 MB · Otomatik sıkıştırılır."}
+          : `${mediaPresets[format].label} · En fazla 10 MB · Yüklenen görsel merkezden kırpılır ve bu ölçüye dönüştürülür. Önemli öğeleri merkezde tutun. Harici adreslerde otomatik boyutlandırma uygulanmaz.`}
       </small>
       {error && (
         <p role="alert" className="admin-alert error">

@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import { mediaPresets, type MediaPreset } from "@/lib/admin/media-presets";
 import { randomUUID } from "node:crypto";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import {
@@ -19,6 +20,9 @@ export async function POST(request: Request) {
       headers: { "Content-Type": request.headers.get("content-type") ?? "" },
     }).formData();
     const file = form.get("file");
+    const presetName = String(form.get("preset") ?? "landscape");
+    if (!Object.hasOwn(mediaPresets, presetName)) throw new AdminError("Geçersiz görsel ölçüsü.");
+    const preset = mediaPresets[presetName as MediaPreset];
     if (!(file instanceof File) || !file.size)
       throw new AdminError("Bir dosya seçin.");
     let bytes = Buffer.from(await file.arrayBuffer());
@@ -40,7 +44,7 @@ export async function POST(request: Request) {
       try {
         const image = sharp(bytes, { limitInputPixels: 40000000 })
           .rotate()
-          .resize(1920, 1920, { fit: "inside", withoutEnlargement: true })
+          .resize(preset.width, preset.height, { fit: "cover", position: "centre" })
           .webp({ quality: 85 });
         const result = await image.toBuffer({ resolveWithObject: true });
         bytes = Buffer.from(result.data);

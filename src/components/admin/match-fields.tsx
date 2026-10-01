@@ -293,7 +293,7 @@ export function MatchFields({
             <Field
               label="Takım"
               value={draft.teamSlug ?? ""}
-              onChange={(teamSlug) => switchContext({ teamSlug })}
+              onChange={(teamSlug) => { const team = teams.find(t => t.slug === teamSlug); switchContext({ teamSlug, league: team?.name ?? "", season: team?.season ?? "" }); }}
               options={teams.map((t) => ({ value: t.slug, label: t.name }))}
             />
             {field("league", "Lig / yaş grubu", "text", true)}
@@ -345,7 +345,7 @@ export function MatchFields({
         )}
         <datalist id={datalist}>
           <option value="FETHİYE ALFA SPOR" />
-          {opponents.map((o) => (
+          {opponents.filter(o => o.teamSlugs?.includes(draft.teamSlug ?? "")).map((o) => (
             <option key={o._id} value={o.name} />
           ))}
         </datalist>

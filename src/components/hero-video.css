@@ -78,10 +78,23 @@
   bottom: 32px;
   color: #e0e3e0;
 }
-.hero-video-toggle {
+.hero-video-controls {
   position: absolute;
   bottom: 24px;
-  right: 6%;
+  left: 24px;
+  z-index: 2;
+  max-width: calc(100% - 130px);
+}
+.hero-video-notice {
+  font-size: 12px;
+  color: white;
+  background: #080b0bcc;
+  border-radius: 8px;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+}
+.hero-video-notice:empty { display: none; }
+.hero-video-toggle {
   display: flex;
   align-items: center;
   gap: 9px;
@@ -132,8 +145,5 @@
     bottom: 32px;
     max-width: 170px;
     line-height: 1.7;
-  }
-  .hero-video-toggle {
-    right: 24px;
   }
 }

@@ -13,9 +13,12 @@ import {
   ArrowUpRight,
   Search,
   Plus,
+  Menu,
+  X,
 } from "lucide-react";
 import { sectionNames, type Section } from "@/lib/admin/schema";
 import { Editor, type Draft, type TeamOption } from "./editor";
+import { UserManagement } from "./user-management";
 import type { Competition, Opponent, Match } from "@/lib/matches";
 type View = Section | "overview" | "account";
 const sections = Object.keys(sectionNames) as Section[];
@@ -32,9 +35,11 @@ const icons = {
 };
 export function AdminPanel({
   email,
+  role,
   initialData,
 }: {
   email: string;
+  role: "admin" | "editor";
   initialData: Partial<Record<Section, Draft[]>>;
 }) {
   const router = useRouter();
@@ -48,6 +53,8 @@ export function AdminPanel({
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
   const [page, setPage] = useState(1);
+  const [opponentTeam, setOpponentTeam] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [matchFilters, setMatchFilters] = useState({
     team: "",
     season: "",
@@ -97,7 +104,12 @@ export function AdminPanel({
     );
   }
   function changeView(next: View) {
+    if (next === view) {
+      setMenuOpen(false);
+      return;
+    }
     if (!leave()) return;
+    setMenuOpen(false);
     setView(next);
     setEditing(null);
     setDirty(false);
@@ -120,12 +132,13 @@ export function AdminPanel({
       router.refresh();
     } else setError("Çıkış yapılamadı.");
   }
-  function newRecord() {
+  function newRecord(target: Section = view as Section) {
+    if (!leave()) return;
     const base = {
       order:
-        view === "news"
+        target === "news"
           ? Math.min(0, ...(data.news ?? []).map((r) => r.order ?? 0)) - 1
-          : (data[view as Section]?.length ?? 0),
+          : (data[target]?.length ?? 0),
     };
     const defaults: Record<string, Draft> = {
       news: {
@@ -165,7 +178,12 @@ export function AdminPanel({
         venue: null,
         note: null,
       },
-      opponents: { ...base, name: "" },
+      opponents: {
+        ...base,
+        name: "",
+        teamSlugs:
+          opponentTeam && opponentTeam !== "unassigned" ? [opponentTeam] : [],
+      },
       competitions: {
         ...base,
         name: "",
@@ -184,7 +202,9 @@ export function AdminPanel({
       },
       staff: { ...base, name: "", role: "", bio: "", photo: "" },
     };
-    setEditing(defaults[view]);
+    setView(target);
+    setMenuOpen(false);
+    setEditing(defaults[target]);
     setDirty(false);
     setMessage("");
   }
@@ -215,6 +235,11 @@ export function AdminPanel({
   }
   const records = (data[view as Section] ?? []).filter(
     (r) =>
+      (view !== "opponents" ||
+        !opponentTeam ||
+        (opponentTeam === "unassigned"
+          ? !r.teamSlugs?.length
+          : r.teamSlugs?.includes(opponentTeam))) &&
       (view !== "matches" ||
         ((!matchFilters.team || r.teamSlug === matchFilters.team) &&
           (!matchFilters.season || r.season === matchFilters.season) &&
@@ -267,42 +292,69 @@ export function AdminPanel({
   }
   const titles: Record<View, string> = {
     ...sectionNames,
-    overview: "Genel bakış",
+    overview: "Çalışma masası",
     account: "Hesabım",
   };
+  const descriptions: Record<View, string> = {
+    overview: "Kulübünüzün günlük işlemlerine buradan başlayın.",
+    news: "Haberlerinizi hazırlayın, düzenleyin ve yayımlayın.",
+    matches: "Fikstürü takip edin, skorları ve maç kadrolarını güncelleyin.",
+    competitions: "Ligleri, sezonları ve puanlama kurallarını yönetin.",
+    opponents: "Rakipleri yaş gruplarına göre düzenleyin.",
+    teams: "Takım bilgilerini ve oyuncu kadrolarını güncelleyin.",
+    staff: "Antrenörleri ve teknik ekip bilgilerini düzenleyin.",
+    settings: "Sayfa içeriklerini düzenleyin, kaydetmeden önce önizleyin.",
+    account: "Hesabınızı ve erişim ayarlarınızı yönetin.",
+  };
+  const navigation: { label: string; items: View[] }[] = [
+    { label: "ÇALIŞMA ALANI", items: ["overview", "news", "settings"] },
+    {
+      label: "SPORTİF YÖNETİM",
+      items: ["matches", "teams", "competitions", "opponents", "staff"],
+    },
+    { label: "HESAP", items: ["account"] },
+  ];
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell ${menuOpen ? "menu-open" : ""}`}>
       <aside className="admin-sidebar">
-        <Link className="admin-brand" href="/admin">
+        <Link
+          className="admin-brand"
+          href="/admin"
+          onClick={(event) => {
+            event.preventDefault();
+            changeView("overview");
+          }}
+        >
           ALFA <span>YÖNETİM</span>
         </Link>
-        <p className="admin-kicker">KULÜP PANELİ</p>
-        <nav aria-label="Yönetim menüsü">
-          {(
-            [
-              "overview",
-              "news",
-              "matches",
-              "competitions",
-              "opponents",
-              "teams",
-              "staff",
-              "settings",
-              "account",
-            ] as View[]
-          ).map((key) => {
-            const Icon = icons[key];
-            return (
-              <button
-                key={key}
-                aria-current={view === key ? "page" : undefined}
-                onClick={() => changeView(key)}
-              >
-                <Icon size={18} />
-                {titles[key]}
-              </button>
-            );
-          })}
+        <button
+          className="admin-menu-toggle"
+          aria-expanded={menuOpen}
+          aria-controls="admin-navigation"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}{" "}
+          {menuOpen ? "Menüyü kapat" : "Menü"}
+        </button>
+        <nav id="admin-navigation" aria-label="Yönetim menüsü">
+          {navigation.map((group) => (
+            <div className="admin-nav-group" key={group.label}>
+              <p className="admin-nav-label">{group.label}</p>
+              {group.items.map((key) => {
+                const Icon = icons[key];
+                return (
+                  <button
+                    key={key}
+                    aria-current={view === key ? "page" : undefined}
+                    onClick={() => changeView(key)}
+                  >
+                    <Icon size={18} />
+                    <span>{titles[key]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </nav>
         <div className="admin-sidebar-bottom">
           <span>{email}</span>
@@ -317,6 +369,7 @@ export function AdminPanel({
           <div>
             <p className="admin-kicker">FETHİYE ALFA SPOR</p>
             <h1>{titles[view]}</h1>
+            <p className="admin-page-description">{descriptions[view]}</p>
           </div>
           <Link href="/" target="_blank" className="admin-site-link">
             Siteyi görüntüle <ArrowUpRight size={17} />
@@ -340,68 +393,129 @@ export function AdminPanel({
           <>
             {view === "overview" && (
               <>
-                <div className="admin-welcome">
-                  <p className="admin-kicker">HER ŞEY BİR ARADA</p>
-                  <h2>Kulübün hikâyesini güncel tutun.</h2>
-                  <p>
-                    Haber yayımlayın, maç sonuçlarını girin ve kadroları
-                    düzenleyin.
-                  </p>
+                <div className="admin-commandbar" aria-label="Hızlı işlemler">
                   <button
                     className="admin-primary"
-                    onClick={() => {
-                      changeView("news");
-                    }}
+                    onClick={() => newRecord("news")}
                   >
-                    Haberleri yönet <ArrowUpRight size={16} />
+                    <Plus size={16} /> Haber ekle
+                  </button>
+                  <button onClick={() => newRecord("matches")}>
+                    <Plus size={16} /> Maç ekle
+                  </button>
+                  <button onClick={() => changeView("teams")}>
+                    <Users size={16} /> Kadrolar
+                  </button>
+                  <button onClick={() => changeView("settings")}>
+                    <Settings size={16} /> Siteyi düzenle
                   </button>
                 </div>
-                <div className="admin-stats">
-                  {(["news", "teams", "matches", "staff"] as Section[]).map(
-                    (key) => (
-                      <button key={key} onClick={() => changeView(key)}>
-                        <span>{sectionNames[key]}</span>
-                        <strong>{data[key]?.length ?? 0}</strong>
-                        <small>Düzenle →</small>
-                      </button>
-                    ),
-                  )}
-                </div>
-                <div className="admin-overview-grid">
-                  <div className="admin-card">
-                    <h3>Hızlı erişim</h3>
-                    <button onClick={() => changeView("settings")}>
-                      Ana sayfa, galeri ve iletişim bilgileri →
-                    </button>
-                    <button onClick={() => changeView("teams")}>
-                      Oyuncu ekle veya kadro düzenle →
-                    </button>
-                    <button onClick={() => changeView("matches")}>
-                      Maç sonucu gir →
-                    </button>
-                  </div>
-                  <div className="admin-card">
-                    <h3>Yayın durumu</h3>
-                    <p>
+                <div className="admin-statusline">
+                  <span>
+                    <strong>
                       {data.news?.filter((n) => n.published !== false).length ??
-                        0}{" "}
-                      haber yayında
-                    </p>
-                    <p>
+                        0}
+                    </strong>{" "}
+                    haber yayında
+                  </span>
+                  <span>
+                    <strong>
                       {data.news?.filter((n) => n.published === false).length ??
-                        0}{" "}
-                      haber taslakta
-                    </p>
-                    <p>
+                        0}
+                    </strong>{" "}
+                    haber taslakta
+                  </span>
+                  <span>
+                    <strong>
                       {data.teams?.reduce(
-                        (n, t) => n + (t.players?.length ?? 0),
+                        (count, team) => count + (team.players?.length ?? 0),
                         0,
-                      ) ?? 0}{" "}
-                      oyuncu kaydı
-                    </p>
-                  </div>
+                      ) ?? 0}
+                    </strong>{" "}
+                    oyuncu
+                  </span>
                 </div>
+                <section className="admin-desk-section">
+                  <div className="admin-desk-heading">
+                    <h2>İçerik ve kulüp yönetimi</h2>
+                    <span>Bölüm seçin, düzenlemeye başlayın</span>
+                  </div>
+                  <div className="admin-directory">
+                    {(
+                      [
+                        "news",
+                        "matches",
+                        "teams",
+                        "competitions",
+                        "opponents",
+                        "staff",
+                        "settings",
+                      ] as Section[]
+                    ).map((key) => {
+                      const Icon = icons[key];
+                      return (
+                        <button
+                          className="admin-directory-row"
+                          key={key}
+                          onClick={() => changeView(key)}
+                        >
+                          <Icon size={19} />
+                          <span className="admin-directory-name">
+                            {titles[key]}
+                          </span>
+                          <span className="admin-directory-description">
+                            {descriptions[key]}
+                          </span>
+                          <span className="admin-directory-count">
+                            {key === "settings"
+                              ? "Site içeriği"
+                              : `${data[key]?.length ?? 0} kayıt`}
+                          </span>
+                          <ArrowUpRight size={16} />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+                <section className="admin-desk-section">
+                  <div className="admin-desk-heading">
+                    <h2>Haberler</h2>
+                    <button onClick={() => changeView("news")}>
+                      Tüm haberler <ArrowUpRight size={15} />
+                    </button>
+                  </div>
+                  <div className="admin-news-register">
+                    {(data.news ?? []).slice(0, 5).map((record) => (
+                      <button
+                        key={record._id}
+                        onClick={() => {
+                          changeView("news");
+                          setEditing(record);
+                        }}
+                      >
+                        <span className="admin-register-title">
+                          {record.title}
+                          <small>{record.category}</small>
+                        </span>
+                        <span
+                          className={`admin-register-status ${record.published === false ? "is-draft" : ""}`}
+                        >
+                          {record.published === false ? "Taslak" : "Yayında"}
+                        </span>
+                        <span className="admin-register-edit">Düzenle →</span>
+                      </button>
+                    ))}
+                    {!data.news?.length && (
+                      <p className="admin-empty">
+                        Henüz haber yok. Üstteki Haber ekle düğmesiyle başlayın.
+                      </p>
+                    )}
+                  </div>
+                </section>
               </>
+            )}
+            {view === "account" && role === "admin" && (
+              <UserManagement onDirtyChange={setDirty} />
             )}
             {view === "account" && (
               <form
@@ -495,6 +609,7 @@ export function AdminPanel({
                     })) as Match[]
                   }
                   onDirty={() => setDirty(true)}
+                  dirty={dirty}
                   onClose={() => {
                     if (leave()) {
                       setEditing(null);
@@ -524,7 +639,10 @@ export function AdminPanel({
                         }}
                       />
                     </div>
-                    <button className="admin-primary" onClick={newRecord}>
+                    <button
+                      className="admin-primary"
+                      onClick={() => newRecord()}
+                    >
                       <Plus size={17} />
                       {view === "news"
                         ? "Haber yaz"
@@ -652,6 +770,26 @@ export function AdminPanel({
                       </button>
                     </div>
                   )}
+                  {view === "opponents" && (
+                    <label className="admin-filter-bar">
+                      Yaş grubuna göre filtrele
+                      <select
+                        value={opponentTeam}
+                        onChange={(e) => {
+                          setOpponentTeam(e.target.value);
+                          setPage(1);
+                        }}
+                      >
+                        <option value="">Tüm yaş grupları</option>
+                        <option value="unassigned">Atanmamış</option>
+                        {teams.map((t) => (
+                          <option key={t.slug} value={t.slug}>
+                            {t.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
                   <div className="admin-table-wrap">
                     <table>
                       <thead>
@@ -664,7 +802,7 @@ export function AdminPanel({
                       <tbody>
                         {shown.map((r) => (
                           <tr key={r._id}>
-                            <td>
+                            <td data-label="İçerik">
                               <strong>
                                 {r.title ||
                                   r.name ||
@@ -673,10 +811,18 @@ export function AdminPanel({
                               <small>
                                 {view === "matches"
                                   ? `${r.date} · ${r.league} · ${r.week}. hafta`
-                                  : r.subtitle || r.role || r.season}
+                                  : view === "opponents"
+                                    ? r.teamSlugs
+                                        ?.map(
+                                          (slug) =>
+                                            teams.find((t) => t.slug === slug)
+                                              ?.name ?? slug,
+                                        )
+                                        .join(" · ") || "Yaş grubu atanmamış"
+                                    : r.subtitle || r.role || r.season}
                               </small>
                             </td>
-                            <td>
+                            <td data-label="Bilgi">
                               {view === "news" ? (
                                 <span
                                   className={`admin-badge ${r.published === false ? "draft" : ""}`}
@@ -691,7 +837,7 @@ export function AdminPanel({
                                 "Aktif"
                               )}
                             </td>
-                            <td>
+                            <td data-label="İşlemler">
                               <div className="admin-row-actions">
                                 <button
                                   onClick={() => {

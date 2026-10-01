@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { connection } from "next/server";
 import { getDb } from "./mongodb";
+import { previewContext } from "./admin/preview-context";
 import type seed from "@/data/content.json";
 import defaultHeroVideo from "@/data/hero-video.json";
 import type sourceSeed from "@/data/match-sources.json";
@@ -67,7 +68,7 @@ async function readList<T extends object>(name: string): Promise<T[]> {
 export const getContent = cache(async (): Promise<Content> => {
   await connection();
   const db = await getDb();
-  const [teams, news, staff, settings, matchData] = await Promise.all([
+  const [teams, news, staff, storedSettings, matchData] = await Promise.all([
     readList<Content["teams"][number]>("teams"),
     readList<Content["news"][number]>("news"),
     readList<Content["staff"][number]>("staff"),
@@ -89,6 +90,7 @@ export const getContent = cache(async (): Promise<Content> => {
       .findOne({ _id: "club" }),
     getMatchData(),
   ]);
+  const settings = previewContext.getStore() ?? storedSettings;
   if (!settings)
     throw new Error(
       "Kulüp içeriği bulunamadı. npm run migrate:mongodb çalıştırın.",

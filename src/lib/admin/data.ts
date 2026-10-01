@@ -45,11 +45,16 @@ export async function listAdmin(section: Section) {
     if (!record) throw new AdminError("Kulüp ayarları bulunamadı.", 404);
     return [settingsDefaults(record)];
   }
-  return collection
+  const records = await collection
     .find({ _deleted: { $ne: true } })
     .sort({ order: 1, _id: 1 })
     .limit(2000)
     .toArray();
+  if (section === "opponents") {
+    const competitions = await (await getDb()).collection<Competition>("competitions").find({ _deleted: { $ne: true } }).toArray();
+    return records.map(record => ({ ...record, teamSlugs: record.teamSlugs ?? [...new Set(competitions.filter(c => c.opponentIds.includes(record._id)).map(c => c.teamSlug))] }));
+  }
+  return records;
 }
 export async function saveAdmin(
   section: Section,
@@ -77,6 +82,17 @@ export async function saveAdmin(
   const recordId = id as string | null;
   if (section === "settings" && recordId !== "club")
     throw new AdminError("Geçersiz ayar kaydı.");
+  if (section === "opponents") {
+    const slugs = fields.teamSlugs as string[];
+    if (new Set(slugs).size !== slugs.length || await db.collection("teams").countDocuments({ slug: { $in: slugs }, _deleted: { $ne: true } }) !== slugs.length)
+      throw new AdminError("Geçerli yaş grupları seçin.");
+    if (recordId) {
+      const used = await db.collection("competitions").find({ opponentIds: recordId, _deleted: { $ne: true } }).toArray();
+      const previous = await collection.findOne({ _id: recordId });
+      if (used.some(c => (previous?.teamSlugs as string[] | undefined)?.includes(c.teamSlug) && !slugs.includes(c.teamSlug)))
+        throw new AdminError("Organizasyonda kullanılan yaş grubu kaldırılamaz.");
+    }
+  }
   if (section === "teams") {
     if (recordId && fields.slug !== recordId)
       throw new AdminError("Mevcut takımın URL kodu değiştirilemez.");
@@ -117,6 +133,13 @@ export async function saveAdmin(
     )
       throw new AdminError("Mevcut bir takım seçin.");
     const ids = fields.opponentIds as string[];
+    const selectedOpponents = await db.collection<Opponent>("opponents").find({ _id: { $in: ids }, _deleted: { $ne: true } }).toArray();
+    const existingCompetition = recordId ? await db.collection<Competition>("competitions").findOne({ _id: recordId }) : null;
+    for (const opponent of selectedOpponents) {
+      const inherited = !opponent.teamSlugs && await db.collection("competitions").findOne({ opponentIds: opponent._id, teamSlug: fields.teamSlug, _deleted: { $ne: true } });
+      if (!opponent.teamSlugs?.includes(String(fields.teamSlug)) && !inherited && !(existingCompetition && existingCompetition.teamSlug === fields.teamSlug && existingCompetition.opponentIds.includes(opponent._id)))
+        throw new AdminError("Rakipleri önce seçilen yaş grubuna atayın.");
+    }
     if (
       (await db
         .collection<Opponent>("opponents")
