@@ -1423,12 +1423,17 @@ html body .admin-root select {
   border-radius: 3px;
 }
 .admin-root .admin-savebar {
+  flex-wrap: wrap;
   margin: 28px 0 0;
   padding: 14px 0 max(14px, env(safe-area-inset-bottom));
   border-top: 1px solid var(--tone-25);
   background: var(--tone-0);
   border-radius: 0;
   box-shadow: none;
+}
+.admin-root .admin-savebar .admin-alert.error {
+  flex-basis: 100%;
+  margin: 0;
 }
 .admin-root .admin-savebar .admin-primary {
   white-space: nowrap;

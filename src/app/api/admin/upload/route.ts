@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       }
     }
     const key = `media/admin/${randomUUID()}.${extension}`;
-    const url = getR2PublicUrl(key);
+    const url = extension === "mp4" ? getR2PublicUrl(key) : `/api/media/${key}`;
     await getR2Client().send(
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET_NAME,

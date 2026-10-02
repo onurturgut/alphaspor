@@ -23,7 +23,7 @@ for (const [league, expectedCount] of Object.entries(counts)) {
     ids.add(match.id);
     assert.equal(match.season, "2025/2026");
     assert.equal(match.league, league.toUpperCase());
-    assert.equal(match.teamSlug, league === "u14" ? "u14-u15" : league);
+    assert.equal(match.teamSlug, league);
     assert.match(match.date, /^\d{4}-\d{2}-\d{2}$/);
     assert.equal(
       new Date(`${match.date}T12:00:00Z`).toISOString().slice(0, 10),

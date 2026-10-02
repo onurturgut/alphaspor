@@ -32,6 +32,9 @@ export function CompetitionFields({
   const [preview, setPreview] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const eligibleOpponents = opponents.filter(
+    (o) => o.teamSlugs?.includes(draft.teamSlug ?? "") || draft.opponentIds?.includes(o._id),
+  );
   const fixtureInputValid =
     /^\d{4}-\d{2}-\d{2}$/.test(startDate) &&
     !isNaN(new Date(`${startDate}T12:00:00Z`).getTime()) &&
@@ -136,6 +139,16 @@ export function CompetitionFields({
       </div>
       <h3>Katılımcı rakipler ({draft.opponentIds?.length ?? 0})</h3>
       <p className="admin-help">
+        Rakip seçmeden taslak olarak kaydedebilirsiniz. Yayımlamak ve fikstür
+        oluşturmak için en az bir rakip ekleyin.
+      </p>
+      {eligibleOpponents.length === 0 && (
+        <p className="admin-help" role="status">
+          Bu yaş grubuna atanmış rakip yok. Taslağı kaydettikten sonra Rakipler
+          bölümünde bir rakibi bu yaş grubuna atayın ve organizasyonu tekrar açın.
+        </p>
+      )}
+      <p className="admin-help">
         Kulübümüz otomatik katılır. Eksik rakipleri önce Rakipler bölümünden
         ekleyin. Maçlar oluşturulduktan sonra katılımcılar; ilk maç raporu
         kaydedildikten sonra oyun kuralları kilitlenir. Kadro girmeden önce maç
@@ -150,8 +163,7 @@ export function CompetitionFields({
         />
       </label>
       <div className="admin-roster-grid">
-        {opponents
-          .filter(o => o.teamSlugs?.includes(draft.teamSlug ?? "") || draft.opponentIds?.includes(o._id))
+        {eligibleOpponents
           .filter((o) =>
             o.name
               .toLocaleLowerCase("tr")
@@ -216,7 +228,7 @@ export function CompetitionFields({
           </div>
           <button
             type="button"
-            disabled={!fixtureInputValid || busy}
+            disabled={!fixtureInputValid || busy || !draft.opponentIds?.length}
             onClick={() => setPreview(true)}
           >
             Fikstürü önizle

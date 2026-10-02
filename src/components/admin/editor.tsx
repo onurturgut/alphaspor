@@ -1,7 +1,7 @@
 "use client";
 import { useState, type FormEvent } from "react";
 import type { z } from "zod";
-import { schemas, type Section } from "@/lib/admin/schema";
+import { schemas, slugify, type Section } from "@/lib/admin/schema";
 import { Field, MediaField, type FieldProps } from "./fields";
 import { coachLicense } from "@/lib/coach-license";
 import { PlayerProfileFields } from "./player-profile-fields";
@@ -63,6 +63,7 @@ export function Editor({
   const [playerQuery, setPlayerQuery] = useState("");
   const [homeSection, setHomeSection] = useState("hero");
   const [selectedPage, setSelectedPage] = useState("club");
+  const [customSlug, setCustomSlug] = useState(false);
   const set = (key: keyof Draft, value: unknown) => {
     setDraft((d) => ({ ...d, [key]: value }));
     onDirty();
@@ -115,13 +116,18 @@ export function Editor({
     setSaving(true);
     setError("");
     try {
+      const parsed = schemas[section].safeParse(draft);
+      if (!parsed.success) {
+        throw new Error(parsed.error.issues.slice(0, 4)
+          .map((issue) => `${issue.path.join(".")}: ${issue.message}`).join(" · "));
+      }
       const response = await fetch(`/api/admin/data/${section}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: draft._id ?? null,
           version: draft._rev ?? null,
-          data: draft,
+          data: parsed.data,
         }),
       });
       const result = await response.json();
@@ -233,16 +239,24 @@ export function Editor({
         {section === "teams" && (
           <>
             <div className="admin-form-grid">
-              {field("name", "Takım adı", { required: true })}
-              {field("slug", "URL kodu", {
+              {field("name", "Takım adı", {
+                required: true,
+                onChange: (name) => update({ name, ...(!draft._id && !customSlug ? { slug: slugify(name) } : {}) }),
+              })}
+              {field("slug", "URL kodu (slug)", {
                 required: true,
                 disabled: !!draft._id,
-                hint: "Örn. u16 — oluşturduktan sonra değiştirilemez.",
+                onChange: (value) => { setCustomSlug(!!value); set("slug", value || slugify(draft.name ?? "")); },
+                hint: `Takım adından otomatik oluşur. Adres: /takimlar/${slugify(draft.slug || "u-15")}. Kaydederken küçük harfe çevrilir; sonrasında değiştirilemez.`,
               })}
               {field("season", "Sezon", { required: true, hint: "2026/2027" })}
               {field("order", "Sıralama", { type: "number" })}
-              {image("photo", "Takım fotoğrafı")}
-              {field("photoAlt", "Fotoğraf açıklaması")}
+              {draft._id && (
+                <>
+                  {image("photo", "Takım fotoğrafı")}
+                  {field("photoAlt", "Fotoğraf açıklaması")}
+                </>
+              )}
             </div>
             <div className="admin-section-heading">
               <h3>
@@ -800,12 +814,8 @@ export function Editor({
           </>
         )}
       </fieldset>
-      {error && (
-        <p className="admin-alert error" role="alert">
-          {error}
-        </p>
-      )}
       <div className="admin-savebar">
+        {error && <p className="admin-alert error" role="alert">{error}</p>}
         <p role="status" className={dirty ? "admin-unsaved" : ""}>
           {uploads
             ? "Dosyanın yüklenmesi bekleniyor…"

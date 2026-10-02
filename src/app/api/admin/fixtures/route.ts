@@ -41,6 +41,8 @@ export async function POST(request: Request) {
     if (!competition) throw new AdminError("Organizasyon bulunamadı.", 404);
     if (competition._rev !== version)
       throw new AdminError("Organizasyon değişti. Sayfayı yenileyin.", 409);
+    if (!competition.opponentIds.length)
+      throw new AdminError("Fikstür oluşturmak için önce en az bir rakip ekleyin.");
     const opponents = await db
       .collection<Opponent>("opponents")
       .find({ _id: { $in: competition.opponentIds }, _deleted: { $ne: true } })

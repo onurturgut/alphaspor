@@ -1,6 +1,7 @@
 "use client";
 import { useId, useState } from "react";
 import Image from "next/image";
+import { uploadedImageUrl } from "@/lib/media";
 import { mediaPresets, type MediaPreset } from "@/lib/admin/media-presets";
 export type FieldProps = {
   label: string;
@@ -124,7 +125,7 @@ export function MediaField({
         {value && !video && (
           <Image
             unoptimized
-            src={value}
+            src={uploadedImageUrl(value)}
             alt="Seçilen görsel"
             width={80}
             height={64}

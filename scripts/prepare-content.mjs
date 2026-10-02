@@ -217,7 +217,8 @@ const teamPhotos = new Map(
 );
 const teams = [];
 for (const name of teamNames) {
-  const slug = name.toLowerCase().replaceAll("/", "-");
+  const sourceSlug = name.toLowerCase().replaceAll("/", "-");
+  const slug = sourceSlug === "u14-u15" ? "u14" : sourceSlug;
   const photoTeam = name === "U14/U15" ? "U14" : name;
   const photo = await resolveImage(teamPhotos.get(photoTeam));
   if (!photo)
@@ -231,7 +232,7 @@ for (const name of teamNames) {
     const photo = await copyMedia(byFile.get(student.photoFile));
     if (!photo) throw new Error(`Missing archived photo for ${student.name}`);
     players.push({
-      id: `${slug}-${student.sourceId}`,
+      id: `${sourceSlug}-${student.sourceId}`,
       name: student.name,
       position: student.position,
       photo,

@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { connection } from "next/server";
 import { getDb } from "./mongodb";
+import { uploadedImageUrl } from "./media";
 import { previewContext } from "./admin/preview-context";
 import type seed from "@/data/content.json";
 import defaultHeroVideo from "@/data/hero-video.json";
@@ -96,15 +97,18 @@ export const getContent = cache(async (): Promise<Content> => {
       "Kulüp içeriği bulunamadı. npm run migrate:mongodb çalıştırın.",
     );
   return {
-    teams: withMatchAppearances(teams, matchData.matches),
-    news,
-    staff,
+    teams: withMatchAppearances(teams.map((team) => ({
+      ...team, photo: uploadedImageUrl(team.photo || "/media/logo.webp"),
+      players: team.players.map((player) => ({ ...player, photo: uploadedImageUrl(player.photo) })),
+    })), matchData.matches),
+    news: news.map((item) => ({ ...item, image: item.image ? uploadedImageUrl(item.image) : item.image })),
+    staff: staff.map((member) => ({ ...member, photo: member.photo ? uploadedImageUrl(member.photo) : member.photo })),
     about: settings.about,
     contact: settings.contact,
     heroVideo: settings.heroVideo ?? defaultHeroVideo,
     home: { ...defaultHome, ...settings.home },
     pages: { ...defaultPages, ...settings.pages },
-    gallery: settings.gallery ?? defaultGallery,
+    gallery: (settings.gallery ?? defaultGallery).map((item) => ({ ...item, src: uploadedImageUrl(item.src) })),
     values: settings.values ?? defaultValues,
   };
 });

@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+/** Turkish names converted to stable, URL-safe identifiers. */
+export function slugify(value: string): string {
+  return value.trim().replace(/İ/g, "I").replace(/ı/g, "i")
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
 const text = (max = 250) => z.string().trim().max(max);
 const required = (max = 250) => text(max).min(1, "Bu alan zorunlu.");
 export const safeUrl = text(2048).refine((value) => {
@@ -187,7 +194,6 @@ export const schemas = {
     clubName: required(150),
     opponentIds: z
       .array(required(100))
-      .min(1)
       .max(24)
       .refine(
         (ids) => new Set(ids).size === ids.length && !ids.includes("club"),
@@ -204,6 +210,9 @@ export const schemas = {
     headToHeadMeetings: z.number().int().min(1).max(4).default(2),
     published: z.boolean().default(false),
     order,
+  }).refine((competition) => !competition.published || competition.opponentIds.length > 0, {
+    path: ["opponentIds"],
+    message: "Yayımlamak için en az bir rakip seçin. Rakipleri daha sonra eklemek için taslak olarak kaydedebilirsiniz.",
   }),
   news: z.object({
     title: required(),
@@ -216,11 +225,11 @@ export const schemas = {
   }),
   teams: z
     .object({
-      slug,
+      slug: z.string().transform(slugify).pipe(slug),
       name: required(100),
       season,
-      photo: safeUrl.refine(Boolean, "Takım görseli seçin."),
-      photoAlt: text(300),
+      photo: safeUrl.default(""),
+      photoAlt: text(300).default(""),
       players: z.array(playerSchema).max(150),
       order,
     })

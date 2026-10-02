@@ -84,7 +84,7 @@ try {
   opponents.push(opponent.id);
   assert.deepEqual((await db.collection("opponents").findOne({ _id: opponent.id })).teamSlugs, [teams[0].slug]);
   await json(await request("/api/admin/data/opponents", "PUT", { id: null, version: null, data: { name: "Invalid", teamSlugs: ["missing-team"], order: 9999 } }), 400);
-  assert.equal((await request("/takimlar/u14")).headers.get("location"), "/takimlar/u14-u15");
+  assert.equal((await request("/takimlar/u14-u15")).headers.get("location"), "/takimlar/u14");
   console.log("PASS: opponent age group persistence, invalid team rejection, U14 redirect");
   if (process.argv.includes("--browser")) {
     mkdirSync(".local-backups", { recursive: true });

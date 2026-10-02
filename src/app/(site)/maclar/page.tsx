@@ -38,7 +38,7 @@ export default async function Matches({
             season: t.season,
           }))}
           key={`${takim || "all"}:${initialSeason}:${initialTab}`}
-          initialTeam={takim === "u14" ? "u14-u15" : takim}
+          initialTeam={takim === "u14-u15" ? "u14" : takim}
           initialSeason={initialSeason}
           initialTab={initialTab}
         />

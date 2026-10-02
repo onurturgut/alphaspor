@@ -1,6 +1,7 @@
 import { mediaUrl } from "@/lib/media";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 import "./themes.css";
 import "./refinements.css";
@@ -45,8 +46,9 @@ export default function RootLayout({
   return (
     <html lang="tr" className={aldrich.variable} suppressHydrationWarning>
       <head>
-        <script
+        <Script
           id="alfa-theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){var t;try{t=localStorage.getItem('alfa-theme')}catch(e){}document.documentElement.dataset.theme=t==='light'||t==='dark'?t:window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'})()`,
           }}

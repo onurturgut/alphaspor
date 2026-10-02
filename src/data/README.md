@@ -4,7 +4,7 @@
 `node scripts/prepare-content.mjs`. The archived source is never overwritten.
 
 - `teams`: U9, U10, U11, U12, U13, U14/U15; URL slugs are lowercase, with
-  `u14-u15` for the combined squad. There are 74 team-player records. U9 has no
+  `u14` for the combined squad. There are 74 team-player records. U9 has no
   player records in the source, so its array is intentionally empty.
 - `players`: source names and broad positions are preserved. A person appearing
   in multiple squads remains in each squad. There are 42 distinct image files
@@ -79,7 +79,7 @@ are retained in `public/media/fixtures/` and linked from the match center.
 - U14 week 9 is dated December 17 after week 10's December 13; week 14 is
   January 20 after week 15's January 18. Dates are preserved, not corrected
   from week order. The fixture UI sorts by date while retaining week labels.
-- U14 is linked to the combined `u14-u15` squad slug; all match labels remain
+- U14 is linked to the combined `u14` squad slug; all match labels remain
   U14. No U15, U10 or U9 fixtures were invented.
 - The homepage displays the latest match date with a published score, not a
   fabricated upcoming fixture. This is a static source snapshot, not a live feed.

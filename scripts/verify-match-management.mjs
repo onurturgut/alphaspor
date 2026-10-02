@@ -317,6 +317,14 @@ assert.equal(
     .success,
   false,
 );
+assert.equal(
+  schemas.competitions.safeParse({ ...competition, published: false, opponentIds: [] }).success,
+  true,
+);
+assert.equal(
+  schemas.competitions.safeParse({ ...competition, published: true, opponentIds: [] }).success,
+  false,
+);
 assert.deepEqual(
   standings({ ...competition, standingsEnabled: false }, opponents, [match]),
   [],
