@@ -1,4 +1,3 @@
-import { mediaUrl } from "@/lib/media";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
@@ -22,7 +21,8 @@ export const metadata: Metadata = {
   description:
     "Fethiye Alfa Spor: oyun temelli eğitim, bireysel gelişim ve takım ruhu. Takımlarımızı keşfedin, geleceğe birlikte adım atalım.",
   icons: {
-    icon: mediaUrl("/media/logo.webp"),
+    icon: { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    shortcut: "/icons/icon-192.png",
     apple: [
       {
         url: "/icons/apple-touch-icon.png",
