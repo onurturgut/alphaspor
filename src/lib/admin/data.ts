@@ -51,8 +51,22 @@ export async function listAdmin(section: Section) {
     .limit(2000)
     .toArray();
   if (section === "opponents") {
-    const competitions = await (await getDb()).collection<Competition>("competitions").find({ _deleted: { $ne: true } }).toArray();
-    return records.map(record => ({ ...record, teamSlugs: record.teamSlugs ?? [...new Set(competitions.filter(c => c.opponentIds.includes(record._id)).map(c => c.teamSlug))] }));
+    const competitions = await (
+      await getDb()
+    )
+      .collection<Competition>("competitions")
+      .find({ _deleted: { $ne: true } })
+      .toArray();
+    return records.map((record) => ({
+      ...record,
+      teamSlugs: record.teamSlugs ?? [
+        ...new Set(
+          competitions
+            .filter((c) => c.opponentIds.includes(record._id))
+            .map((c) => c.teamSlug),
+        ),
+      ],
+    }));
   }
   return records;
 }
@@ -84,13 +98,31 @@ export async function saveAdmin(
     throw new AdminError("Geçersiz ayar kaydı.");
   if (section === "opponents") {
     const slugs = fields.teamSlugs as string[];
-    if (new Set(slugs).size !== slugs.length || await db.collection("teams").countDocuments({ slug: { $in: slugs }, _deleted: { $ne: true } }) !== slugs.length)
+    if (
+      new Set(slugs).size !== slugs.length ||
+      (await db
+        .collection("teams")
+        .countDocuments({ slug: { $in: slugs }, _deleted: { $ne: true } })) !==
+        slugs.length
+    )
       throw new AdminError("Geçerli yaş grupları seçin.");
     if (recordId) {
-      const used = await db.collection("competitions").find({ opponentIds: recordId, _deleted: { $ne: true } }).toArray();
+      const used = await db
+        .collection("competitions")
+        .find({ opponentIds: recordId, _deleted: { $ne: true } })
+        .toArray();
       const previous = await collection.findOne({ _id: recordId });
-      if (used.some(c => (previous?.teamSlugs as string[] | undefined)?.includes(c.teamSlug) && !slugs.includes(c.teamSlug)))
-        throw new AdminError("Organizasyonda kullanılan yaş grubu kaldırılamaz.");
+      if (
+        used.some(
+          (c) =>
+            (previous?.teamSlugs as string[] | undefined)?.includes(
+              c.teamSlug,
+            ) && !slugs.includes(c.teamSlug),
+        )
+      )
+        throw new AdminError(
+          "Organizasyonda kullanılan yaş grubu kaldırılamaz.",
+        );
     }
   }
   if (section === "teams") {
@@ -133,11 +165,34 @@ export async function saveAdmin(
     )
       throw new AdminError("Mevcut bir takım seçin.");
     const ids = fields.opponentIds as string[];
-    const selectedOpponents = await db.collection<Opponent>("opponents").find({ _id: { $in: ids }, _deleted: { $ne: true } }).toArray();
-    const existingCompetition = recordId ? await db.collection<Competition>("competitions").findOne({ _id: recordId }) : null;
+    const selectedOpponents = await db
+      .collection<Opponent>("opponents")
+      .find({ _id: { $in: ids }, _deleted: { $ne: true } })
+      .toArray();
+    const existingCompetition = recordId
+      ? await db
+          .collection<Competition>("competitions")
+          .findOne({ _id: recordId })
+      : null;
     for (const opponent of selectedOpponents) {
-      const inherited = !opponent.teamSlugs && await db.collection("competitions").findOne({ opponentIds: opponent._id, teamSlug: fields.teamSlug, _deleted: { $ne: true } });
-      if (!opponent.teamSlugs?.includes(String(fields.teamSlug)) && !inherited && !(existingCompetition && existingCompetition.teamSlug === fields.teamSlug && existingCompetition.opponentIds.includes(opponent._id)))
+      const inherited =
+        !opponent.teamSlugs &&
+        (await db
+          .collection("competitions")
+          .findOne({
+            opponentIds: opponent._id,
+            teamSlug: fields.teamSlug,
+            _deleted: { $ne: true },
+          }));
+      if (
+        !opponent.teamSlugs?.includes(String(fields.teamSlug)) &&
+        !inherited &&
+        !(
+          existingCompetition &&
+          existingCompetition.teamSlug === fields.teamSlug &&
+          existingCompetition.opponentIds.includes(opponent._id)
+        )
+      )
         throw new AdminError("Rakipleri önce seçilen yaş grubuna atayın.");
     }
     if (
@@ -156,13 +211,7 @@ export async function saveAdmin(
       const existing = await db
         .collection<AdminRecord>("competitions")
         .findOne({ _id: recordId });
-      for (const key of [
-        "name",
-        "teamSlug",
-        "season",
-        "kind",
-        "clubName",
-      ]) {
+      for (const key of ["name", "teamSlug", "season", "kind", "clubName"]) {
         if (JSON.stringify(existing?.[key]) !== JSON.stringify(fields[key]))
           throw new AdminError(
             "Maçları olan organizasyonun temel bilgileri değiştirilemez. Yeni organizasyon oluşturun veya önce maçlarını kaldırın.",
@@ -214,7 +263,11 @@ export async function saveAdmin(
         throw new AdminError(
           "Takımlar organizasyon katılımcılarından seçilmeli.",
         );
-      if ((customHome || customAway) && fields.homeId !== "club" && fields.awayId !== "club")
+      if (
+        (customHome || customAway) &&
+        fields.homeId !== "club" &&
+        fields.awayId !== "club"
+      )
         throw new AdminError(
           "Tek seferlik rakip yalnızca kulübümüzün hazırlık maçında kullanılabilir.",
         );
@@ -232,7 +285,7 @@ export async function saveAdmin(
             ? String(fields.homeTeam || "").trim()
             : id === "custom-away"
               ? String(fields.awayTeam || "").trim()
-          : opponents.find((o) => o._id === id)?.name;
+              : opponents.find((o) => o._id === id)?.name;
       if (!name(fields.homeId) || !name(fields.awayId))
         throw new AdminError("Rakip bulunamadı.");
       if (fields.teamSlug !== competition.teamSlug)
@@ -271,6 +324,14 @@ export async function saveAdmin(
         team.players
           .filter((p) => [...report.starters, ...report.bench].includes(p.id))
           .map((p) => [p.id, p.name]),
+      );
+      report.playerPhotos = Object.fromEntries(
+        team.players
+          .filter(
+            (p) =>
+              [...report.starters, ...report.bench].includes(p.id) && p.photo,
+          )
+          .map((p) => [p.id, p.photo]),
       );
     }
   }

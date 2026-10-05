@@ -83,7 +83,6 @@ export function MatchFields({
   matches: Match[];
 }) {
   const datalist = useId();
-  const [search, setSearch] = useState("");
   const [mode, setMode] = useState<"goal" | "substitution">("goal");
   const [minute, setMinute] = useState(0);
   const [side, setSide] = useState<"home" | "away">("home");
@@ -548,69 +547,11 @@ export function MatchFields({
               </button>
             )}
           </div>
-          {report.starterCount === 11 ? (
-            <LineupBuilder
-              players={players}
-              report={report}
-              onChange={setReport}
-            />
-          ) : (
-            <>
-              <label>
-                Oyuncu ara
-                <input
-                  type="search"
-                  value={search}
-                  placeholder="İsim veya forma numarası"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </label>
-              <div className="admin-roster-grid">
-                {players
-                  .filter((p) =>
-                    `${p.name} ${p.shirtNumber ?? ""}`
-                      .toLocaleLowerCase("tr")
-                      .includes(search.toLocaleLowerCase("tr")),
-                  )
-                  .map((p) => (
-                    <label className="admin-roster-player" key={p.id}>
-                      <span>
-                        {p.shirtNumber ? `#${p.shirtNumber} · ` : ""}
-                        {p.name}
-                        <small>{p.position}</small>
-                      </span>
-                      <select
-                        aria-label={`${p.name} kadro durumu`}
-                        value={
-                          report.starters.includes(p.id)
-                            ? "starter"
-                            : report.bench.includes(p.id)
-                              ? "bench"
-                              : "none"
-                        }
-                        onChange={(e) =>
-                          setReport({
-                            ...report,
-                            starters: [
-                              ...report.starters.filter((id) => id !== p.id),
-                              ...(e.target.value === "starter" ? [p.id] : []),
-                            ],
-                            bench: [
-                              ...report.bench.filter((id) => id !== p.id),
-                              ...(e.target.value === "bench" ? [p.id] : []),
-                            ],
-                          })
-                        }
-                      >
-                        <option value="none">Kadro dışı</option>
-                        <option value="starter">Başlangıç</option>
-                        <option value="bench">Yedek</option>
-                      </select>
-                    </label>
-                  ))}
-              </div>
-            </>
-          )}
+          <LineupBuilder
+            players={players}
+            report={report}
+            onChange={setReport}
+          />
           {!players.length && (
             <p className="admin-help">
               Önce Takımlar ve oyuncular bölümünden bu takıma oyuncu ekleyin.

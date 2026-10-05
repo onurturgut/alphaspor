@@ -11,15 +11,32 @@ export const metadata: Metadata = {
 export default async function News({
   searchParams,
 }: {
-  searchParams: Promise<{ takim?: string }>;
+  searchParams: Promise<{ takim?: string; sayfa?: string }>;
 }) {
   const content = await getContent();
-  const { takim } = await searchParams;
+  const { takim, sayfa } = await searchParams;
   const categories = [...new Set(content.news.map((n) => n.category))];
   const category = categories.includes(takim || "") ? takim : undefined;
   const news = category
     ? content.news.filter((n) => n.category === category)
     : content.news;
+  const pageSize = 9;
+  const totalPages = Math.max(1, Math.ceil(news.length / pageSize));
+  const requestedPage = Number.parseInt(sayfa ?? "1", 10);
+  const currentPage = Number.isFinite(requestedPage)
+    ? Math.min(Math.max(requestedPage, 1), totalPages)
+    : 1;
+  const visibleNews = news.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+  const pageHref = (page: number) => ({
+    pathname: "/haberler",
+    query: {
+      ...(category ? { takim: category } : {}),
+      ...(page > 1 ? { sayfa: page } : {}),
+    },
+  });
   return (
     <>
       <PageIntro {...content.pages.news} />
@@ -38,7 +55,24 @@ export default async function News({
             </Link>
           ))}
         </nav>
-        <NewsCards news={news} fullText />
+        <NewsCards news={visibleNews} />
+        {totalPages > 1 && (
+          <nav className="news-pagination" aria-label="Haber sayfaları">
+            {currentPage > 1 ? (
+              <Link href={pageHref(currentPage - 1)}>← Önceki</Link>
+            ) : (
+              <span aria-disabled="true">← Önceki</span>
+            )}
+            <strong>
+              {currentPage} / {totalPages}
+            </strong>
+            {currentPage < totalPages ? (
+              <Link href={pageHref(currentPage + 1)}>Sonraki →</Link>
+            ) : (
+              <span aria-disabled="true">Sonraki →</span>
+            )}
+          </nav>
+        )}
       </section>
     </>
   );

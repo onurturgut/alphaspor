@@ -101,6 +101,34 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.news-pagination {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.news-pagination a,
+.news-pagination span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  width: fit-content;
+  color: var(--muted);
+  font-size: 12px;
+}
+.news-pagination > :last-child {
+  justify-self: end;
+}
+.news-pagination strong {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.news-pagination span[aria-disabled="true"] {
+  opacity: 0.4;
+}
 
 .contact-layout {
   align-items: start;
@@ -224,6 +252,28 @@ html body .contact-form {
   .contact-form__title {
     gap: 12px;
   }
+  .filter-bar {
+    flex-wrap: nowrap;
+    margin-inline: -20px;
+    padding: 0 20px 10px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: 20px;
+    scrollbar-width: thin;
+  }
+  .filter-bar a {
+    flex: 0 0 auto;
+    min-height: 44px;
+  }
+  .news-pagination {
+    gap: 10px;
+    margin-top: 28px;
+  }
+  .news-pagination a,
+  .news-pagination span,
+  .news-pagination strong {
+    font-size: 11px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .mobile-nav,
@@ -244,4 +294,25 @@ html body .news-showcase-card { display: flex; flex-direction: column; grid-colu
 html body .news-showcase-card .news-showcase-visual { aspect-ratio: 4 / 3; min-height: 0; }
 html body .news-showcase-copy p { color: var(--muted); }
 html body .contact-form__field input, html body .contact-form__field textarea, html body .contact-form__submit { border-radius: 10px; }
-@media (max-width: 700px) { html body .news-showcase-grid { grid-template-columns: 1fr; } }
+@media (max-width: 700px) {
+  html body .news-showcase-grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(86vw, 360px);
+    gap: 14px;
+    margin-inline: -20px;
+    padding: 2px 20px 18px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: 20px;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: thin;
+  }
+  html body .news-showcase-card,
+  html body .news-showcase-card.news-showcase-featured {
+    grid-column: auto;
+    grid-row: auto;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}

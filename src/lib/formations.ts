@@ -116,3 +116,32 @@ export function isFormationId(value: string | undefined): value is FormationId {
 export function formationSlots(value: string | undefined) {
   return formations[isFormationId(value) ? value : "4-3-3"];
 }
+
+/**
+ * Project top-down tactical coordinates onto cinematic-pitch.webp.
+ *
+ * Measured against the 1000 x 1500 source image, the playing-area lines are:
+ * - far goal line:  (228, 473) -> (773, 473)
+ * - halfway line:   (124, 700) -> (877, 700)
+ * - near goal line: (  0,1148) -> (999,1148)
+ *
+ * The vertical transform is projective rather than linear because the camera
+ * looks down the length of the field. The horizontal limits then follow the
+ * two touchlines, keeping wide players inside the visible pitch at every row.
+ */
+export function cinematicPitchPosition(x: number, y: number) {
+  const depth = Math.min(1, Math.max(0, y / 100));
+  const lateral = Math.min(1, Math.max(0, x / 100));
+
+  // Homography through y=473 (far), y=700 (halfway), and y=1148 (near).
+  const imageY = (0.0734 * depth + 0.3153) / (1 - 0.4926 * depth);
+  const fieldDepth = (imageY - 473 / 1500) / ((1148 - 473) / 1500);
+  const leftTouchline = 228 / 1000 + (0 / 1000 - 228 / 1000) * fieldDepth;
+  const rightTouchline = 773 / 1000 + (999 / 1000 - 773 / 1000) * fieldDepth;
+  const imageX = leftTouchline + lateral * (rightTouchline - leftTouchline);
+
+  return {
+    left: `${imageX * 100}%`,
+    top: `${imageY * 100}%`,
+  };
+}

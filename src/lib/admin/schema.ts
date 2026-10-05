@@ -79,6 +79,8 @@ const matchReportSchema = z.object({
       ]),
     )
     .max(300),
+  playerNames: z.record(z.string(), required(250)).optional(),
+  playerPhotos: z.record(z.string(), safeUrl).optional(),
 });
 export const appearanceSchema = z.object({
   id: required(100),

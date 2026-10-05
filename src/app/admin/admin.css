@@ -2275,15 +2275,20 @@ html body .admin-root .admin-alert {
 .admin-lineup-pitch {
   position: relative;
   isolation: isolate;
-  width: min(100%, 520px);
-  aspect-ratio: 68/105;
+  width: min(100%, 760px);
+  aspect-ratio: 3/2;
   margin: 0 auto;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 32%);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #176b3a;
-  box-shadow: inset 0 0 40px rgb(0 0 0 / 18%);
+  background: #101210;
+  box-shadow: 0 18px 44px rgb(0 0 0 / 24%);
   user-select: none;
+}
+.admin-pitch-background {
+  z-index: 0;
+  object-fit: cover;
+  pointer-events: none;
 }
 .admin-pitch-turf {
   position: absolute;
@@ -4172,4 +4177,132 @@ html body .admin-root button.admin-pitch-player > span {
     justify-content: stretch;
   }
   .admin-root .admin-squad-actions button { flex: 1; }
+}
+
+/* Responsive match workspace: portrait tactics board and touch-first roster flow. */
+.admin-root .admin-lineup-layout {
+  grid-template-columns: minmax(320px, 1fr) minmax(300px, 0.72fr);
+  gap: clamp(14px, 2vw, 24px);
+}
+.admin-root .admin-lineup-column {
+  border-radius: 16px;
+}
+.admin-root .admin-lineup-pitch {
+  width: min(100%, 520px);
+  aspect-ratio: 2 / 3;
+  border-radius: 16px;
+}
+.admin-root .admin-pitch-background {
+  object-fit: cover;
+}
+.admin-root button.admin-pitch-player {
+  width: clamp(62px, 15%, 84px);
+}
+.admin-root button.admin-pitch-player > b {
+  width: 38px;
+  height: 38px;
+  border-color: rgb(255 255 255 / 92%);
+  background: rgb(8 14 11 / 88%);
+}
+.admin-root button.admin-pitch-player > span {
+  max-width: 82px;
+  padding: 3px 5px;
+  border-radius: 5px;
+  background: rgb(5 10 7 / 78%);
+  font-size: 9px;
+}
+.admin-root button.admin-pitch-player.is-empty > span {
+  background: rgb(5 46 22 / 82%);
+}
+.admin-root button.admin-pitch-player[aria-pressed="true"] > b {
+  outline: 3px solid #fbbf24;
+  outline-offset: 3px;
+}
+.admin-root .admin-squad-list {
+  max-height: min(720px, 75vh);
+  padding-right: 3px;
+}
+.admin-root .admin-event-form {
+  margin-top: 20px;
+  border-radius: 16px;
+}
+
+@media (max-width: 900px) {
+  .admin-root .admin-lineup-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-root .admin-squad-panel {
+    grid-row: auto;
+  }
+  .admin-root .admin-lineup-pitch {
+    width: min(100%, 480px);
+  }
+  .admin-root .admin-squad-list {
+    max-height: 520px;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-root .admin-lineup-column {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  .admin-root .admin-lineup-heading {
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .admin-root .admin-lineup-heading h3 {
+    font-size: 17px;
+  }
+  .admin-root .admin-formation-select {
+    max-width: none;
+  }
+  .admin-root .admin-lineup-pitch {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+  }
+  .admin-root button.admin-pitch-player {
+    width: 62px;
+    min-height: 44px;
+  }
+  .admin-root button.admin-pitch-player > b {
+    width: 34px;
+    height: 34px;
+  }
+  .admin-root button.admin-pitch-player > span {
+    max-width: 62px;
+    margin-top: 3px;
+    font-size: 8px;
+    line-height: 1.15;
+  }
+  .admin-root .admin-squad-panel {
+    position: relative;
+  }
+  .admin-root .admin-squad-list {
+    max-height: none;
+    overflow: visible;
+  }
+  .admin-root .admin-squad-row {
+    min-height: 58px;
+    padding: 9px;
+  }
+  .admin-root .admin-event-form .admin-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-root .admin-event-form .admin-tabs button {
+    min-height: 44px;
+  }
+  .admin-root .admin-match-events li {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 8px;
+  }
+  .admin-root .admin-match-events li > span {
+    flex: none;
+  }
+  .admin-root .admin-match-events li > button {
+    min-height: 40px;
+  }
 }

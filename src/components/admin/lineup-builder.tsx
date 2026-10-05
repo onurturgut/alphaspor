@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { AcademyPlayer } from "@/lib/academy";
 import {
+  cinematicPitchPosition,
   formationIds,
   formationSlots,
   isFormationId,
@@ -74,10 +76,12 @@ export function LineupBuilder({ players, report, onChange }: Props) {
     const nextSlots = formationSlots(value);
     const ids = lineup.map((item) => item.playerId);
     updateSquad(
-      ids.slice(0, nextSlots.length).map((playerId, index) => ({
-        slotId: nextSlots[index].id,
-        playerId,
-      })),
+      ids
+        .slice(0, Math.min(nextSlots.length, report.starterCount))
+        .map((playerId, index) => ({
+          slotId: nextSlots[index].id,
+          playerId,
+        })),
       report.bench,
       value,
     );
@@ -88,6 +92,7 @@ export function LineupBuilder({ players, report, onChange }: Props) {
     if (!selectedSlot) return;
     const current = lineup.find((item) => item.slotId === selectedSlot);
     const previous = lineup.find((item) => item.playerId === playerId);
+    if (!current && !previous && lineup.length >= report.starterCount) return;
     let next = lineup.filter(
       (item) => item.slotId !== selectedSlot && item.playerId !== playerId,
     );
@@ -129,7 +134,9 @@ export function LineupBuilder({ players, report, onChange }: Props) {
             <span className="admin-section-kicker">Oyun dizilişi</span>
             <h3>Saha yerleşimi</h3>
           </div>
-          <span>{lineup.length}/11</span>
+          <span>
+            {lineup.length}/{report.starterCount}
+          </span>
         </div>
         <label className="admin-formation-select">
           Diziliş
@@ -146,26 +153,20 @@ export function LineupBuilder({ players, report, onChange }: Props) {
         </label>
         <p className="admin-help">
           Bir pozisyona, ardından o pozisyonda oynayacak futbolcuya dokunun.
+          Başlangıç sayısına ulaştığınızda kalan pozisyonlar boş bırakılabilir.
         </p>
         <div
           className="admin-lineup-pitch"
           aria-label={`${formation} saha dizilişi`}
         >
-          <span className="admin-pitch-turf" />
-          <svg
-            className="admin-pitch-lines"
-            viewBox="0 0 680 1050"
+          <Image
+            className="admin-pitch-background"
+            src="/media/academy/cinematic-pitch.webp"
+            alt=""
+            fill
+            sizes="(max-width: 900px) calc(100vw - 48px), 520px"
             aria-hidden="true"
-          >
-            <rect x="22" y="22" width="636" height="1006" />
-            <line x1="22" y1="525" x2="658" y2="525" />
-            <circle cx="340" cy="525" r="92" />
-            <circle className="admin-pitch-dot" cx="340" cy="525" r="7" />
-            <rect x="142" y="22" width="396" height="160" />
-            <rect x="142" y="868" width="396" height="160" />
-            <rect x="255" y="22" width="170" height="62" />
-            <rect x="255" y="966" width="170" height="62" />
-          </svg>
+          />
           {slots.map((item) => {
             const assignment = lineup.find((row) => row.slotId === item.id);
             const player = assignment
@@ -176,11 +177,12 @@ export function LineupBuilder({ players, report, onChange }: Props) {
                 key={item.id}
                 type="button"
                 className={`admin-pitch-player${selectedSlot === item.id ? " is-selected" : ""}${player ? "" : " is-empty"}`}
-                style={{ left: `${item.x}%`, top: `${item.y}%` }}
+                style={cinematicPitchPosition(item.x, item.y)}
                 onClick={() =>
                   setSelectedSlot(selectedSlot === item.id ? null : item.id)
                 }
                 aria-label={`${item.label}: ${player?.name ?? "oyuncu seç"}`}
+                aria-pressed={selectedSlot === item.id}
               >
                 <b>{player ? initials(player.name) : "+"}</b>
                 <span>{player?.name ?? item.label}</span>
@@ -214,6 +216,13 @@ export function LineupBuilder({ players, report, onChange }: Props) {
           {filteredPlayers.map((player) => {
             const onField = lineup.some((item) => item.playerId === player.id);
             const onBench = report.bench.includes(player.id);
+            const selectedPositionFilled = lineup.some(
+              (item) => item.slotId === selectedSlot,
+            );
+            const canAssign =
+              onField ||
+              selectedPositionFilled ||
+              lineup.length < report.starterCount;
             return (
               <div className="admin-squad-row" key={player.id}>
                 <span className="admin-player-initials">
@@ -228,7 +237,11 @@ export function LineupBuilder({ players, report, onChange }: Props) {
                 </span>
                 <span className="admin-squad-actions">
                   {selectedSlot && (
-                    <button type="button" onClick={() => assign(player.id)}>
+                    <button
+                      type="button"
+                      disabled={!canAssign}
+                      onClick={() => assign(player.id)}
+                    >
                       Ata
                     </button>
                   )}
@@ -264,10 +277,10 @@ export function LineupBuilder({ players, report, onChange }: Props) {
                 </span>
                 <em
                   data-role={
-                    onField ? "İlk 11" : onBench ? "Yedek" : "Kadro dışı"
+                    onField ? "Başlangıç" : onBench ? "Yedek" : "Kadro dışı"
                   }
                 >
-                  {onField ? "İlk 11" : onBench ? "Yedek" : "Kadro dışı"}
+                  {onField ? "Başlangıç" : onBench ? "Yedek" : "Kadro dışı"}
                 </em>
               </div>
             );

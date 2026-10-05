@@ -29,6 +29,7 @@ export type MatchReport = {
   lineup?: { slotId: string; playerId: string }[];
   events: MatchEvent[];
   playerNames?: Record<string, string>;
+  playerPhotos?: Record<string, string>;
 };
 export type Competition = {
   _id: string;
@@ -514,8 +515,7 @@ export function generateFixtures(
   }
   return fixtures.sort(
     (a, b) =>
-      (a.week ?? Number.MAX_SAFE_INTEGER) -
-      (b.week ?? Number.MAX_SAFE_INTEGER),
+      (a.week ?? Number.MAX_SAFE_INTEGER) - (b.week ?? Number.MAX_SAFE_INTEGER),
   );
 }
 
@@ -545,8 +545,10 @@ export function selectMatches(
     .sort((a, b) => {
       if (!a.date || !b.date) {
         if (!a.date && !b.date)
-          return (a.week ?? Number.MAX_SAFE_INTEGER) -
-            (b.week ?? Number.MAX_SAFE_INTEGER);
+          return (
+            (a.week ?? Number.MAX_SAFE_INTEGER) -
+            (b.week ?? Number.MAX_SAFE_INTEGER)
+          );
         return a.date ? -1 : 1;
       }
       const chronological = `${a.date}${a.time ?? "00:00"}`.localeCompare(

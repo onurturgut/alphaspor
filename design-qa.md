@@ -32,6 +32,57 @@
 
 final result: passed
 
+# Kadro ve maç detayları — 5 Ekim 2026
+
+- Kaynak görsel: `C:/Users/onurt/Downloads/WhatsApp Image 2026-10-05 at 00.48.26.jpeg`, 1600 × 801 px, 1×.
+- Uygulama: `/maclar` içindeki açık `Kadro ve maç detayları` durumu.
+- Hedef durum: saha yerleşimi, yedekler ve maç olaylarının aynı satırda üç panel olarak görünmesi; dar ekranlarda tek sütuna dönüşmesi.
+- Uygulama varlığı: `public/media/academy/alfa-wolf-pitch.webp`, 1536 × 1024 px.
+- Uygulama ekran görüntüsü: alınamadı. Bu çalışma oturumunun bilgisayar kullanım envanterinde uygulama içi tarayıcı, Chrome ve diğer tarayıcı yüzeyleri bulunmuyor.
+- Viewport ve yoğunluk: kaynak 1600 × 801 px / 1×; uygulama için tarayıcı ölçümü yapılamadı.
+- Durum: Kodlandı; görsel karşılaştırma tarayıcı eksikliği nedeniyle engellendi.
+
+## Teknik kontroller
+
+- TypeScript kontrolü geçti.
+- ESLint geçti.
+- Next.js 16.3.4 üretim derlemesi geçti.
+- `git diff --check` içerik hatası göstermedi; yalnızca çalışma ağacının mevcut LF/CRLF uyarıları var.
+- `verify:match-management`, Windows Node 24 çalıştırıcısının `src/lib/matches.ts` içindeki uzantısız `./formations` içe aktarımını çözememesi nedeniyle başlayamadı. Derleme ve TypeScript aynı içe aktarımı başarıyla çözüyor.
+
+## Görsel değerlendirme
+
+- Tipografi: Referanstaki küçük üst etiket, güçlü panel başlığı ve yoğun olay metni hiyerarşisi kodlandı; tarayıcıda piksel karşılaştırması yapılamadı.
+- Yerleşim: Masaüstünde 2.15 / 0.78 / 1.05 oranlı üç panel, tablette iki sütun ve mobilde tek sütun tanımlandı.
+- Renkler: Mevcut tema değişkenleri, yeşil giriş etiketi, bordo çıkış etiketi ve mavi olay ikonları kullanıldı.
+- Görsel kalite: Referanstaki saha için mevcut yüksek çözünürlüklü kurtlu saha varlığı kullanıldı. Oyuncu fotoğrafı varsa dairesel portre, yoksa baş harf geri dönüşü gösteriliyor.
+- İçerik: Yedek giriş dakikaları ve başlangıç oyuncularının çıkış dakikaları maç olaylarından hesaplanıyor; olay sayısı, maç süresi, gol ve oyuncu değişikliği ayrımları korunuyor.
+
+## Karşılaştırma geçmişi
+
+- İlk uygulama tamamlandı; kaynak görsel açıldı ve ölçüldü.
+- Uygulama tarayıcıda açılamadığı için aynı viewport/state ekran görüntüsü ve birleşik yan yana karşılaştırma üretilemedi.
+- Açılır detay etkileşimi, mobil taşma ve tarayıcı konsolu görsel olarak doğrulanamadı.
+
+## Bulgular
+
+- [P1] Tarayıcı-render kanıtı eksik. Kaynak ve uygulama aynı viewport ve durumda karşılaştırılamadı. Kullanılabilir bir tarayıcı yüzeyi açıldığında masaüstü ve mobil yakalama yapılıp panel oranları, saha üzerindeki oyuncu konumları ve metin taşmaları kontrol edilmeli.
+
+final result: blocked
+
+# Maç sahası forvet konumu — 5 Ekim 2026
+
+- Kaynak görsel gerçeği: `C:/Users/onurt/OneDrive/Resimler/Ekran Görüntüleri/Ekran görüntüsü 2026-10-05 230529.png`, 541 × 702 px. Forvet işareti stadyum tribününde; hedef, aynı dizilişi görünür çim alanına taşımak.
+- Uygulama: `/maclar` maç detayı ve aynı koordinatları kullanan `/admin` kadro yerleşimi.
+- Viewport/state: kaynak mobil ekran; maç detayındaki saha paneli açık. Uygulama ekran görüntüsü bu oturumda kullanılabilir tarayıcı yüzeyi olmadığı için alınamadı.
+- Tam görünüm karşılaştırması: kaynak açıldı; uygulama yakalaması olmadığından birleşik karşılaştırma engellendi.
+- Odaklı karşılaştırma: forvetin eski `%14–21` dikey değerleri doğrudan tüm stadyum görseline uygulanıyordu. Yeni dönüşüm, taktik koordinatları görseldeki `%34–94` saha bandına eşliyor; örneğin 4-3-3 santrforu `%18` yerine `%44.8` konumuna gelir.
+- Tipografi, renkler, görseller ve içerik değiştirilmedi. Yalnızca oyuncu işaretlerinin dikey saha koordinatı düzeltildi.
+- Teknik kontroller: TypeScript, ESLint ve Next.js üretim derlemesi geçti. `verify:match-management`, mevcut Node ESM uzantısız `./formations` import sorunu nedeniyle başlayamadı.
+- [P1] Tarayıcı-render kanıtı eksik. Kod düzeltmesi derleniyor ancak aynı mobil durumda piksel karşılaştırması ve konsol kontrolü yapılamadı.
+
+final result: blocked
+
 # Yönetim paneli oyuncu kartı standardı — 4 Ekim 2026
 
 - Kaynak görsel gerçeği: Kullanıcının konuşmaya eklediği Yiğit Hammaloğlu ve Akdeniz Harmandar karşılaştırma ekran görüntüsü.
@@ -146,3 +197,9 @@ final result: passed
 Kapsam: Gerçek kadro verileriyle referans tasarımın uygulanması. Fotoğraf çekimi/dekupe üretimi ve özel harf çiziminin birebir kopyası bu uygulamada yapılmadı.
 
 final result: passed
+
+## En güncel QA durumu
+
+Kadro ve maç detayları çalışmasının tarayıcı-render karşılaştırması, bu oturumda kullanılabilir tarayıcı yüzeyi bulunmadığı için henüz tamamlanamadı.
+
+final result: blocked

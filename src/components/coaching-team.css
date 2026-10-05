@@ -232,17 +232,36 @@
   .coaching-team {
     padding: 44px 0;
   }
+  .coaching-shell {
+    width: 100%;
+  }
   .coaching-heading {
+    width: calc(100% - 40px);
+    margin-inline: auto;
     margin-bottom: 26px;
   }
   .coaching-heading > span {
     font-size: 14px;
   }
   .coaching-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(86vw, 360px);
+    gap: 14px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding: 2px 20px 18px;
+    scroll-padding-inline: 20px;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: thin;
+  }
+  .coach-card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
   .coach-featured {
+    grid-column: auto;
+    grid-row: auto;
     display: block;
   }
   .coach-featured .coach-photo {
