@@ -2,9 +2,15 @@ import { z } from "zod";
 
 /** Turkish names converted to stable, URL-safe identifiers. */
 export function slugify(value: string): string {
-  return value.trim().replace(/İ/g, "I").replace(/ı/g, "i")
-    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return value
+    .trim()
+    .replace(/İ/g, "I")
+    .replace(/ı/g, "i")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 const text = (max = 250) => z.string().trim().max(max);
@@ -44,6 +50,13 @@ const matchReportSchema = z.object({
   allowReentry: z.boolean(),
   starters: z.array(required(100)).max(11),
   bench: z.array(required(100)).max(50),
+  formation: z
+    .enum(["4-3-3", "4-2-3-1", "4-4-2", "3-4-2-1", "3-5-2", "5-3-2"])
+    .optional(),
+  lineup: z
+    .array(z.object({ slotId: required(20), playerId: required(100) }))
+    .max(11)
+    .optional(),
   events: z
     .array(
       z.discriminatedUnion("type", [
@@ -185,35 +198,46 @@ export const settingsSchema = z
     }
   });
 export const schemas = {
-  opponents: z.object({ name: required(150), teamSlugs: z.array(slug).max(30).default([]), order }),
-  competitions: z.object({
-    name: required(100),
-    teamSlug: slug,
-    season,
-    kind: z.enum(["official", "friendly", "tournament"]),
-    clubName: required(150),
-    opponentIds: z
-      .array(required(100))
-      .max(24)
-      .refine(
-        (ids) => new Set(ids).size === ids.length && !ids.includes("club"),
-        "Rakipler benzersiz olmalı.",
-      ),
-    duration: z.number().int().min(1).max(150),
-    starterCount: z.number().int().min(1).max(11),
-    allowReentry: z.boolean(),
-    winPoints: z.number().int().min(0).max(10),
-    drawPoints: z.number().int().min(0).max(10),
-    lossPoints: z.number().int().min(0).max(10),
-    standingsEnabled: z.boolean().default(true),
-    standingsRule: z.enum(["general", "tff"]).default("general"),
-    headToHeadMeetings: z.number().int().min(1).max(4).default(2),
-    published: z.boolean().default(false),
+  opponents: z.object({
+    name: required(150),
+    teamSlugs: z.array(slug).max(30).default([]),
     order,
-  }).refine((competition) => !competition.published || competition.opponentIds.length > 0, {
-    path: ["opponentIds"],
-    message: "Yayımlamak için en az bir rakip seçin. Rakipleri daha sonra eklemek için taslak olarak kaydedebilirsiniz.",
   }),
+  competitions: z
+    .object({
+      name: required(100),
+      teamSlug: slug,
+      season,
+      kind: z.enum(["official", "friendly", "tournament"]),
+      clubName: required(150),
+      opponentIds: z
+        .array(required(100))
+        .max(24)
+        .refine(
+          (ids) => new Set(ids).size === ids.length && !ids.includes("club"),
+          "Rakipler benzersiz olmalı.",
+        ),
+      duration: z.number().int().min(1).max(150),
+      starterCount: z.number().int().min(1).max(11),
+      allowReentry: z.boolean(),
+      winPoints: z.number().int().min(0).max(10),
+      drawPoints: z.number().int().min(0).max(10),
+      lossPoints: z.number().int().min(0).max(10),
+      standingsEnabled: z.boolean().default(true),
+      standingsRule: z.enum(["general", "tff"]).default("general"),
+      headToHeadMeetings: z.number().int().min(1).max(4).default(2),
+      published: z.boolean().default(false),
+      order,
+    })
+    .refine(
+      (competition) =>
+        !competition.published || competition.opponentIds.length > 0,
+      {
+        path: ["opponentIds"],
+        message:
+          "Yayımlamak için en az bir rakip seçin. Rakipleri daha sonra eklemek için taslak olarak kaydedebilirsiniz.",
+      },
+    ),
   news: z.object({
     title: required(),
     category: required(100),

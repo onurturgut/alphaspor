@@ -31,11 +31,6 @@ import {
 import styles from "./academy-explorer.module.css";
 import { playerCardArt } from "@/lib/player-card-art";
 
-const cardBrush = localFont({
-  src: "../../public/fonts/permanent-marker.ttf",
-  display: "swap",
-  variable: "--font-card-brush",
-});
 const cardCondensed = localFont({
   src: [
     { path: "../../public/fonts/barlow-condensed-regular.ttf", weight: "400" },
@@ -351,7 +346,9 @@ export function AcademyExplorer({
               </div>
               <div className={styles.cardStage}>
                 {cardArt ? (
-                  <div className={styles.collectible}>
+                  <div
+                    className={`${styles.collectible} ${styles.finishedCard} ${cardCondensed.variable}`}
+                  >
                     <Image
                       key={cardArt}
                       src={cardArt}
@@ -360,15 +357,32 @@ export function AcademyExplorer({
                       sizes="(max-width: 700px) 90vw, 360px"
                       style={{ objectFit: "contain" }}
                     />
+                    <span className={styles.cardStatsCleanup} aria-hidden="true" />
+                    <dl
+                      className={`${styles.cardStats} ${styles.cardStatsLive}`}
+                      aria-label={`${season} canlı oyuncu istatistikleri`}
+                    >
+                      {[
+                        ["MAÇ", stats.matches],
+                        ["GOL", stats.goals],
+                        ["ASİST", stats.assists],
+                        ["DK", stats.minutes],
+                      ].map(([label, value]) => (
+                        <div key={label as string}>
+                          <dt>{label}</dt>
+                          <dd>{formatNumber(value as number | null)}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
                 ) : (
                   <div
-                    className={`${styles.collectible} ${cardBrush.variable} ${cardCondensed.variable}`}
+                    className={`${styles.collectible} ${cardCondensed.variable}`}
                     aria-label={`${player.name} oyuncu kartı`}
                   >
                     <Image
                       className={styles.cardFrame}
-                      src="/media/academy/wolf-card-frame-final.webp"
+                      src="/media/academy/player-card-template.webp"
                       alt=""
                       fill
                       sizes="(max-width: 700px) 90vw, 360px"
@@ -391,7 +405,7 @@ export function AcademyExplorer({
                         <span
                           className={styles.cardGivenName}
                           style={{
-                            fontSize: `${Math.min(17, 110 / Math.max(givenName.length, 1))}cqw`,
+                            fontSize: `${Math.min(11.5, 80 / Math.max(givenName.length, 1))}cqw`,
                           }}
                         >
                           {givenName.toLocaleUpperCase("tr-TR")}

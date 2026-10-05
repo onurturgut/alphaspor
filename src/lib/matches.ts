@@ -1,4 +1,5 @@
 import type { AcademyPlayer, Appearance } from "./academy";
+import { formationSlots, type FormationId } from "./formations";
 
 export type MatchEvent =
   | {
@@ -24,6 +25,8 @@ export type MatchReport = {
   allowReentry: boolean;
   starters: string[];
   bench: string[];
+  formation?: FormationId;
+  lineup?: { slotId: string; playerId: string }[];
   events: MatchEvent[];
   playerNames?: Record<string, string>;
 };
@@ -147,6 +150,29 @@ export function validateReport(
   const roster = [...report.starters, ...report.bench];
   if (new Set(roster).size !== roster.length)
     errors.push("Bir oyuncu kadroda yalnızca bir kez yer alabilir.");
+  if (report.lineup) {
+    const availableSlots = new Set(
+      formationSlots(report.formation).map((item) => item.id),
+    );
+    if (report.lineup.some((item) => !availableSlots.has(item.slotId)))
+      errors.push("Saha dizilişinde geçersiz bir pozisyon var.");
+    if (
+      new Set(report.lineup.map((item) => item.slotId)).size !==
+      report.lineup.length
+    )
+      errors.push("Bir saha pozisyonuna yalnızca bir oyuncu atanabilir.");
+    if (
+      new Set(report.lineup.map((item) => item.playerId)).size !==
+      report.lineup.length
+    )
+      errors.push("Bir oyuncu sahada yalnızca bir pozisyonda olabilir.");
+    const placed = new Set(report.lineup.map((item) => item.playerId));
+    if (
+      placed.size !== report.starters.length ||
+      report.starters.some((id) => !placed.has(id))
+    )
+      errors.push("Saha dizilişi ile başlangıç kadrosu uyuşmuyor.");
+  }
   const known = new Set(players.map((p) => p.id));
   if (roster.some((id) => !known.has(id)))
     errors.push("Kadroda bu takıma ait olmayan oyuncu var.");

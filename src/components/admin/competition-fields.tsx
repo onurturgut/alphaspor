@@ -24,6 +24,11 @@ export function CompetitionFields({
   canGenerate: boolean;
 }) {
   const [query, setQuery] = useState("");
+  const [availableOpponents, setAvailableOpponents] = useState(opponents);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [newOpponentName, setNewOpponentName] = useState("");
+  const [addingOpponent, setAddingOpponent] = useState(false);
+  const [opponentError, setOpponentError] = useState("");
   const [startDate, setStartDate] = useState(
     new Date().toISOString().slice(0, 10),
   );
@@ -32,7 +37,7 @@ export function CompetitionFields({
   const [preview, setPreview] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const eligibleOpponents = opponents.filter(
+  const eligibleOpponents = availableOpponents.filter(
     (o) => o.teamSlugs?.includes(draft.teamSlug ?? "") || draft.opponentIds?.includes(o._id),
   );
   const fixtureInputValid =
@@ -45,7 +50,7 @@ export function CompetitionFields({
     preview && fixtureInputValid && draft._id
       ? generateFixtures(
           draft as Competition,
-          opponents,
+          availableOpponents,
           startDate,
           intervalDays,
           returnLeg,
@@ -60,6 +65,45 @@ export function CompetitionFields({
       onChange={(v) => update({ [key]: type === "number" ? Number(v) : v })}
     />
   );
+  async function addOpponent() {
+    const name = newOpponentName.trim();
+    if (!name || !draft.teamSlug || addingOpponent) return;
+    setAddingOpponent(true);
+    setOpponentError("");
+    try {
+      const response = await fetch("/api/admin/data/opponents", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: null,
+          version: null,
+          data: {
+            name,
+            teamSlugs: [draft.teamSlug],
+            order: availableOpponents.length,
+          },
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      const opponent: Opponent = {
+        _id: result.id,
+        name,
+        teamSlugs: [draft.teamSlug],
+      };
+      setAvailableOpponents((items) => [...items, opponent]);
+      update({ opponentIds: [...(draft.opponentIds ?? []), result.id] });
+      setNewOpponentName("");
+      setShowQuickAdd(false);
+      setQuery("");
+    } catch (error) {
+      setOpponentError(
+        error instanceof Error ? error.message : "Rakip eklenemedi.",
+      );
+    } finally {
+      setAddingOpponent(false);
+    }
+  }
   return (
     <>
       <div className="admin-form-grid">
@@ -142,26 +186,70 @@ export function CompetitionFields({
         Rakip seçmeden taslak olarak kaydedebilirsiniz. Yayımlamak ve fikstür
         oluşturmak için en az bir rakip ekleyin.
       </p>
-      {eligibleOpponents.length === 0 && (
+      <div className="admin-opponent-toolbar">
+        <label>
+          Rakip ara
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </label>
+        <button
+          type="button"
+          className="admin-primary"
+          aria-expanded={showQuickAdd}
+          onClick={() => {
+            setShowQuickAdd((value) => !value);
+            setOpponentError("");
+          }}
+        >
+          + Rakip ekle
+        </button>
+      </div>
+      {showQuickAdd && (
+        <div className="admin-quick-opponent">
+          <label>
+            Yeni rakip takım adı
+            <input
+              autoFocus
+              value={newOpponentName}
+              maxLength={150}
+              placeholder="Takım adını yazın"
+              onChange={(e) => setNewOpponentName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  void addOpponent();
+                }
+              }}
+            />
+          </label>
+          <button
+            type="button"
+            className="admin-primary"
+            disabled={addingOpponent || !newOpponentName.trim() || !draft.teamSlug}
+            onClick={() => void addOpponent()}
+          >
+            {addingOpponent ? "Ekleniyor…" : "Rakibi ekle ve seç"}
+          </button>
+          {opponentError && (
+            <p className="admin-alert error" role="alert">{opponentError}</p>
+          )}
+        </div>
+      )}
+      {eligibleOpponents.length === 0 && !showQuickAdd && (
         <p className="admin-help" role="status">
           Bu yaş grubuna atanmış rakip yok. Taslağı kaydettikten sonra Rakipler
           bölümünde bir rakibi bu yaş grubuna atayın ve organizasyonu tekrar açın.
         </p>
       )}
       <p className="admin-help">
-        Kulübümüz otomatik katılır. Eksik rakipleri önce Rakipler bölümünden
-        ekleyin. Maçlar oluşturulduktan sonra katılımcılar; ilk maç raporu
+        Kulübümüz otomatik katılır. Eksik takımları “Rakip ekle” ile
+        hemen oluşturabilirsiniz. Maçlar oluşturulduktan sonra katılımcılar; ilk maç raporu
         kaydedildikten sonra oyun kuralları kilitlenir. Kadro girmeden önce maç
         süresini ve başlangıç oyuncu sayısını kontrol edin.
       </p>
-      <label>
-        Rakip ara
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-      </label>
       <div className="admin-roster-grid">
         {eligibleOpponents
           .filter((o) =>

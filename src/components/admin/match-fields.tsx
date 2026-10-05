@@ -16,6 +16,7 @@ import {
   type Opponent,
 } from "@/lib/matches";
 import type { AcademyPlayer } from "@/lib/academy";
+import { LineupBuilder } from "./lineup-builder";
 
 function PlayerSelect({
   label,
@@ -293,7 +294,14 @@ export function MatchFields({
             <Field
               label="Takım"
               value={draft.teamSlug ?? ""}
-              onChange={(teamSlug) => { const team = teams.find(t => t.slug === teamSlug); switchContext({ teamSlug, league: team?.name ?? "", season: team?.season ?? "" }); }}
+              onChange={(teamSlug) => {
+                const team = teams.find((t) => t.slug === teamSlug);
+                switchContext({
+                  teamSlug,
+                  league: team?.name ?? "",
+                  season: team?.season ?? "",
+                });
+              }}
               options={teams.map((t) => ({ value: t.slug, label: t.name }))}
             />
             {field("league", "Lig / yaş grubu", "text", true)}
@@ -345,9 +353,11 @@ export function MatchFields({
         )}
         <datalist id={datalist}>
           <option value="FETHİYE ALFA SPOR" />
-          {opponents.filter(o => o.teamSlugs?.includes(draft.teamSlug ?? "")).map((o) => (
-            <option key={o._id} value={o.name} />
-          ))}
+          {opponents
+            .filter((o) => o.teamSlugs?.includes(draft.teamSlug ?? ""))
+            .map((o) => (
+              <option key={o._id} value={o.name} />
+            ))}
         </datalist>
         <Field
           label="Maç durumu"
@@ -428,6 +438,8 @@ export function MatchFields({
                 allowReentry: competition?.allowReentry ?? false,
                 starters: [],
                 bench: [],
+                formation: "4-3-3",
+                lineup: [],
                 events: [],
               });
             }}
@@ -505,12 +517,17 @@ export function MatchFields({
                 disabled={report.events.length > 0}
                 onClick={() => {
                   const ids = new Set(players.map((p) => p.id));
+                  const starters = prior
+                    .report!.starters.filter((id) => ids.has(id))
+                    .slice(0, report.starterCount);
                   setReport({
                     ...report,
-                    starters: prior
-                      .report!.starters.filter((id) => ids.has(id))
-                      .slice(0, report.starterCount),
+                    starters,
                     bench: prior.report!.bench.filter((id) => ids.has(id)),
+                    formation: prior.report!.formation ?? report.formation,
+                    lineup: prior.report!.lineup?.filter((item) =>
+                      starters.includes(item.playerId),
+                    ),
                   });
                 }}
               >
@@ -518,59 +535,69 @@ export function MatchFields({
               </button>
             )}
           </div>
-          <label>
-            Oyuncu ara
-            <input
-              type="search"
-              value={search}
-              placeholder="İsim veya forma numarası"
-              onChange={(e) => setSearch(e.target.value)}
+          {report.starterCount === 11 ? (
+            <LineupBuilder
+              players={players}
+              report={report}
+              onChange={setReport}
             />
-          </label>
-          <div className="admin-roster-grid">
-            {players
-              .filter((p) =>
-                `${p.name} ${p.shirtNumber ?? ""}`
-                  .toLocaleLowerCase("tr")
-                  .includes(search.toLocaleLowerCase("tr")),
-              )
-              .map((p) => (
-                <label className="admin-roster-player" key={p.id}>
-                  <span>
-                    {p.shirtNumber ? `#${p.shirtNumber} · ` : ""}
-                    {p.name}
-                    <small>{p.position}</small>
-                  </span>
-                  <select
-                    aria-label={`${p.name} kadro durumu`}
-                    value={
-                      report.starters.includes(p.id)
-                        ? "starter"
-                        : report.bench.includes(p.id)
-                          ? "bench"
-                          : "none"
-                    }
-                    onChange={(e) =>
-                      setReport({
-                        ...report,
-                        starters: [
-                          ...report.starters.filter((id) => id !== p.id),
-                          ...(e.target.value === "starter" ? [p.id] : []),
-                        ],
-                        bench: [
-                          ...report.bench.filter((id) => id !== p.id),
-                          ...(e.target.value === "bench" ? [p.id] : []),
-                        ],
-                      })
-                    }
-                  >
-                    <option value="none">Kadro dışı</option>
-                    <option value="starter">Başlangıç</option>
-                    <option value="bench">Yedek</option>
-                  </select>
-                </label>
-              ))}
-          </div>
+          ) : (
+            <>
+              <label>
+                Oyuncu ara
+                <input
+                  type="search"
+                  value={search}
+                  placeholder="İsim veya forma numarası"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </label>
+              <div className="admin-roster-grid">
+                {players
+                  .filter((p) =>
+                    `${p.name} ${p.shirtNumber ?? ""}`
+                      .toLocaleLowerCase("tr")
+                      .includes(search.toLocaleLowerCase("tr")),
+                  )
+                  .map((p) => (
+                    <label className="admin-roster-player" key={p.id}>
+                      <span>
+                        {p.shirtNumber ? `#${p.shirtNumber} · ` : ""}
+                        {p.name}
+                        <small>{p.position}</small>
+                      </span>
+                      <select
+                        aria-label={`${p.name} kadro durumu`}
+                        value={
+                          report.starters.includes(p.id)
+                            ? "starter"
+                            : report.bench.includes(p.id)
+                              ? "bench"
+                              : "none"
+                        }
+                        onChange={(e) =>
+                          setReport({
+                            ...report,
+                            starters: [
+                              ...report.starters.filter((id) => id !== p.id),
+                              ...(e.target.value === "starter" ? [p.id] : []),
+                            ],
+                            bench: [
+                              ...report.bench.filter((id) => id !== p.id),
+                              ...(e.target.value === "bench" ? [p.id] : []),
+                            ],
+                          })
+                        }
+                      >
+                        <option value="none">Kadro dışı</option>
+                        <option value="starter">Başlangıç</option>
+                        <option value="bench">Yedek</option>
+                      </select>
+                    </label>
+                  ))}
+              </div>
+            </>
+          )}
           {!players.length && (
             <p className="admin-help">
               Önce Takımlar ve oyuncular bölümünden bu takıma oyuncu ekleyin.

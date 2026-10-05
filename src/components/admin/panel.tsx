@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -14,7 +15,13 @@ import {
   Search,
   Plus,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   X,
+  FileText,
+  CalendarDays,
+  UserRound,
+  Activity,
 } from "lucide-react";
 import { sectionNames, type Section } from "@/lib/admin/schema";
 import { Editor, type Draft, type TeamOption } from "./editor";
@@ -55,10 +62,12 @@ export function AdminPanel({
   const [page, setPage] = useState(1);
   const [opponentTeam, setOpponentTeam] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [matchFilters, setMatchFilters] = useState({
     team: "",
     season: "",
     competition: "",
+    week: "",
     status: "",
     published: "",
     from: "",
@@ -245,6 +254,7 @@ export function AdminPanel({
           (!matchFilters.season || r.season === matchFilters.season) &&
           (!matchFilters.competition ||
             r.competitionId === matchFilters.competition) &&
+          (!matchFilters.week || String(r.week ?? "") === matchFilters.week) &&
           (!matchFilters.status || r.status === matchFilters.status) &&
           (!matchFilters.published ||
             (r.published !== false) === (matchFilters.published === "yes")) &&
@@ -255,6 +265,19 @@ export function AdminPanel({
         .includes(query.toLocaleLowerCase("tr")),
   );
   const shown = records.slice((page - 1) * 15, page * 15);
+  const matchGroups = shown.reduce<
+    { key: string; label: string; records: Draft[] }[]
+  >((groups, record) => {
+    const isLeagueMatch = (record.kind ?? "official") === "official";
+    const key = isLeagueMatch ? `week-${record.week ?? 0}` : "other";
+    const label = isLeagueMatch
+      ? `${record.week ?? "—"}. Hafta`
+      : "Diğer karşılaşmalar";
+    const group = groups.find((item) => item.key === key);
+    if (group) group.records.push(record);
+    else groups.push({ key, label, records: [record] });
+    return groups;
+  }, []);
   async function publishPage() {
     const drafts = shown.filter((m) => m.published === false);
     if (
@@ -314,8 +337,41 @@ export function AdminPanel({
     },
     { label: "HESAP", items: ["account"] },
   ];
+  const publishedNews =
+    data.news?.filter((item) => item.published !== false).length ?? 0;
+  const draftNews =
+    data.news?.filter((item) => item.published === false).length ?? 0;
+  const playerCount =
+    data.teams?.reduce(
+      (count, team) => count + (team.players?.length ?? 0),
+      0,
+    ) ?? 0;
+  const today = new Date().toISOString().slice(0, 10);
+  const upcomingMatches =
+    data.matches?.filter(
+      (match) =>
+        match.status === "unreported" && (match.date ?? "") >= today,
+    ).length ?? 0;
+  const selectedMatchCompetition = (data.competitions ?? []).find(
+    (competition) => competition._id === matchFilters.competition,
+  );
+  const showMatchWeekFilter =
+    selectedMatchCompetition?.kind === "official" ||
+    selectedMatchCompetition?.kind === "tournament";
+  const matchWeekOptions = [
+    ...new Set(
+      (data.matches ?? [])
+        .filter(
+          (match) => match.competitionId === selectedMatchCompetition?._id,
+        )
+        .map((match) => Number(match.week))
+        .filter((week) => Number.isInteger(week) && week > 0),
+    ),
+  ].sort((a, b) => a - b);
   return (
-    <div className={`admin-shell ${menuOpen ? "menu-open" : ""}`}>
+    <div
+      className={`admin-shell ${menuOpen ? "menu-open" : ""} ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}
+    >
       <aside className="admin-sidebar">
         <Link
           className="admin-brand"
@@ -325,8 +381,33 @@ export function AdminPanel({
             changeView("overview");
           }}
         >
-          ALFA <span>YÖNETİM</span>
+          <Image
+            className="admin-brand-logo"
+            src="/media/logo.webp"
+            alt=""
+            width={30}
+            height={40}
+          />
+          <span className="admin-brand-word">ALFA</span>
+          <span className="admin-brand-section">YÖNETİM</span>
         </Link>
+        <button
+          type="button"
+          className="admin-sidebar-toggle"
+          aria-label={
+            sidebarCollapsed
+              ? "Çalışma alanı menüsünü genişlet"
+              : "Çalışma alanı menüsünü daralt"
+          }
+          aria-expanded={!sidebarCollapsed}
+          onClick={() => setSidebarCollapsed((value) => !value)}
+        >
+          {sidebarCollapsed ? (
+            <PanelLeftOpen size={18} />
+          ) : (
+            <PanelLeftClose size={18} />
+          )}
+        </button>
         <button
           className="admin-menu-toggle"
           aria-expanded={menuOpen}
@@ -345,6 +426,7 @@ export function AdminPanel({
                 return (
                   <button
                     key={key}
+                    title={sidebarCollapsed ? titles[key] : undefined}
                     aria-current={view === key ? "page" : undefined}
                     onClick={() => changeView(key)}
                   >
@@ -360,7 +442,7 @@ export function AdminPanel({
           <span>{email}</span>
           <button onClick={() => void logout()}>
             <LogOut size={17} />
-            Çıkış yap
+            <span>Çıkış yap</span>
           </button>
         </div>
       </aside>
@@ -410,7 +492,49 @@ export function AdminPanel({
                     <Settings size={16} /> Siteyi düzenle
                   </button>
                 </div>
-                <div className="admin-statusline">
+                <div className="admin-metrics" aria-label="Kulüp özeti">
+                  <article className="admin-metric-card">
+                    <span className="admin-metric-icon">
+                      <FileText size={24} />
+                    </span>
+                    <div>
+                      <p>YAYINDAKİ HABERLER</p>
+                      <strong>{publishedNews}</strong>
+                      <span>Güncel içerikler</span>
+                    </div>
+                  </article>
+                  <article className="admin-metric-card">
+                    <span className="admin-metric-icon">
+                      <CalendarDays size={24} />
+                    </span>
+                    <div>
+                      <p>YAKLAŞAN MAÇLAR</p>
+                      <strong>{upcomingMatches}</strong>
+                      <span>Programdaki karşılaşmalar</span>
+                    </div>
+                  </article>
+                  <article className="admin-metric-card">
+                    <span className="admin-metric-icon">
+                      <UserRound size={24} />
+                    </span>
+                    <div>
+                      <p>TOPLAM OYUNCU</p>
+                      <strong>{playerCount}</strong>
+                      <span>{data.teams?.length ?? 0} takım kadrosu</span>
+                    </div>
+                  </article>
+                  <article className="admin-metric-card">
+                    <span className="admin-metric-icon">
+                      <Activity size={24} />
+                    </span>
+                    <div>
+                      <p>BEKLEYEN TASLAKLAR</p>
+                      <strong>{draftNews}</strong>
+                      <span>Yayınlanmayı bekliyor</span>
+                    </div>
+                  </article>
+                </div>
+                <div className="admin-statusline admin-statusline-legacy">
                   <span>
                     <strong>
                       {data.news?.filter((n) => n.published !== false).length ??
@@ -722,6 +846,7 @@ export function AdminPanel({
                               setMatchFilters((f) => ({
                                 ...f,
                                 [key]: e.target.value,
+                                ...(key === "competition" ? { week: "" } : {}),
                               }));
                               setPage(1);
                             }}
@@ -735,6 +860,28 @@ export function AdminPanel({
                           </select>
                         </label>
                       ))}
+                      {showMatchWeekFilter && (
+                        <label>
+                          Hafta
+                          <select
+                            value={matchFilters.week}
+                            onChange={(e) => {
+                              setMatchFilters((filters) => ({
+                                ...filters,
+                                week: e.target.value,
+                              }));
+                              setPage(1);
+                            }}
+                          >
+                            <option value="">Tüm haftalar</option>
+                            {matchWeekOptions.map((week) => (
+                              <option key={week} value={week}>
+                                {week}. Hafta
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      )}
                       {(["from", "to"] as const).map((key) => (
                         <label key={key}>
                           {key === "from" ? "İlk tarih" : "Son tarih"}
@@ -757,6 +904,7 @@ export function AdminPanel({
                             team: "",
                             season: "",
                             competition: "",
+                            week: "",
                             status: "",
                             published: "",
                             from: "",
@@ -790,6 +938,93 @@ export function AdminPanel({
                       </select>
                     </label>
                   )}
+                  {view === "news" ? (
+                    <div className="admin-news-grid">
+                      {shown.map((r) => (
+                        <article className="admin-news-card" key={r._id}>
+                          <div className="admin-news-card-visual">
+                            <Image
+                              src={r.image || "/media/logo.webp"}
+                              alt={r.image ? `${r.title ?? "Haber"} görseli` : "Alfa Spor logosu"}
+                              fill
+                              sizes="(max-width: 700px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                          </div>
+                          <div className="admin-news-card-body">
+                            <div className="admin-news-card-meta">
+                              <span>{r.category || "Genel"}</span>
+                              <span
+                                className={`admin-badge ${r.published === false ? "draft" : ""}`}
+                              >
+                                {r.published === false ? "Taslak" : "Yayında"}
+                              </span>
+                            </div>
+                            <h3>{r.title || "Başlıksız haber"}</h3>
+                            <p>{r.subtitle || r.body || "Henüz açıklama eklenmedi."}</p>
+                            <div className="admin-row-actions">
+                              <button
+                                onClick={() => {
+                                  setEditing(r);
+                                  setDirty(false);
+                                  setMessage("");
+                                }}
+                              >
+                                Düzenle
+                              </button>
+                              <button
+                                className="admin-danger-text"
+                                disabled={busy}
+                                onClick={() => void remove(r)}
+                              >
+                                Sil
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : view === "matches" ? (
+                    <div className="admin-match-groups">
+                      {matchGroups.map((group) => (
+                        <section className="admin-match-week" key={group.key}>
+                          <div className="admin-match-week-heading">
+                            <h3>{group.label}</h3>
+                            <span>{group.records.length} karşılaşma</span>
+                          </div>
+                          <div className="admin-table-wrap">
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Karşılaşma</th>
+                                  <th>Bilgi</th>
+                                  <th>İşlemler</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {group.records.map((r) => (
+                                  <tr key={r._id}>
+                                    <td data-label="Karşılaşma">
+                                      <strong>{r.homeTeam} — {r.awayTeam}</strong>
+                                      <small>{r.date} · {r.league}</small>
+                                    </td>
+                                    <td data-label="Bilgi">
+                                      {r.homeScore ?? "–"} : {r.awayScore ?? "–"} · {r.published === false ? "Taslak" : "Yayında"}
+                                    </td>
+                                    <td data-label="İşlemler">
+                                      <div className="admin-row-actions">
+                                        <button onClick={() => { setEditing(r); setDirty(false); setMessage(""); }}>Düzenle</button>
+                                        <button className="admin-danger-text" disabled={busy} onClick={() => void remove(r)}>Sil</button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </section>
+                      ))}
+                    </div>
+                  ) : (
                   <div className="admin-table-wrap">
                     <table>
                       <thead>
@@ -809,30 +1044,20 @@ export function AdminPanel({
                                   `${r.homeTeam} — ${r.awayTeam}`}
                               </strong>
                               <small>
-                                {view === "matches"
-                                  ? `${r.date} · ${r.league} · ${r.week}. hafta`
-                                  : view === "opponents"
-                                    ? r.teamSlugs
-                                        ?.map(
-                                          (slug) =>
-                                            teams.find((t) => t.slug === slug)
-                                              ?.name ?? slug,
-                                        )
-                                        .join(" · ") || "Yaş grubu atanmamış"
-                                    : r.subtitle || r.role || r.season}
+                                {view === "opponents"
+                                  ? r.teamSlugs
+                                      ?.map(
+                                        (slug) =>
+                                          teams.find((t) => t.slug === slug)
+                                            ?.name ?? slug,
+                                      )
+                                      .join(" · ") || "Yaş grubu atanmamış"
+                                  : r.subtitle || r.role || r.season}
                               </small>
                             </td>
                             <td data-label="Bilgi">
-                              {view === "news" ? (
-                                <span
-                                  className={`admin-badge ${r.published === false ? "draft" : ""}`}
-                                >
-                                  {r.published === false ? "Taslak" : "Yayında"}
-                                </span>
-                              ) : view === "teams" ? (
+                              {view === "teams" ? (
                                 `${r.players?.length ?? 0} oyuncu`
-                              ) : view === "matches" ? (
-                                `${r.homeScore ?? "–"} : ${r.awayScore ?? "–"} · ${r.published === false ? "Taslak" : "Yayında"}`
                               ) : (
                                 "Aktif"
                               )}
@@ -862,6 +1087,7 @@ export function AdminPanel({
                       </tbody>
                     </table>
                   </div>
+                  )}
                   {!records.length && (
                     <p className="admin-empty">
                       Kayıt bulunamadı. Yeni bir içerik ekleyebilirsiniz.

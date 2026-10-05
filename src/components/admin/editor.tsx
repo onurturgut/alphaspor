@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useState, type FormEvent } from "react";
 import type { z } from "zod";
 import { schemas, slugify, type Section } from "@/lib/admin/schema";
@@ -285,38 +286,74 @@ export function Editor({
             {!players.length && (
               <p className="admin-empty">Bu takımda henüz oyuncu yok.</p>
             )}
-            <div className="admin-roster-picker">
-              <Field
-                label="Oyuncu ara"
-                value={playerQuery}
-                onChange={setPlayerQuery}
-              />
-              <Field
-                label="Düzenlenecek oyuncu"
-                value={selectedPlayer || players[0]?.id || ""}
-                onChange={setSelectedPlayer}
-                options={players
-                  .filter(
-                    (p) =>
-                      p.id === (selectedPlayer || players[0]?.id) ||
-                      p.name
-                        .toLocaleLowerCase("tr")
-                        .includes(playerQuery.toLocaleLowerCase("tr")),
-                  )
-                  .map((p) => ({
-                    value: p.id,
-                    label:
-                      (p.shirtNumber ? "#" + p.shirtNumber + " · " : "") +
-                      (p.name || "Yeni oyuncu") +
-                      " · " +
-                      (p.position || "Mevki seçilmedi"),
-                  }))}
-              />
-            </div>
-            {players.map(
-              (player, index) =>
-                player.id === (selectedPlayer || players[0]?.id) && (
-                  <div className="admin-subcard" key={player.id}>
+            {!!players.length && (
+              <div className="admin-player-workspace">
+                <section className="admin-player-column admin-player-directory" aria-label="Oyuncular">
+                  <div className="admin-player-column-heading">
+                    <div>
+                      <span>1. PANEL</span>
+                      <h4>Oyuncular</h4>
+                    </div>
+                    <strong>{players.length}</strong>
+                  </div>
+                  <div className="admin-player-search">
+                    <Field
+                      label="Oyuncu ara"
+                      value={playerQuery}
+                      onChange={setPlayerQuery}
+                      type="search"
+                    />
+                  </div>
+                  <div className="admin-player-list">
+                    {players
+                      .filter((player) => {
+                        const query = playerQuery.trim().toLocaleLowerCase("tr-TR");
+                        return (
+                          !query ||
+                          player.name.toLocaleLowerCase("tr-TR").includes(query) ||
+                          player.position.toLocaleLowerCase("tr-TR").includes(query)
+                        );
+                      })
+                      .map((player) => {
+                        const isSelected = player.id === (selectedPlayer || players[0]?.id);
+                        return (
+                          <button
+                            type="button"
+                            className="admin-player-list-row"
+                            aria-pressed={isSelected}
+                            key={player.id}
+                            onClick={() => setSelectedPlayer(player.id)}
+                          >
+                            <span className="admin-player-list-photo">
+                              {player.photo ? (
+                                <Image src={player.photo} alt="" fill sizes="52px" />
+                              ) : (
+                                <span aria-hidden="true">{(player.name || "Y").slice(0, 1)}</span>
+                              )}
+                            </span>
+                            <span className="admin-player-list-name">
+                              <strong>{player.name || "Yeni oyuncu"}</strong>
+                              <small>{player.position || "Mevki seçilmedi"}</small>
+                            </span>
+                            <span className="admin-player-list-number">
+                              {player.shirtNumber ?? "—"}
+                            </span>
+                          </button>
+                        );
+                      })}
+                  </div>
+                </section>
+
+                {players.map(
+                  (player, index) =>
+                    player.id === (selectedPlayer || players[0]?.id) && (
+                  <section className="admin-player-column admin-player-edit" key={`edit-${player.id}`}>
+                    <div className="admin-player-column-heading">
+                      <div>
+                        <span>2. PANEL</span>
+                        <h4>Oyuncu düzenlemeleri</h4>
+                      </div>
+                    </div>
                     <div className="admin-section-heading">
                       <strong>
                         {index + 1}. {player.name || "Yeni oyuncu"}
@@ -438,8 +475,72 @@ export function Editor({
                         })()}
                       </p>
                     )}
-                  </div>
-                ),
+                  </section>
+                    ),
+                )}
+
+                {players.map(
+                  (player, index) =>
+                    player.id === (selectedPlayer || players[0]?.id) && (
+                      <aside className="admin-player-column admin-player-card-panel" key={`card-${player.id}`}>
+                        <div className="admin-player-column-heading">
+                          <div>
+                            <span>3. PANEL</span>
+                            <h4>Oyuncu kartı</h4>
+                          </div>
+                        </div>
+                        <div className="admin-player-card-preview">
+                          {draft._id && !dirty ? (
+                            <Image
+                              src={`/api/admin/player-card?team=${encodeURIComponent(draft.slug ?? "")}&player=${encodeURIComponent(player.id)}`}
+                              alt={`${player.name || "Oyuncu"} oyuncu kartı`}
+                              fill
+                              unoptimized
+                              sizes="(max-width: 900px) 100vw, 30vw"
+                            />
+                          ) : (
+                            <>
+                              <Image
+                                src="/media/academy/player-card-template.webp"
+                                alt="Oyuncu kartı şablonu"
+                                fill
+                                sizes="(max-width: 900px) 100vw, 30vw"
+                              />
+                              <div className="admin-player-card-pending">
+                                <strong>{player.name || "Yeni oyuncu"}</strong>
+                                <span>Kart önizlemesi için değişiklikleri kaydedin.</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                        {computedPlayers[index] && (() => {
+                          const stats = playerStats(playerAppearances(computedPlayers[index], draft.season ?? ""));
+                          return (
+                            <dl className="admin-player-card-stats">
+                              <div><dt>Maç</dt><dd>{stats.matches ?? "—"}</dd></div>
+                              <div><dt>Gol</dt><dd>{stats.goals ?? "—"}</dd></div>
+                              <div><dt>Asist</dt><dd>{stats.assists ?? "—"}</dd></div>
+                              <div><dt>Dk</dt><dd>{stats.minutes ?? "—"}</dd></div>
+                            </dl>
+                          );
+                        })()}
+                        {draft._id && !dirty ? (
+                          <a
+                            className="admin-player-card-download"
+                            href={`/api/admin/player-card?team=${encodeURIComponent(draft.slug ?? "")}&player=${encodeURIComponent(player.id)}`}
+                            download
+                          >
+                            Oyuncu kartını indir
+                          </a>
+                        ) : (
+                          <span className="admin-player-card-download is-disabled">
+                            İndirmek için önce kaydedin
+                          </span>
+                        )}
+                      </aside>
+                    ),
+                )}
+              </div>
             )}
           </>
         )}

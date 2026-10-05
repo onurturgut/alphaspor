@@ -306,8 +306,9 @@
 .cardMeta {
   position: absolute;
   z-index: 2;
-  left: 15%;
-  top: 36%;
+  left: 10.5%;
+  top: 29%;
+  width: 21%;
   display: grid;
   justify-items: center;
   gap: 4px;
@@ -315,20 +316,21 @@
   text-shadow: 0 2px 8px #000;
 }
 .cardMeta > strong {
-  font-size: 27cqw;
+  font-size: 22cqw;
   line-height: 0.95;
+  font-weight: 700;
 }
 .cardMeta > span {
-  font-size: 4.4cqw;
+  font-size: 4.1cqw;
   letter-spacing: 0.04em;
   color: #eee;
 }
 .cardPortrait {
   position: absolute;
-  top: 25%;
-  left: 28%;
-  right: 10%;
-  bottom: 24%;
+  top: 15%;
+  left: 23%;
+  right: 4%;
+  bottom: 22%;
   overflow: hidden;
   mask-image:
     linear-gradient(to bottom, transparent, #000 18%, #000 75%, transparent),
@@ -342,44 +344,52 @@
 }
 .cardIdentity {
   position: absolute;
-  left: 12%;
-  right: 12%;
-  bottom: 24%;
+  left: 9%;
+  right: 9%;
+  bottom: 23.5%;
   text-align: center;
   z-index: 3;
   text-shadow: 0 2px 12px #000, 0 1px 3px #000;
 }
 .cardIdentity h2 {
   margin: 0;
-  font-weight: 400;
+  font-family: var(--font-card-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
   line-height: 1;
 }
 .cardGivenName {
   display: block;
-  font-family: var(--font-card-brush), Impact, sans-serif;
-  line-height: 1.25;
-  transform: rotate(-5deg);
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0.02em;
 }
 .cardSurname {
   display: block;
-  margin-top: 1cqw;
+  margin-top: 0.8cqw;
   font-family: var(--font-card-condensed), "Arial Narrow", sans-serif;
-  font-size: 6cqw;
+  font-size: 9cqw;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.025em;
   overflow-wrap: anywhere;
 }
 .cardStats {
   position: absolute;
   left: 15%;
   right: 15%;
-  bottom: 14%;
+  bottom: 13.5%;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0;
   font-family: var(--font-card-condensed), "Arial Narrow", sans-serif;
   text-align: center;
   text-shadow: 0 2px 5px #000;
+  background: none;
+}
+.cardStats > div,
+.cardStats dt,
+.cardStats dd {
+  background: none;
 }
 .cardStats > div + div {
   border-left: 1px solid #858585;
@@ -395,6 +405,43 @@
   font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+.cardStatsLive {
+  z-index: 5;
+  bottom: 15.5%;
+  left: 11%;
+  right: 11%;
+  padding: 0;
+  background: none;
+}
+.cardStatsLive dt {
+  opacity: 0;
+}
+.cardStatsLive > div + div {
+  border-left: 0;
+}
+.cardStatsCleanup {
+  position: absolute;
+  z-index: 4;
+  top: 79.5%;
+  left: 9%;
+  right: 9%;
+  height: 6%;
+  background: linear-gradient(
+    180deg,
+    rgb(5 7 8 / 0),
+    rgb(5 7 8 / 0.94) 28%,
+    rgb(5 7 8 / 0.98) 72%,
+    rgb(5 7 8 / 0)
+  );
+  filter: blur(1px);
+  pointer-events: none;
+}
+.finishedCard .cardStatsLive dd {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.4cqw;
+  text-shadow: 0 2px 7px #000;
 }
 .cardPortrait .portraitFallback {
   background: transparent;

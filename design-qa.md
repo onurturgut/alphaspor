@@ -32,6 +32,37 @@
 
 final result: passed
 
+# Yönetim paneli oyuncu kartı standardı — 4 Ekim 2026
+
+- Kaynak görsel gerçeği: Kullanıcının konuşmaya eklediği Yiğit Hammaloğlu ve Akdeniz Harmandar karşılaştırma ekran görüntüsü.
+- Uygulama hedefi: `/takimlar`; hazır kart resmi olmayan, yönetim panelinden eklenmiş bir oyuncu seçili.
+- Uygulama ekran görüntüsü: alınamadı. Bu oturumda uygulama içi tarayıcı ve bağlı başka bir tarayıcı yüzeyi bulunmadı.
+- Viewport, CSS boyutu ve yoğunluk normalizasyonu: tarayıcı kanıtı olmadığı için mevcut değil.
+- Durum: standart dinamik kart; oyuncu numarası, mevki/takım, portre, ad ve sezon istatistikleri canlı veriyle gösteriliyor.
+- Tam görünüm karşılaştırması: kaynak açıldı; üretilen 800 × 1200 WebP şablon açıldı ve siyah dış dikdörtgenin kalktığı görüldü. Tarayıcıda birleşik bileşen görünümü karşılaştırılamadı.
+- Odaklı karşılaştırma: yeni şablonda Yiğit kartının metal kalkanı, mavi gözlü kurtu, kar/orman atmosferi ve Alfa arması korundu; oyuncuya özel yazı ve portre alanları temizlendi.
+- Tipografi: dinamik ad, soyadı ve istatistikler Barlow Condensed ile Yiğit kartındaki kalın, sıkıştırılmış stile yaklaştırıldı. Önceki fırça yazısı kaldırıldı.
+- Yerleşim: numara sol üste, büyük portre merkezde, iki satırlı ad alt merkezde ve dört istatistik altta olacak şekilde yeniden hizalandı.
+- Renkler: tam yüzey kar/kömür atmosferi; kart dışında düz siyah blok yok.
+- Görsel kalite: yeni şablon 800 × 1200, WebP, sRGB, alfa kanalsız ve 222552 bayt.
+- İçerik: oyuncu verisi canlı kalıyor; yeni örnek sayı veya kişi eklenmedi.
+- Birincil etkileşimler ve konsol hataları: tarayıcı yüzeyi olmadığından kontrol edilemedi.
+- Otomatik kontroller: ESLint, TypeScript, `verify:academy`, üretim derlemesi ve `git diff --check` geçti.
+
+## Bulgular
+
+- [P2] Birleşik kartın tarayıcıda görsel doğrulaması eksik.
+  Etki: gerçek oyuncu fotoğrafı ve uzun adlarla son katman hizası ekran kanıtı olmadan kesin olarak onaylanamaz.
+  Düzeltme: tarayıcı yüzeyi kullanılabilir olduğunda aynı viewport ve oyuncu durumunda ekran görüntüsü alıp kaynakla yan yana karşılaştırmak.
+
+## Karşılaştırma geçmişi
+
+- İlk geçiş: farklı yedek şablon ve düz siyah dış zemin P1 olarak tespit edildi.
+- Düzeltme: Yiğit kartından standart boş şablon üretildi, bileşen bu şablona bağlandı ve tipografi/katman konumları eşlendi.
+- Sonraki kanıt: şablon varlığında siyah dış zemin yok; birleşik tarayıcı kanıtı mevcut değil.
+
+final result: blocked
+
 # Kulübümüz — 23 Eylül 2026
 
 - Kaynaklar: `public/media/club/Ekran görüntüsü 2026-09-23 140620.png` (847×851), `140816.png` (801×817), `140928.png` (673×835); son iki dosya aynı tarihli ad önekini taşır.

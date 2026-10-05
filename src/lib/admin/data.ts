@@ -162,13 +162,17 @@ export async function saveAdmin(
         "season",
         "kind",
         "clubName",
-        "opponentIds",
       ]) {
         if (JSON.stringify(existing?.[key]) !== JSON.stringify(fields[key]))
           throw new AdminError(
-            "Maçları olan organizasyonun takım ve katılımcı bilgileri değiştirilemez. Yeni organizasyon oluşturun veya önce maçlarını kaldırın.",
+            "Maçları olan organizasyonun temel bilgileri değiştirilemez. Yeni organizasyon oluşturun veya önce maçlarını kaldırın.",
           );
       }
+      const previousOpponentIds = (existing?.opponentIds ?? []) as string[];
+      if (previousOpponentIds.some((id) => !ids.includes(id)))
+        throw new AdminError(
+          "Maçları olan organizasyondan mevcut rakipler çıkarılamaz; ancak yeni rakip ekleyebilirsiniz.",
+        );
       const hasReports = await db.collection("matches").countDocuments({
         competitionId: recordId,
         _deleted: { $ne: true },
@@ -199,12 +203,20 @@ export async function saveAdmin(
         });
       if (!competition) throw new AdminError("Organizasyon bulunamadı.");
       const participantIds = ["club", ...competition.opponentIds];
+      const customHome =
+        competition.kind === "friendly" && fields.homeId === "custom-home";
+      const customAway =
+        competition.kind === "friendly" && fields.awayId === "custom-away";
       if (
-        !participantIds.includes(String(fields.homeId)) ||
-        !participantIds.includes(String(fields.awayId))
+        (!customHome && !participantIds.includes(String(fields.homeId))) ||
+        (!customAway && !participantIds.includes(String(fields.awayId)))
       )
         throw new AdminError(
           "Takımlar organizasyon katılımcılarından seçilmeli.",
+        );
+      if ((customHome || customAway) && fields.homeId !== "club" && fields.awayId !== "club")
+        throw new AdminError(
+          "Tek seferlik rakip yalnızca kulübümüzün hazırlık maçında kullanılabilir.",
         );
       const opponents = await db
         .collection<Opponent>("opponents")
@@ -216,6 +228,10 @@ export async function saveAdmin(
       const name = (id: unknown) =>
         id === "club"
           ? competition.clubName
+          : id === "custom-home"
+            ? String(fields.homeTeam || "").trim()
+            : id === "custom-away"
+              ? String(fields.awayTeam || "").trim()
           : opponents.find((o) => o._id === id)?.name;
       if (!name(fields.homeId) || !name(fields.awayId))
         throw new AdminError("Rakip bulunamadı.");

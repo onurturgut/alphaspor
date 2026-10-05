@@ -3,6 +3,11 @@
 - Referans: `C:/Users/onurt/Downloads/ChatGPT Image 24 Eyl 2026 15_33_21.png`.
 - Uygulama: `src/components/academy-explorer.tsx` ve ilgili CSS modülü.
 - Kullanılan görsel: `public/media/academy/wolf-card-frame-final.webp` (800 × 1200).
+- Yönetim panelinden sonradan eklenen ve hazır kart görseli bulunmayan
+  oyuncular için standart şablon:
+  `public/media/academy/player-card-template.webp` (800 × 1200). Bu şablon,
+  Yiğit Hammaloğlu kartındaki tam yüzey kar/kurt/metal çerçeve dilini kullanır;
+  kartın dışında düz siyah dikdörtgen bırakmaz.
 - Araç: yerleşik Image Gen; aşağıdaki iki düzenleme, ardından Sharp ile boyutlandırma ve WebP sıkıştırması.
 - Fontlar: Permanent Marker ve Barlow Condensed, yerel `public/fonts` dosyaları; lisansları aynı dizinde. Kaynaklar: https://github.com/google/fonts/tree/main/apache/permanentmarker ve https://github.com/google/fonts/tree/main/ofl/barlowcondensed.
 
