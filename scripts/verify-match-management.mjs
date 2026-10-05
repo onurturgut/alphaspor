@@ -128,6 +128,17 @@ const match = {
 };
 assert.deepEqual(validateReport(match, players), []);
 assert.ok(schemas.matches.safeParse(match).success);
+assert.equal(
+  schemas.matches.safeParse({ ...match, week: null }).success,
+  false,
+  "Official matches require a week",
+);
+for (const kind of ["friendly", "tournament"])
+  assert.equal(
+    schemas.matches.safeParse({ ...match, kind, week: null }).success,
+    true,
+    `${kind} matches may omit the week`,
+  );
 assert.deepEqual(reportScore(match.report), { home: 2, away: 1 });
 const stats = matchAppearances(match);
 assert.deepEqual(

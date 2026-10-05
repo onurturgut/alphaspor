@@ -20,6 +20,8 @@ export default async function Matches({
   const initialTab =
     gorunum === "puan-durumu"
       ? "standings"
+      : gorunum === "hazirlik-maclari"
+        ? "friendlies"
       : gorunum === "sonuclar"
         ? "results"
         : "fixtures";

@@ -138,6 +138,7 @@ export function MatchFields({
       league: c.name,
       season: c.season,
       kind: c.kind,
+      week: c.kind === "official" ? (draft.week ?? 1) : null,
       homeId: "club",
       homeTeam: c.clubName,
       awayId: c.opponentIds[0],
@@ -314,11 +315,23 @@ export function MatchFields({
                 { value: "friendly", label: "Hazırlık" },
                 { value: "tournament", label: "Turnuva" },
               ]}
-              onChange={(kind) => update({ kind: kind as Match["kind"] })}
+              onChange={(kind) =>
+                update({
+                  kind: kind as Match["kind"],
+                  week: kind === "official" ? (draft.week ?? 1) : null,
+                })
+              }
             />
           </>
         )}
-        {field("week", "Hafta", "number", true)}
+        {field(
+          "week",
+          (competition?.kind ?? draft.kind) === "official"
+            ? "Hafta"
+            : "Hafta (opsiyonel)",
+          "number",
+          (competition?.kind ?? draft.kind) === "official",
+        )}
         {field("date", "Tarih (açıklanmadıysa boş bırakın)", "date")}
         {field("time", "Saat", "time")}
         {(["home", "away"] as const).map((s) =>

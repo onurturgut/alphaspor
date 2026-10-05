@@ -280,7 +280,7 @@ export const schemas = {
       teamSlug: slug,
       league: required(100),
       season,
-      week: z.number().int().min(1).max(100),
+      week: z.number().int().min(1).max(100).nullable().optional(),
       date: z.union([date, z.literal("")]),
       time: text(5)
         .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
@@ -295,6 +295,12 @@ export const schemas = {
       order,
     })
     .superRefine((v, ctx) => {
+      if (v.kind === "official" && v.week == null)
+        ctx.addIssue({
+          code: "custom",
+          path: ["week"],
+          message: "Resmî maçlarda hafta zorunludur.",
+        });
       if (
         v.homeTeam.toLocaleLowerCase("tr") ===
         v.awayTeam.toLocaleLowerCase("tr")

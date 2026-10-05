@@ -55,7 +55,7 @@ export type Match = {
   teamSlug: string;
   league: string;
   season: string;
-  week: number;
+  week: number | null;
   date: string;
   time: string | null;
   homeTeam: string;
@@ -512,7 +512,11 @@ export function generateFixtures(
     }
     rotation.splice(1, 0, rotation.pop()!);
   }
-  return fixtures.sort((a, b) => a.week - b.week);
+  return fixtures.sort(
+    (a, b) =>
+      (a.week ?? Number.MAX_SAFE_INTEGER) -
+      (b.week ?? Number.MAX_SAFE_INTEGER),
+  );
 }
 
 export function formatMatchDate(date: string) {
@@ -540,7 +544,9 @@ export function selectMatches(
     )
     .sort((a, b) => {
       if (!a.date || !b.date) {
-        if (!a.date && !b.date) return a.week - b.week;
+        if (!a.date && !b.date)
+          return (a.week ?? Number.MAX_SAFE_INTEGER) -
+            (b.week ?? Number.MAX_SAFE_INTEGER);
         return a.date ? -1 : 1;
       }
       const chronological = `${a.date}${a.time ?? "00:00"}`.localeCompare(
@@ -549,7 +555,8 @@ export function selectMatches(
       return (
         (resultsOnly ? -chronological : chronological) ||
         a.league.localeCompare(b.league) ||
-        a.week - b.week
+        (a.week ?? Number.MAX_SAFE_INTEGER) -
+          (b.week ?? Number.MAX_SAFE_INTEGER)
       );
     });
 }

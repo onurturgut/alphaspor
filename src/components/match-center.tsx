@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   CalendarDays,
   ChevronDown,
+  Handshake,
   MapPin,
   Trophy,
   ListOrdered,
@@ -26,8 +27,13 @@ import { MatchDetails } from "./match-details";
 import { CompetitionStandings } from "./competition-standings";
 import type { Competition, Opponent } from "@/lib/matches";
 
-type MatchTab = "fixtures" | "results" | "standings";
-const tabOrder: MatchTab[] = ["fixtures", "results", "standings"];
+type MatchTab = "fixtures" | "results" | "standings" | "friendlies";
+const tabOrder: MatchTab[] = [
+  "fixtures",
+  "results",
+  "standings",
+  "friendlies",
+];
 
 type MatchCenterProps = {
   teamOptions: { slug: string; name: string; season: string }[];
@@ -69,7 +75,8 @@ function MatchRow({ match }: { match: Match }) {
     >
       <div className="match-row__date">
         <span className="match-row__league">
-          {match.league} <span>· {match.week}. hafta</span>
+          {match.league}
+          {match.week != null && <span> · {match.week}. hafta</span>}
         </span>
         {match.date ? (
           <time dateTime={match.date}>{formatMatchDate(match.date)}</time>
@@ -174,6 +181,7 @@ export function MatchCenter({
   const fixturesRef = useRef<HTMLButtonElement>(null);
   const resultsRef = useRef<HTMLButtonElement>(null);
   const standingsRef = useRef<HTMLButtonElement>(null);
+  const friendliesRef = useRef<HTMLButtonElement>(null);
   const selectedTeam =
     teams.find((team) => team.value === teamValue) ?? teams[0];
   const teamDescription =
@@ -181,23 +189,32 @@ export function MatchCenter({
       ? "takımlarımızın"
       : `${selectedTeam.label} takımımızın`;
   const allMatches = selectMatches(matches, selectedTeam.slug, season);
-  const resultCount = allMatches.filter(hasScore).length;
-  const visibleMatches = selectMatches(
-    matches,
-    selectedTeam.slug,
-    season,
-    tab === "results",
+  const competitiveMatches = allMatches.filter(
+    (match) => match.kind !== "friendly",
   );
+  const friendlyMatches = allMatches.filter(
+    (match) => match.kind === "friendly",
+  );
+  const visibleMatches =
+    tab === "friendlies"
+      ? friendlyMatches
+      : tab === "results"
+        ? competitiveMatches.filter(hasScore)
+        : competitiveMatches;
+  const resultCount = visibleMatches.filter(hasScore).length;
   const weekGroups = new Map<string, Match[]>();
   for (const match of visibleMatches) {
-    const key = `${match.teamSlug}-${match.competitionId ?? match.league}-${match.week}`;
+    const key = `${match.teamSlug}-${match.competitionId ?? match.league}-${match.week ?? "no-week"}`;
     const group = weekGroups.get(key) ?? [];
     group.push(match);
     weekGroups.set(key, group);
   }
   const weeks = [...weekGroups.entries()].sort(
     ([, a], [, b]) =>
-      (tab === "results" ? b[0].week - a[0].week : a[0].week - b[0].week) ||
+      (tab === "results"
+        ? (b[0].week ?? -1) - (a[0].week ?? -1)
+        : (a[0].week ?? Number.MAX_SAFE_INTEGER) -
+          (b[0].week ?? Number.MAX_SAFE_INTEGER)) ||
       a[0].league.localeCompare(b[0].league, "tr"),
   );
   const sources = matchSources.filter(
@@ -216,6 +233,8 @@ export function MatchCenter({
       "gorunum",
       next.tab === "standings"
         ? "puan-durumu"
+        : next.tab === "friendlies"
+          ? "hazirlik-maclari"
         : next.tab === "results"
           ? "sonuclar"
           : "fikstur",
@@ -237,16 +256,19 @@ export function MatchCenter({
         event.key === "Home"
           ? 0
           : event.key === "End"
-            ? 2
+            ? tabOrder.length - 1
             : (index +
                 (event.key === "ArrowRight" ? 1 : -1) +
                 tabOrder.length) %
               tabOrder.length
       ];
     updateFilters({ tab: next });
-    ({ fixtures: fixturesRef, results: resultsRef, standings: standingsRef })[
-      next
-    ].current?.focus();
+    ({
+      fixtures: fixturesRef,
+      results: resultsRef,
+      standings: standingsRef,
+      friendlies: friendliesRef,
+    })[next].current?.focus();
   }
 
   return (
@@ -296,6 +318,19 @@ export function MatchCenter({
           >
             <ListOrdered size={17} aria-hidden="true" /> Puan durumu
           </button>
+          <button
+            ref={friendliesRef}
+            id={`${id}-friendlies-tab`}
+            type="button"
+            role="tab"
+            aria-selected={tab === "friendlies"}
+            aria-controls={`${id}-friendlies-panel`}
+            tabIndex={tab === "friendlies" ? 0 : -1}
+            onClick={() => updateFilters({ tab: "friendlies" })}
+            onKeyDown={handleTabKey}
+          >
+            <Handshake size={17} aria-hidden="true" /> Hazırlık maçları
+          </button>
         </div>
 
         <div className="match-center__filters">
@@ -340,7 +375,7 @@ export function MatchCenter({
         </div>
       </div>
 
-      {(["fixtures", "results"] as const).map((panel) => (
+      {(["fixtures", "results", "friendlies"] as const).map((panel) => (
         <div
           key={panel}
           id={`${id}-${panel}-panel`}
@@ -359,14 +394,16 @@ export function MatchCenter({
                       {season.replace("/", " / ")} SEZONU
                     </span>
                     <h2>
-                      {selectedTeam.value === "all"
-                        ? "Sahadaki hikâyemiz."
-                        : `${selectedTeam.label} karşılaşmaları.`}
+                      {panel === "friendlies"
+                        ? selectedTeam.value === "all"
+                          ? "Hazırlık maçlarımız."
+                          : `${selectedTeam.label} hazırlık maçları.`
+                        : selectedTeam.value === "all"
+                          ? "Sahadaki hikâyemiz."
+                          : `${selectedTeam.label} karşılaşmaları.`}
                     </h2>
                     <p>
-                      {panel === "fixtures"
-                        ? "Maçları görmek için bir hafta seç."
-                        : "Sonuçları görmek için bir hafta seç."}
+                      Karşılaşmaları görüntülemek için grupları aç.
                     </p>
                   </div>
                   <dl className="match-summary__stats">
@@ -389,10 +426,17 @@ export function MatchCenter({
                     {selectedTeam.value === "all"
                       ? "TÜM TAKIMLAR"
                       : selectedTeam.label}{" "}
-                    · {panel === "results" ? "SONUÇLAR" : "FİKSTÜR"}
+                    · {panel === "results"
+                      ? "SONUÇLAR"
+                      : panel === "friendlies"
+                        ? "HAZIRLIK MAÇLARI"
+                        : "FİKSTÜR"}
                   </span>
                   <span role="status" aria-live="polite">
-                    {visibleMatches.length} karşılaşma · {weeks.length} hafta
+                    {visibleMatches.length} karşılaşma · {weeks.length}{" "}
+                    {visibleMatches.every((match) => match.week != null)
+                      ? "hafta"
+                      : "grup"}
                   </span>
                 </div>
                 <div
@@ -407,7 +451,9 @@ export function MatchCenter({
                     >
                       <summary>
                         <span className="match-week__number">
-                          {group[0].week}. HAFTA
+                          {group[0].week != null
+                            ? `${group[0].week}. HAFTA`
+                            : "MAÇLAR"}
                         </span>
                         <span className="match-week__league">
                           {group[0].league}
@@ -419,7 +465,11 @@ export function MatchCenter({
                       </summary>
                       <ol
                         className="match-list"
-                        aria-label={`${group[0].league} ${group[0].week}. hafta maçları`}
+                        aria-label={
+                          group[0].week != null
+                            ? `${group[0].league} ${group[0].week}. hafta maçları`
+                            : `${group[0].league} maçları`
+                        }
                       >
                         {group.map((match) => (
                           <MatchRow key={match.id} match={match} />
@@ -434,6 +484,8 @@ export function MatchCenter({
                 <div className="match-center__empty-icon" aria-hidden="true">
                   {panel === "fixtures" ? (
                     <CalendarDays size={32} strokeWidth={1.3} />
+                  ) : panel === "friendlies" ? (
+                    <Handshake size={32} strokeWidth={1.3} />
                   ) : (
                     <Trophy size={32} strokeWidth={1.3} />
                   )}
@@ -444,11 +496,15 @@ export function MatchCenter({
                 <h3>
                   {panel === "fixtures"
                     ? "Bu sezon için fikstür bulunmuyor."
+                    : panel === "friendlies"
+                      ? "Hazırlık maçı bulunmuyor."
                     : "Sonuçlar henüz eklenmedi."}
                 </h3>
                 <p>
                   {panel === "fixtures"
                     ? `${teamDescription.charAt(0).toUpperCase()}${teamDescription.slice(1)} bu sezona ait maç takvimi yayınlandığında burada yer alacak.`
+                    : panel === "friendlies"
+                      ? `${teamDescription.charAt(0).toUpperCase()}${teamDescription.slice(1)} bu sezona ait hazırlık maçları yayınlandığında burada yer alacak.`
                     : `${teamDescription.charAt(0).toUpperCase()}${teamDescription.slice(1)} bu sezona ait doğrulanmış maç sonuçları burada paylaşılacak.`}
                 </p>
                 <div className="match-center__actions">

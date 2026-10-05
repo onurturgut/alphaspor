@@ -329,7 +329,8 @@ export function CompetitionFields({
               <div className="admin-fixture-preview">
                 {fixtures.map((m) => (
                   <p key={m.id}>
-                    {m.week}. hafta · {m.date} · {m.homeTeam} — {m.awayTeam}
+                    {m.week != null ? `${m.week}. hafta · ` : ""}
+                    {m.date} · {m.homeTeam} — {m.awayTeam}
                   </p>
                 ))}
               </div>
