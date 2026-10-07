@@ -27,6 +27,7 @@ import { sectionNames, type Section } from "@/lib/admin/schema";
 import { Editor, type Draft, type TeamOption } from "./editor";
 import { UserManagement } from "./user-management";
 import type { Competition, Opponent, Match } from "@/lib/matches";
+import { defaultStarterCountForTeam } from "@/lib/formations";
 type View = Section | "overview" | "account";
 const sections = Object.keys(sectionNames) as Section[];
 const icons = {
@@ -182,6 +183,9 @@ export function AdminPanel({
         awayScore: null,
         status: "unreported",
         kind: "official",
+        starterCount: defaultStarterCountForTeam(
+          `${teams[0]?.slug ?? ""} ${teams[0]?.name ?? ""}`,
+        ),
         published: false,
         report: null,
         venue: null,
@@ -202,7 +206,9 @@ export function AdminPanel({
         clubName: "FETHİYE ALFA SPOR",
         opponentIds: [],
         duration: 90,
-        starterCount: 11,
+        starterCount: defaultStarterCountForTeam(
+          `${teams[0]?.slug ?? ""} ${teams[0]?.name ?? ""}`,
+        ),
         allowReentry: false,
         winPoints: 3,
         drawPoints: 1,
@@ -349,8 +355,7 @@ export function AdminPanel({
   const today = new Date().toISOString().slice(0, 10);
   const upcomingMatches =
     data.matches?.filter(
-      (match) =>
-        match.status === "unreported" && (match.date ?? "") >= today,
+      (match) => match.status === "unreported" && (match.date ?? "") >= today,
     ).length ?? 0;
   const selectedMatchCompetition = (data.competitions ?? []).find(
     (competition) => competition._id === matchFilters.competition,
@@ -945,7 +950,11 @@ export function AdminPanel({
                           <div className="admin-news-card-visual">
                             <Image
                               src={r.image || "/media/logo.webp"}
-                              alt={r.image ? `${r.title ?? "Haber"} görseli` : "Alfa Spor logosu"}
+                              alt={
+                                r.image
+                                  ? `${r.title ?? "Haber"} görseli`
+                                  : "Alfa Spor logosu"
+                              }
                               fill
                               sizes="(max-width: 700px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
@@ -960,7 +969,11 @@ export function AdminPanel({
                               </span>
                             </div>
                             <h3>{r.title || "Başlıksız haber"}</h3>
-                            <p>{r.subtitle || r.body || "Henüz açıklama eklenmedi."}</p>
+                            <p>
+                              {r.subtitle ||
+                                r.body ||
+                                "Henüz açıklama eklenmedi."}
+                            </p>
                             <div className="admin-row-actions">
                               <button
                                 onClick={() => {
@@ -1004,16 +1017,38 @@ export function AdminPanel({
                                 {group.records.map((r) => (
                                   <tr key={r._id}>
                                     <td data-label="Karşılaşma">
-                                      <strong>{r.homeTeam} — {r.awayTeam}</strong>
-                                      <small>{r.date} · {r.league}</small>
+                                      <strong>
+                                        {r.homeTeam} — {r.awayTeam}
+                                      </strong>
+                                      <small>
+                                        {r.date} · {r.league}
+                                      </small>
                                     </td>
                                     <td data-label="Bilgi">
-                                      {r.homeScore ?? "–"} : {r.awayScore ?? "–"} · {r.published === false ? "Taslak" : "Yayında"}
+                                      {r.homeScore ?? "–"} :{" "}
+                                      {r.awayScore ?? "–"} ·{" "}
+                                      {r.published === false
+                                        ? "Taslak"
+                                        : "Yayında"}
                                     </td>
                                     <td data-label="İşlemler">
                                       <div className="admin-row-actions">
-                                        <button onClick={() => { setEditing(r); setDirty(false); setMessage(""); }}>Düzenle</button>
-                                        <button className="admin-danger-text" disabled={busy} onClick={() => void remove(r)}>Sil</button>
+                                        <button
+                                          onClick={() => {
+                                            setEditing(r);
+                                            setDirty(false);
+                                            setMessage("");
+                                          }}
+                                        >
+                                          Düzenle
+                                        </button>
+                                        <button
+                                          className="admin-danger-text"
+                                          disabled={busy}
+                                          onClick={() => void remove(r)}
+                                        >
+                                          Sil
+                                        </button>
                                       </div>
                                     </td>
                                   </tr>
@@ -1025,68 +1060,66 @@ export function AdminPanel({
                       ))}
                     </div>
                   ) : (
-                  <div className="admin-table-wrap">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>İçerik</th>
-                          <th>Bilgi</th>
-                          <th>İşlemler</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {shown.map((r) => (
-                          <tr key={r._id}>
-                            <td data-label="İçerik">
-                              <strong>
-                                {r.title ||
-                                  r.name ||
-                                  `${r.homeTeam} — ${r.awayTeam}`}
-                              </strong>
-                              <small>
-                                {view === "opponents"
-                                  ? r.teamSlugs
-                                      ?.map(
-                                        (slug) =>
-                                          teams.find((t) => t.slug === slug)
-                                            ?.name ?? slug,
-                                      )
-                                      .join(" · ") || "Yaş grubu atanmamış"
-                                  : r.subtitle || r.role || r.season}
-                              </small>
-                            </td>
-                            <td data-label="Bilgi">
-                              {view === "teams" ? (
-                                `${r.players?.length ?? 0} oyuncu`
-                              ) : (
-                                "Aktif"
-                              )}
-                            </td>
-                            <td data-label="İşlemler">
-                              <div className="admin-row-actions">
-                                <button
-                                  onClick={() => {
-                                    setEditing(r);
-                                    setDirty(false);
-                                    setMessage("");
-                                  }}
-                                >
-                                  Düzenle
-                                </button>
-                                <button
-                                  className="admin-danger-text"
-                                  disabled={busy}
-                                  onClick={() => void remove(r)}
-                                >
-                                  Sil
-                                </button>
-                              </div>
-                            </td>
+                    <div className="admin-table-wrap">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>İçerik</th>
+                            <th>Bilgi</th>
+                            <th>İşlemler</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody>
+                          {shown.map((r) => (
+                            <tr key={r._id}>
+                              <td data-label="İçerik">
+                                <strong>
+                                  {r.title ||
+                                    r.name ||
+                                    `${r.homeTeam} — ${r.awayTeam}`}
+                                </strong>
+                                <small>
+                                  {view === "opponents"
+                                    ? r.teamSlugs
+                                        ?.map(
+                                          (slug) =>
+                                            teams.find((t) => t.slug === slug)
+                                              ?.name ?? slug,
+                                        )
+                                        .join(" · ") || "Yaş grubu atanmamış"
+                                    : r.subtitle || r.role || r.season}
+                                </small>
+                              </td>
+                              <td data-label="Bilgi">
+                                {view === "teams"
+                                  ? `${r.players?.length ?? 0} oyuncu`
+                                  : "Aktif"}
+                              </td>
+                              <td data-label="İşlemler">
+                                <div className="admin-row-actions">
+                                  <button
+                                    onClick={() => {
+                                      setEditing(r);
+                                      setDirty(false);
+                                      setMessage("");
+                                    }}
+                                  >
+                                    Düzenle
+                                  </button>
+                                  <button
+                                    className="admin-danger-text"
+                                    disabled={busy}
+                                    onClick={() => void remove(r)}
+                                  >
+                                    Sil
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   )}
                   {!records.length && (
                     <p className="admin-empty">

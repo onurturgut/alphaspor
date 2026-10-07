@@ -1,13 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import type { AcademyPlayer } from "@/lib/academy";
 import {
   cinematicPitchPosition,
-  formationIds,
+  createPositionBasedLineup,
+  defaultFormationForPlayerCount,
+  formationIdsForPlayerCount,
+  formationMeta,
   formationSlots,
   isFormationId,
+  mobilePitchPosition,
   type FormationId,
 } from "@/lib/formations";
 import type { MatchReport } from "@/lib/matches";
@@ -28,12 +32,26 @@ function initials(name: string) {
 }
 
 export function LineupBuilder({ players, report, onChange }: Props) {
-  const formation: FormationId = isFormationId(report.formation)
-    ? report.formation
-    : "4-3-3";
+  const matchingFormations = formationIdsForPlayerCount(report.starterCount);
+  const compatibleFormations: FormationId[] = matchingFormations.length
+    ? matchingFormations
+    : ["4-3-3"];
+  const formation: FormationId =
+    isFormationId(report.formation) &&
+    compatibleFormations.includes(report.formation)
+      ? report.formation
+      : defaultFormationForPlayerCount(report.starterCount);
   const slots = formationSlots(formation);
+  const formationCategories = [
+    "Dengeli",
+    "Savunmacı",
+    "Hücumcu",
+    "Dar oyun",
+    "Kanat oyunu",
+  ] as const;
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [autoMessage, setAutoMessage] = useState("");
 
   const lineup = useMemo(() => {
     const validSlots = new Set(slots.map((item) => item.id));
@@ -84,6 +102,51 @@ export function LineupBuilder({ players, report, onChange }: Props) {
         })),
       report.bench,
       value,
+    );
+    setSelectedSlot(null);
+    setAutoMessage("");
+  }
+
+  function changePlayerCount(nextCount: 8 | 11) {
+    if (nextCount === report.starterCount) return;
+    if (
+      (report.starters.length > 0 || report.events.length > 0) &&
+      !confirm(
+        "Başlangıç oyuncu sayısı değişince saha yerleşimi ve maç olayları temizlenecek. Devam edilsin mi?",
+      )
+    )
+      return;
+    onChange({
+      ...report,
+      starterCount: nextCount,
+      starters: [],
+      bench: players.map((player) => player.id),
+      formation: defaultFormationForPlayerCount(nextCount),
+      lineup: [],
+      events: [],
+    });
+    setSelectedSlot(null);
+    setAutoMessage("");
+  }
+
+  function createAutomaticLineup() {
+    const next = createPositionBasedLineup(formation, players).slice(
+      0,
+      report.starterCount,
+    );
+    const selected = new Set(next.map((item) => item.playerId));
+    updateSquad(
+      next,
+      players
+        .filter((player) => !selected.has(player.id))
+        .map((player) => player.id),
+      formation,
+    );
+    const missing = slots.length - next.length;
+    setAutoMessage(
+      missing
+        ? `${next.length}/${slots.length} pozisyon dolduruldu. ${missing} pozisyon için uygun mevki bulunamadı.`
+        : `${slots.length}/${slots.length} pozisyon mevkilere göre dolduruldu.`,
     );
     setSelectedSlot(null);
   }
@@ -144,13 +207,49 @@ export function LineupBuilder({ players, report, onChange }: Props) {
             value={formation}
             onChange={(event) => changeFormation(event.target.value)}
           >
-            {formationIds.map((id) => (
-              <option key={id} value={id}>
-                {id}
-              </option>
-            ))}
+            {formationCategories.map((category) => {
+              const options = compatibleFormations.filter(
+                (id) => formationMeta[id].category === category,
+              );
+              return options.length ? (
+                <optgroup key={category} label={category}>
+                  {options.map((id) => (
+                    <option key={id} value={id}>
+                      {id} — {formationMeta[id].description}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null;
+            })}
           </select>
         </label>
+        <fieldset className="admin-lineup-count">
+          <legend>Başlangıç oyuncu sayısı</legend>
+          {[8, 11].map((count) => (
+            <label key={count}>
+              <input
+                type="radio"
+                name="lineup-player-count"
+                value={count}
+                checked={report.starterCount === count}
+                onChange={() => changePlayerCount(count as 8 | 11)}
+              />
+              <span>{count} oyuncu</span>
+            </label>
+          ))}
+        </fieldset>
+        <button
+          type="button"
+          onClick={createAutomaticLineup}
+          disabled={!players.length}
+        >
+          Pozisyonlara göre oluştur
+        </button>
+        {autoMessage && (
+          <p className="admin-help" role="status">
+            {autoMessage}
+          </p>
+        )}
         <p className="admin-help">
           Bir pozisyona, ardından o pozisyonda oynayacak futbolcuya dokunun.
           Başlangıç sayısına ulaştığınızda kalan pozisyonlar boş bırakılabilir.
@@ -172,12 +271,20 @@ export function LineupBuilder({ players, report, onChange }: Props) {
             const player = assignment
               ? playerById(assignment.playerId)
               : undefined;
+            const desktopPosition = cinematicPitchPosition(item.x, item.y);
+            const mobilePosition = mobilePitchPosition(slots, item);
             return (
               <button
                 key={item.id}
                 type="button"
                 className={`admin-pitch-player${selectedSlot === item.id ? " is-selected" : ""}${player ? "" : " is-empty"}`}
-                style={cinematicPitchPosition(item.x, item.y)}
+                style={
+                  {
+                    ...desktopPosition,
+                    "--mobile-player-left": mobilePosition.left,
+                    "--mobile-player-top": mobilePosition.top,
+                  } as CSSProperties
+                }
                 onClick={() =>
                   setSelectedSlot(selectedSlot === item.id ? null : item.id)
                 }
@@ -185,7 +292,7 @@ export function LineupBuilder({ players, report, onChange }: Props) {
                 aria-pressed={selectedSlot === item.id}
               >
                 <b>{player ? initials(player.name) : "+"}</b>
-                <span>{player?.name ?? item.label}</span>
+                <span>{player ? initials(player.name) : item.label}</span>
               </button>
             );
           })}

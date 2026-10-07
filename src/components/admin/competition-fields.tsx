@@ -7,6 +7,7 @@ import {
   type Competition,
   type Opponent,
 } from "@/lib/matches";
+import { defaultStarterCountForTeam } from "@/lib/formations";
 
 export function CompetitionFields({
   draft,
@@ -38,7 +39,9 @@ export function CompetitionFields({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const eligibleOpponents = availableOpponents.filter(
-    (o) => o.teamSlugs?.includes(draft.teamSlug ?? "") || draft.opponentIds?.includes(o._id),
+    (o) =>
+      o.teamSlugs?.includes(draft.teamSlug ?? "") ||
+      draft.opponentIds?.includes(o._id),
   );
   const fixtureInputValid =
     /^\d{4}-\d{2}-\d{2}$/.test(startDate) &&
@@ -111,7 +114,17 @@ export function CompetitionFields({
         <Field
           label="Takım / yaş grubu"
           value={draft.teamSlug ?? ""}
-          onChange={(teamSlug) => update({ teamSlug, season: teams.find(t => t.slug === teamSlug)?.season ?? draft.season, opponentIds: [] })}
+          onChange={(teamSlug) => {
+            const team = teams.find((item) => item.slug === teamSlug);
+            update({
+              teamSlug,
+              season: team?.season ?? draft.season,
+              starterCount: defaultStarterCountForTeam(
+                `${teamSlug} ${team?.name ?? ""}`,
+              ),
+              opponentIds: [],
+            });
+          }}
           options={teams.map((t) => ({ value: t.slug, label: t.name }))}
         />
         {field("season", "Sezon")}
@@ -228,27 +241,32 @@ export function CompetitionFields({
           <button
             type="button"
             className="admin-primary"
-            disabled={addingOpponent || !newOpponentName.trim() || !draft.teamSlug}
+            disabled={
+              addingOpponent || !newOpponentName.trim() || !draft.teamSlug
+            }
             onClick={() => void addOpponent()}
           >
             {addingOpponent ? "Ekleniyor…" : "Rakibi ekle ve seç"}
           </button>
           {opponentError && (
-            <p className="admin-alert error" role="alert">{opponentError}</p>
+            <p className="admin-alert error" role="alert">
+              {opponentError}
+            </p>
           )}
         </div>
       )}
       {eligibleOpponents.length === 0 && !showQuickAdd && (
         <p className="admin-help" role="status">
           Bu yaş grubuna atanmış rakip yok. Taslağı kaydettikten sonra Rakipler
-          bölümünde bir rakibi bu yaş grubuna atayın ve organizasyonu tekrar açın.
+          bölümünde bir rakibi bu yaş grubuna atayın ve organizasyonu tekrar
+          açın.
         </p>
       )}
       <p className="admin-help">
-        Kulübümüz otomatik katılır. Eksik takımları “Rakip ekle” ile
-        hemen oluşturabilirsiniz. Maçlar oluşturulduktan sonra katılımcılar; ilk maç raporu
-        kaydedildikten sonra oyun kuralları kilitlenir. Kadro girmeden önce maç
-        süresini ve başlangıç oyuncu sayısını kontrol edin.
+        Kulübümüz otomatik katılır. Eksik takımları “Rakip ekle” ile hemen
+        oluşturabilirsiniz. Maçlar oluşturulduktan sonra katılımcılar; ilk maç
+        raporu kaydedildikten sonra oyun kuralları kilitlenir. Kadro girmeden
+        önce maç süresini ve başlangıç oyuncu sayısını kontrol edin.
       </p>
       <div className="admin-roster-grid">
         {eligibleOpponents

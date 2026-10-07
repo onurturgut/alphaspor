@@ -41,7 +41,10 @@
 }
 .match-report__grid {
   display: grid;
-  grid-template-columns: minmax(320px, 0.95fr) minmax(190px, 0.65fr) minmax(280px, 1fr);
+  grid-template-columns: minmax(320px, 0.95fr) minmax(190px, 0.65fr) minmax(
+      280px,
+      1fr
+    );
   gap: 22px;
   margin: 18px 0 4px;
   align-items: start;
@@ -106,7 +109,7 @@
 .match-report__pitch {
   position: relative;
   isolation: isolate;
-  width: min(100%, 540px);
+  width: min(100%, 520px);
   aspect-ratio: 2 / 3;
   margin-inline: auto;
   overflow: hidden;
@@ -125,14 +128,19 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(180deg, rgb(0 0 0 / 8%), transparent 26%, rgb(0 0 0 / 18%));
+  background: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 8%),
+    transparent 26%,
+    rgb(0 0 0 / 18%)
+  );
 }
 .match-report__player {
   position: absolute;
   z-index: 2;
   display: grid;
   justify-items: center;
-  width: clamp(66px, 7vw, 92px);
+  width: clamp(62px, 15%, 84px);
   color: #fff;
   text-align: center;
   transform: translate(-50%, -50%);
@@ -141,7 +149,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: clamp(30px, 3vw, 42px);
+  width: 38px;
   aspect-ratio: 1;
   overflow: hidden;
   border: 2px solid #fff;
@@ -156,14 +164,15 @@
   object-fit: cover;
 }
 .match-report__player strong {
-  max-width: 100%;
-  margin-top: 2px;
-  padding: 2px 5px;
+  width: max-content;
+  max-width: 82px;
+  margin-top: 3px;
+  padding: 3px 5px;
   overflow: hidden;
   border-radius: 3px;
   background: rgb(0 0 0 / 72%);
-  font-size: clamp(8px, 0.66vw, 10px);
-  line-height: 1.1;
+  font-size: 9px;
+  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -293,12 +302,14 @@
     grid-column: auto;
   }
   .match-report__pitch {
-    width: min(100%, 430px);
+    width: min(100%, 420px);
     aspect-ratio: 2 / 3;
     border-radius: 12px;
   }
   .match-report__player {
-    width: 72px;
+    left: var(--mobile-player-left);
+    top: var(--mobile-player-top);
+    width: 40px;
   }
   .match-report__panel-head {
     min-height: 58px;
@@ -317,12 +328,25 @@
     margin-left: auto;
   }
   .match-report__avatar {
-    width: 34px;
+    width: 15px;
+    border-width: 1px;
+    font-size: 7px;
   }
   .match-report__player strong {
-    max-width: 72px;
-    padding-inline: 4px;
-    font-size: 8px;
+    max-width: 42px;
+    margin-top: 1px;
+    padding: 1px 2px;
+    font-size: 5.5px;
+    line-height: 1;
+  }
+  .match-report__player small {
+    font-size: 5.5px;
+  }
+  .match-report__player em {
+    margin-top: 1px;
+    padding: 1px 3px;
+    font-size: 5.5px;
+    line-height: 1.1;
   }
   .match-report__bench {
     display: grid;

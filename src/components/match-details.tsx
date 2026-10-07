@@ -1,7 +1,12 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { PiArrowsLeftRightBold, PiSoccerBallFill } from "react-icons/pi";
 import { orderedEvents, type Match, type MatchReport } from "@/lib/matches";
-import { cinematicPitchPosition, formationSlots } from "@/lib/formations";
+import {
+  cinematicPitchPosition,
+  formationSlots,
+  mobilePitchPosition,
+} from "@/lib/formations";
 
 function initials(value: string) {
   return value
@@ -82,11 +87,22 @@ export function MatchDetails({ match }: { match: Match }) {
                 if (!position) return null;
                 const playerName = name(item.playerId);
                 const exit = exitedAt(report, item.playerId);
+                const desktopPosition = cinematicPitchPosition(
+                  position.x,
+                  position.y,
+                );
+                const mobilePosition = mobilePitchPosition(slots, position);
                 return (
                   <div
                     className="match-report__player"
                     key={item.slotId}
-                    style={cinematicPitchPosition(position.x, position.y)}
+                    style={
+                      {
+                        ...desktopPosition,
+                        "--mobile-player-left": mobilePosition.left,
+                        "--mobile-player-top": mobilePosition.top,
+                      } as CSSProperties
+                    }
                   >
                     <span className="match-report__avatar">
                       {photo(item.playerId) ? (
@@ -100,7 +116,7 @@ export function MatchDetails({ match }: { match: Match }) {
                         initials(playerName)
                       )}
                     </span>
-                    <strong>{playerName}</strong>
+                    <strong>{initials(playerName)}</strong>
                     <small>{position.label}</small>
                     {exit != null && <em>↓ {exit}′ çıktı</em>}
                   </div>
@@ -137,7 +153,10 @@ export function MatchDetails({ match }: { match: Match }) {
           </ul>
         </details>
 
-        <details open className="match-report__panel match-report__events-panel">
+        <details
+          open
+          className="match-report__panel match-report__events-panel"
+        >
           <summary className="match-report__panel-head">
             <div>
               <span>Kadro ve maç</span>

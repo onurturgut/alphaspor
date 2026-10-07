@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { formationIds } from "@/lib/formations";
 
 /** Turkish names converted to stable, URL-safe identifiers. */
 export function slugify(value: string): string {
@@ -50,9 +51,7 @@ const matchReportSchema = z.object({
   allowReentry: z.boolean(),
   starters: z.array(required(100)).max(11),
   bench: z.array(required(100)).max(50),
-  formation: z
-    .enum(["4-3-3", "4-2-3-1", "4-4-2", "3-4-2-1", "3-5-2", "5-3-2"])
-    .optional(),
+  formation: z.enum(formationIds).optional(),
   lineup: z
     .array(z.object({ slotId: required(20), playerId: required(100) }))
     .max(11)
@@ -278,6 +277,7 @@ export const schemas = {
       awayId: required(100).nullable().optional(),
       kind: z.enum(["official", "friendly", "tournament"]).default("official"),
       published: z.boolean().default(true),
+      starterCount: z.union([z.literal(8), z.literal(11)]).optional(),
       report: matchReportSchema.nullable().optional(),
       teamSlug: slug,
       league: required(100),

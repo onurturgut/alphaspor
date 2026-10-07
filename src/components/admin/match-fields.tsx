@@ -16,6 +16,11 @@ import {
   type Opponent,
 } from "@/lib/matches";
 import type { AcademyPlayer } from "@/lib/academy";
+import {
+  defaultFormationForPlayerCount,
+  defaultStarterCountForTeam,
+  formationIdsForPlayerCount,
+} from "@/lib/formations";
 import { LineupBuilder } from "./lineup-builder";
 
 function PlayerSelect({
@@ -93,23 +98,45 @@ export function MatchFields({
   const [inId, setIn] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const [eventError, setEventError] = useState("");
+  const [availableOpponents, setAvailableOpponents] = useState(opponents);
+  const [savingTeam, setSavingTeam] = useState<"home" | "away" | null>(null);
+  const [teamError, setTeamError] = useState<
+    Partial<Record<"home" | "away", string>>
+  >({});
   const assistRef = useRef<HTMLDivElement>(null);
   const competition = competitions.find((c) => c._id === draft.competitionId);
   const players = teams.find((t) => t.slug === draft.teamSlug)?.players ?? [];
   const report = draft.report as MatchReport | null | undefined;
+  const starterCount: 8 | 11 =
+    draft.starterCount ??
+    (report?.starterCount === 8
+      ? 8
+      : report?.starterCount === 11
+        ? 11
+        : undefined) ??
+    (competition?.starterCount === 8 ? 8 : 11);
   const score = report ? reportScore(report) : null;
   const match = { ...draft, id: draft._id ?? "new" } as Match;
   const sideOfClub = clubSide(match);
   const participants = competition
     ? [
         { _id: "club", name: competition.clubName },
-        ...opponents.filter((o) => competition.opponentIds.includes(o._id)),
+        ...availableOpponents.filter(
+          (o) =>
+            competition.opponentIds.includes(o._id) ||
+            o.teamSlugs?.includes(draft.teamSlug ?? "") ||
+            o._id === draft.homeId ||
+            o._id === draft.awayId,
+        ),
       ]
     : [];
   function setReport(next: MatchReport) {
     const calculated = reportScore(next);
     update({
       report: next,
+      ...(next.starterCount === 8 || next.starterCount === 11
+        ? { starterCount: next.starterCount }
+        : {}),
       ...(draft.status === "played"
         ? { homeScore: calculated.home, awayScore: calculated.away }
         : {}),
@@ -145,7 +172,83 @@ export function MatchFields({
       homeScore: null,
       awayScore: null,
       status: "unreported",
+      starterCount: c.starterCount === 8 ? 8 : 11,
     });
+  }
+  function changeStarterCount(value: string) {
+    const next = Number(value) === 8 ? 8 : 11;
+    if (next === starterCount) return;
+    if (
+      report &&
+      !confirm(
+        "Başlangıç oyuncu sayısı değişince mevcut kadro ve maç olayları temizlenecek. Devam edilsin mi?",
+      )
+    )
+      return;
+    update({
+      starterCount: next,
+      ...(report
+        ? {
+            report: {
+              ...report,
+              starterCount: next,
+              starters: [],
+              bench: [],
+              formation: defaultFormationForPlayerCount(next),
+              lineup: [],
+              events: [],
+            },
+          }
+        : {}),
+    });
+    setEditing(null);
+    setEventError("");
+  }
+  async function saveCustomTeam(side: "home" | "away") {
+    const name = String(draft[`${side}Team`] ?? "").trim();
+    if (!name || !draft.teamSlug || savingTeam) return;
+    setSavingTeam(side);
+    setTeamError((current) => ({ ...current, [side]: "" }));
+    try {
+      const existing = availableOpponents.find(
+        (opponent) =>
+          opponent.name.toLocaleLowerCase("tr-TR") ===
+          name.toLocaleLowerCase("tr-TR"),
+      );
+      if (existing) {
+        update({ [`${side}Id`]: existing._id, [`${side}Team`]: existing.name });
+        return;
+      }
+      const response = await fetch("/api/admin/data/opponents", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: null,
+          version: null,
+          data: {
+            name,
+            teamSlugs: [draft.teamSlug],
+            order: availableOpponents.length,
+          },
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      const opponent: Opponent = {
+        _id: result.id,
+        name,
+        teamSlugs: [draft.teamSlug],
+      };
+      setAvailableOpponents((current) => [...current, opponent]);
+      update({ [`${side}Id`]: opponent._id, [`${side}Team`]: opponent.name });
+    } catch (error) {
+      setTeamError((current) => ({
+        ...current,
+        [side]: error instanceof Error ? error.message : "Takım kaydedilemedi.",
+      }));
+    } finally {
+      setSavingTeam(null);
+    }
   }
   const field = (
     key: keyof Draft,
@@ -300,6 +403,9 @@ export function MatchFields({
                   teamSlug,
                   league: team?.name ?? "",
                   season: team?.season ?? "",
+                  starterCount: defaultStarterCountForTeam(
+                    `${teamSlug} ${team?.name ?? ""}`,
+                  ),
                 });
               }}
               options={teams.map((t) => ({ value: t.slug, label: t.name }))}
@@ -331,26 +437,77 @@ export function MatchFields({
           "number",
           (competition?.kind ?? draft.kind) === "official",
         )}
+        <Field
+          label="Başlangıç oyuncu sayısı"
+          value={String(starterCount)}
+          onChange={changeStarterCount}
+          options={[
+            { value: "8", label: "8 oyuncu" },
+            { value: "11", label: "11 oyuncu" },
+          ]}
+        />
         {field("date", "Tarih (açıklanmadıysa boş bırakın)", "date")}
         {field("time", "Saat", "time")}
         {(["home", "away"] as const).map((s) =>
           competition ? (
-            <Field
-              key={s}
-              label={s === "home" ? "Ev sahibi" : "Deplasman"}
-              value={draft[`${s}Id`] ?? ""}
-              onChange={(id) =>
-                switchContext({
-                  [`${s}Id`]: id,
-                  [`${s}Team`]:
-                    participants.find((p) => p._id === id)?.name ?? "",
-                })
-              }
-              options={[
-                { value: "", label: "Takım seçin" },
-                ...participants.map((p) => ({ value: p._id, label: p.name })),
-              ]}
-            />
+            <div className="admin-match-team-field" key={s}>
+              <Field
+                label={s === "home" ? "Ev sahibi" : "Deplasman"}
+                value={draft[`${s}Id`] ?? ""}
+                onChange={(id) =>
+                  switchContext({
+                    [`${s}Id`]: id,
+                    [`${s}Team`]:
+                      participants.find((p) => p._id === id)?.name ?? "",
+                  })
+                }
+                options={[
+                  { value: "", label: "Takım seçin" },
+                  ...participants.map((p) => ({ value: p._id, label: p.name })),
+                  {
+                    value: `custom-${s}`,
+                    label: "+ Yeni takım adı gir",
+                  },
+                ]}
+              />
+              {draft[`${s}Id`] === `custom-${s}` && (
+                <div className="admin-match-team-add">
+                  <label>
+                    Yeni takım adı
+                    <input
+                      required
+                      value={draft[`${s}Team`] ?? ""}
+                      placeholder="Takım adını yazın"
+                      onChange={(event) =>
+                        update({ [`${s}Team`]: event.target.value })
+                      }
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          void saveCustomTeam(s);
+                        }
+                      }}
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    disabled={
+                      !String(draft[`${s}Team`] ?? "").trim() ||
+                      Boolean(savingTeam)
+                    }
+                    onClick={() => void saveCustomTeam(s)}
+                  >
+                    {savingTeam === s ? "Kaydediliyor…" : "Takımı kaydet"}
+                  </button>
+                  {teamError[s] && (
+                    <p className="admin-alert error" role="alert">
+                      {teamError[s]}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
           ) : (
             <label key={s}>
               {s === "home" ? "Ev sahibi" : "Deplasman"}
@@ -419,8 +576,8 @@ export function MatchFields({
       {competition && (
         <p className="admin-help">
           {competition.name} · {competition.season} · {competition.duration}{" "}
-          dakika · {competition.starterCount} kişilik başlangıç. Organizasyonun
-          da yayında olması gerekir.
+          dakika · {starterCount} kişilik başlangıç. Organizasyonun da yayında
+          olması gerekir.
         </p>
       )}
       {!report && (
@@ -446,11 +603,11 @@ export function MatchFields({
               setReport({
                 clubSide: sideOfClub,
                 duration: competition?.duration ?? 90,
-                starterCount: competition?.starterCount ?? 11,
+                starterCount,
                 allowReentry: competition?.allowReentry ?? false,
                 starters: [],
                 bench: [],
-                formation: "4-3-3",
+                formation: defaultFormationForPlayerCount(starterCount),
                 lineup: [],
                 events: [],
               });
@@ -497,14 +654,6 @@ export function MatchFields({
             />
             {!competition && (
               <>
-                <Field
-                  label="Başlangıç oyuncu sayısı"
-                  type="number"
-                  value={report.starterCount}
-                  onChange={(v) =>
-                    setReport({ ...report, starterCount: Number(v) })
-                  }
-                />
                 <label className="admin-check">
                   <input
                     type="checkbox"
@@ -536,7 +685,13 @@ export function MatchFields({
                     ...report,
                     starters,
                     bench: prior.report!.bench.filter((id) => ids.has(id)),
-                    formation: prior.report!.formation ?? report.formation,
+                    formation:
+                      prior.report!.formation &&
+                      formationIdsForPlayerCount(report.starterCount).includes(
+                        prior.report!.formation,
+                      )
+                        ? prior.report!.formation
+                        : defaultFormationForPlayerCount(report.starterCount),
                     lineup: prior.report!.lineup?.filter((item) =>
                       starters.includes(item.playerId),
                     ),

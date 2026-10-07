@@ -71,6 +71,7 @@ export type Match = {
   awayId?: string | null;
   kind?: "official" | "friendly" | "tournament";
   published?: boolean;
+  starterCount?: 8 | 11;
   report?: MatchReport | null;
 };
 
@@ -494,6 +495,7 @@ export function generateFixtures(
           season: competition.season,
           league: competition.name,
           kind: competition.kind,
+          starterCount: competition.starterCount === 8 ? 8 : 11,
           week,
           date: date.toISOString().slice(0, 10),
           time: null,

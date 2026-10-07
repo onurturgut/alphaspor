@@ -177,13 +177,11 @@ export async function saveAdmin(
     for (const opponent of selectedOpponents) {
       const inherited =
         !opponent.teamSlugs &&
-        (await db
-          .collection("competitions")
-          .findOne({
-            opponentIds: opponent._id,
-            teamSlug: fields.teamSlug,
-            _deleted: { $ne: true },
-          }));
+        (await db.collection("competitions").findOne({
+          opponentIds: opponent._id,
+          teamSlug: fields.teamSlug,
+          _deleted: { $ne: true },
+        }));
       if (
         !opponent.teamSlugs?.includes(String(fields.teamSlug)) &&
         !inherited &&
@@ -300,8 +298,7 @@ export async function saveAdmin(
       const report = fields.report as Match["report"];
       if (
         report &&
-        (report.starterCount !== competition.starterCount ||
-          report.allowReentry !== competition.allowReentry ||
+        (report.allowReentry !== competition.allowReentry ||
           report.duration < competition.duration)
       )
         throw new AdminError(
