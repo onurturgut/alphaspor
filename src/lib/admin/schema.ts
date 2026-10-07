@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formationIds } from "@/lib/formations";
+import { formationIds } from "../formations.ts";
 
 /** Turkish names converted to stable, URL-safe identifiers. */
 export function slugify(value: string): string {

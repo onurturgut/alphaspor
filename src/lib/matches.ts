@@ -1,5 +1,5 @@
-import type { AcademyPlayer, Appearance } from "./academy";
-import { formationSlots, type FormationId } from "./formations";
+import type { AcademyPlayer, Appearance } from "./academy.ts";
+import { formationSlots, type FormationId } from "./formations.ts";
 
 export type MatchEvent =
   | {
