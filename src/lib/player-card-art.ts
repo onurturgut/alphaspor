@@ -43,14 +43,29 @@ const cardNames = new Set([
   "yusuf-aras-yaniklar",
 ]);
 
-export function playerCardKey(name: string): string | null {
-  const key = name
+const portraitNames = new Set([
+  "cansin-toydemir",
+  "ege-yasar",
+  "enes-cura",
+  "ertugrul-ozcan",
+  "eyup-yalcin",
+  "mirac-goster",
+  "murat-asil-koc",
+  "tuncer-doruk-sahin",
+]);
+
+function normalizedPlayerName(name: string) {
+  return name
     .toLocaleLowerCase("tr-TR")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/ı/g, "i")
     .trim()
     .replace(/\s+/g, "-");
+}
+
+export function playerCardKey(name: string): string | null {
+  const key = normalizedPlayerName(name);
   // The roster also contains the single-m spelling for the same player.
   const cardKey = key === "muhamet-hamza-yalcin" ? "muhammet-hamza-yalcin" : key;
   return cardNames.has(cardKey) ? cardKey : null;
@@ -61,4 +76,11 @@ export function playerCardArt(name: string): string | null {
   if (!cardKey) return null;
   const version = cardKey === "batu-boce" ? "v2" : "v1";
   return `/media/academy/player-cards/${cardKey}-${version}.webp`;
+}
+
+export function playerPortraitArt(name: string): string | null {
+  const key = normalizedPlayerName(name);
+  return portraitNames.has(key)
+    ? `/media/academy/player-portraits/${key}-v1.webp`
+    : null;
 }

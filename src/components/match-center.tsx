@@ -28,12 +28,7 @@ import { CompetitionStandings } from "./competition-standings";
 import type { Competition, Opponent } from "@/lib/matches";
 
 type MatchTab = "fixtures" | "results" | "standings" | "friendlies";
-const tabOrder: MatchTab[] = [
-  "fixtures",
-  "results",
-  "standings",
-  "friendlies",
-];
+const tabOrder: MatchTab[] = ["fixtures", "results", "standings", "friendlies"];
 
 type MatchCenterProps = {
   teamOptions: { slug: string; name: string; season: string }[];
@@ -76,7 +71,9 @@ function MatchRow({ match }: { match: Match }) {
       <div className="match-row__date">
         <span className="match-row__league">
           {match.league}
-          {match.week != null && <span> · {match.week}. hafta</span>}
+          {match.kind !== "friendly" && match.week != null && (
+            <span> · {match.week}. hafta</span>
+          )}
         </span>
         {match.date ? (
           <time dateTime={match.date}>{formatMatchDate(match.date)}</time>
@@ -204,7 +201,9 @@ export function MatchCenter({
   const resultCount = visibleMatches.filter(hasScore).length;
   const weekGroups = new Map<string, Match[]>();
   for (const match of visibleMatches) {
-    const key = `${match.teamSlug}-${match.competitionId ?? match.league}-${match.week ?? "no-week"}`;
+    const key = `${match.teamSlug}-${match.competitionId ?? match.league}-${
+      match.kind === "friendly" ? "friendly" : (match.week ?? "no-week")
+    }`;
     const group = weekGroups.get(key) ?? [];
     group.push(match);
     weekGroups.set(key, group);
@@ -235,9 +234,9 @@ export function MatchCenter({
         ? "puan-durumu"
         : next.tab === "friendlies"
           ? "hazirlik-maclari"
-        : next.tab === "results"
-          ? "sonuclar"
-          : "fikstur",
+          : next.tab === "results"
+            ? "sonuclar"
+            : "fikstur",
     );
     window.history.replaceState(
       null,
@@ -402,9 +401,7 @@ export function MatchCenter({
                           ? "Sahadaki hikâyemiz."
                           : `${selectedTeam.label} karşılaşmaları.`}
                     </h2>
-                    <p>
-                      Karşılaşmaları görüntülemek için grupları aç.
-                    </p>
+                    <p>Karşılaşmaları görüntülemek için grupları aç.</p>
                   </div>
                   <dl className="match-summary__stats">
                     <div>
@@ -426,17 +423,22 @@ export function MatchCenter({
                     {selectedTeam.value === "all"
                       ? "TÜM TAKIMLAR"
                       : selectedTeam.label}{" "}
-                    · {panel === "results"
+                    ·{" "}
+                    {panel === "results"
                       ? "SONUÇLAR"
                       : panel === "friendlies"
                         ? "HAZIRLIK MAÇLARI"
                         : "FİKSTÜR"}
                   </span>
                   <span role="status" aria-live="polite">
-                    {visibleMatches.length} karşılaşma · {weeks.length}{" "}
-                    {visibleMatches.every((match) => match.week != null)
-                      ? "hafta"
-                      : "grup"}
+                    {visibleMatches.length} karşılaşma ·{" "}
+                    {panel === "friendlies"
+                      ? "hazırlık maçı"
+                      : `${weeks.length} ${
+                          visibleMatches.every((match) => match.week != null)
+                            ? "hafta"
+                            : "grup"
+                        }`}
                   </span>
                 </div>
                 <div
@@ -451,9 +453,11 @@ export function MatchCenter({
                     >
                       <summary>
                         <span className="match-week__number">
-                          {group[0].week != null
-                            ? `${group[0].week}. HAFTA`
-                            : "MAÇLAR"}
+                          {group[0].kind === "friendly"
+                            ? "HAZIRLIK MAÇI"
+                            : group[0].week != null
+                              ? `${group[0].week}. HAFTA`
+                              : "MAÇLAR"}
                         </span>
                         <span className="match-week__league">
                           {group[0].league}
@@ -466,9 +470,11 @@ export function MatchCenter({
                       <ol
                         className="match-list"
                         aria-label={
-                          group[0].week != null
-                            ? `${group[0].league} ${group[0].week}. hafta maçları`
-                            : `${group[0].league} maçları`
+                          group[0].kind === "friendly"
+                            ? `${group[0].league} hazırlık maçları`
+                            : group[0].week != null
+                              ? `${group[0].league} ${group[0].week}. hafta maçları`
+                              : `${group[0].league} maçları`
                         }
                       >
                         {group.map((match) => (
@@ -498,14 +504,14 @@ export function MatchCenter({
                     ? "Bu sezon için fikstür bulunmuyor."
                     : panel === "friendlies"
                       ? "Hazırlık maçı bulunmuyor."
-                    : "Sonuçlar henüz eklenmedi."}
+                      : "Sonuçlar henüz eklenmedi."}
                 </h3>
                 <p>
                   {panel === "fixtures"
                     ? `${teamDescription.charAt(0).toUpperCase()}${teamDescription.slice(1)} bu sezona ait maç takvimi yayınlandığında burada yer alacak.`
                     : panel === "friendlies"
                       ? `${teamDescription.charAt(0).toUpperCase()}${teamDescription.slice(1)} bu sezona ait hazırlık maçları yayınlandığında burada yer alacak.`
-                    : `${teamDescription.charAt(0).toUpperCase()}${teamDescription.slice(1)} bu sezona ait doğrulanmış maç sonuçları burada paylaşılacak.`}
+                      : `${teamDescription.charAt(0).toUpperCase()}${teamDescription.slice(1)} bu sezona ait doğrulanmış maç sonuçları burada paylaşılacak.`}
                 </p>
                 <div className="match-center__actions">
                   <Link

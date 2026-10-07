@@ -29,7 +29,7 @@ import {
   type AcademyTeam,
 } from "@/lib/academy";
 import styles from "./academy-explorer.module.css";
-import { playerCardArt } from "@/lib/player-card-art";
+import { playerCardArt, playerPortraitArt } from "@/lib/player-card-art";
 
 const cardCondensed = localFont({
   src: [
@@ -48,9 +48,11 @@ function Portrait({
   large?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
-  return player.photo && !player.placeholder && !failed ? (
+  const preparedPortrait = playerPortraitArt(player.name);
+  const portrait = preparedPortrait || (!player.placeholder ? player.photo : "");
+  return portrait && !failed ? (
     <Image
-      src={player.photo}
+      src={portrait}
       alt=""
       fill
       sizes={large ? "(max-width: 700px) 240px, 260px" : "64px"}

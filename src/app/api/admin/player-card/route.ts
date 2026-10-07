@@ -8,7 +8,7 @@ import { AdminError, fail, requireAdmin } from "@/lib/admin/auth";
 import { playerAppearances, playerStats, positionZone, type AcademyPlayer } from "@/lib/academy";
 import { getDb } from "@/lib/mongodb";
 import { withMatchAppearances, type Match } from "@/lib/matches";
-import { playerCardArt, playerCardKey } from "@/lib/player-card-art";
+import { playerCardArt, playerCardKey, playerPortraitArt } from "@/lib/player-card-art";
 import { getR2Client } from "@/lib/r2";
 
 export const runtime = "nodejs";
@@ -172,14 +172,23 @@ export async function GET(request: Request) {
       const template = await localAsset("/media/academy/player-card-template.webp");
       if (!template) throw new AdminError("Standart kart şablonu bulunamadı.", 500);
       const composites: OverlayOptions[] = [];
-      const photo = player.photo && !player.placeholder ? await playerPhoto(player.photo) : null;
-      if (photo) {
-        const portrait = await sharp(photo)
+      const preparedPortrait = playerPortraitArt(player.name);
+      const portraitAsset = preparedPortrait ? await localAsset(preparedPortrait) : null;
+      const uploadedPhoto = !portraitAsset && player.photo && !player.placeholder
+        ? await playerPhoto(player.photo)
+        : null;
+      const portraitSource = portraitAsset ?? uploadedPhoto;
+      if (portraitSource) {
+        const portrait = await sharp(portraitSource)
           .rotate()
-          .resize(520, 650, { fit: "cover", position: "top" })
-          .webp()
+          .resize(620, 760, {
+            fit: portraitAsset ? "contain" : "cover",
+            position: portraitAsset ? "bottom" : "top",
+            background: { r: 0, g: 0, b: 0, alpha: 0 },
+          })
+          .png()
           .toBuffer();
-        composites.push({ input: portrait, left: 190, top: 145, blend: "over" });
+        composites.push({ input: portrait, left: 90, top: 115, blend: "over" });
       }
       composites.push({ input: standardCardText(player, team.name, values, css), top: 0, left: 0 });
       image = sharp(template).resize(WIDTH, HEIGHT, { fit: "fill" }).composite(composites);
