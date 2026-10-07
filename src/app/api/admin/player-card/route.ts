@@ -159,7 +159,7 @@ export async function GET(request: Request) {
     const stats = playerStats(playerAppearances(player, team.season));
     const values = [stats.matches, stats.goals, stats.assists, stats.minutes].map(formatStat);
     const css = await fontCss();
-    const art = playerCardArt(player.name);
+    const art = playerCardArt(player.name, team.slug);
     let image: Sharp;
 
     if (art) {
@@ -195,7 +195,7 @@ export async function GET(request: Request) {
     }
 
     const output = await image.webp({ quality: 94 }).toBuffer();
-    const filename = `${playerCardKey(player.name) ?? safeFilename(player.name)}-oyuncu-karti.webp`;
+    const filename = `${playerCardKey(player.name, team.slug) ?? safeFilename(player.name)}-oyuncu-karti.webp`;
     return new Response(new Uint8Array(output), {
       headers: {
         "Content-Type": "image/webp",

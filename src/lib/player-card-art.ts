@@ -17,30 +17,43 @@ const cardNames = new Set([
   "bekir-aras-ozdemir",
   "cagan-arel-turgut",
   "cayan-biten",
+  "cansin-toydemir",
   "cemil-gursoy",
   "cesur-armagan-unal",
   "cesur-kurt",
   "demir-kurt",
   "deniz-aynaci",
+  "ege-yasar",
   "efe-hasbi",
   "emir-sokmen",
   "emir-turgay",
   "emirhan-alicioglu",
+  "ertugrul-ozcan",
   "eymen-bulut",
   "hasan-pehlivan",
   "mete-ozturk",
+  "mirac-goster",
   "mirac-eymen-kuscu",
+  "murat-asil-koc",
   "muhammet-hamza-yalcin",
   "nevzat-ruzgar-unal",
   "ruzgar-saat",
   "sarp-dolek",
   "selahattin-badur",
+  "tuncer-doruk-sahin",
   "ulas-doruk-deniz",
   "vedat-can-yasar",
   "yaman-hammaloglu",
   "yigit-hammaloglu",
   "yigitcan-yasar",
   "yusuf-aras-yaniklar",
+]);
+
+const ageGroupCardNames = new Map([
+  ["u14:enes-cura", "enes-cura-u14"],
+  ["u14:eyup-yalcin", "eyup-yalcin-u14"],
+  ["u-15:enes-cura", "enes-cura-u15"],
+  ["u-15:eyup-yalcin", "eyup-yalcin-u15"],
 ]);
 
 const portraitNames = new Set([
@@ -64,15 +77,19 @@ function normalizedPlayerName(name: string) {
     .replace(/\s+/g, "-");
 }
 
-export function playerCardKey(name: string): string | null {
+export function playerCardKey(name: string, teamSlug?: string): string | null {
   const key = normalizedPlayerName(name);
+  const ageGroupCard = teamSlug
+    ? ageGroupCardNames.get(`${teamSlug}:${key}`)
+    : null;
+  if (ageGroupCard) return ageGroupCard;
   // The roster also contains the single-m spelling for the same player.
   const cardKey = key === "muhamet-hamza-yalcin" ? "muhammet-hamza-yalcin" : key;
   return cardNames.has(cardKey) ? cardKey : null;
 }
 
-export function playerCardArt(name: string): string | null {
-  const cardKey = playerCardKey(name);
+export function playerCardArt(name: string, teamSlug?: string): string | null {
+  const cardKey = playerCardKey(name, teamSlug);
   if (!cardKey) return null;
   const version = cardKey === "batu-boce" ? "v2" : "v1";
   return `/media/academy/player-cards/${cardKey}-${version}.webp`;
