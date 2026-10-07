@@ -137,8 +137,8 @@ function standardCardText(player: AcademyPlayer, teamName: string, values: strin
 
 export async function GET(request: Request) {
   try {
-    await requireAdmin();
     const url = new URL(request.url);
+    if (url.pathname.startsWith("/api/admin/")) await requireAdmin();
     const teamSlug = url.searchParams.get("team") ?? "";
     const playerId = url.searchParams.get("player") ?? "";
     if (!/^[a-z0-9-]{1,100}$/.test(teamSlug) || !/^[\w-]{1,100}$/.test(playerId))

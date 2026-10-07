@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import localFont from "next/font/local";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import {
   ArrowUpRight,
@@ -29,16 +28,7 @@ import {
   type AcademyTeam,
 } from "@/lib/academy";
 import styles from "./academy-explorer.module.css";
-import { playerCardArt, playerPortraitArt } from "@/lib/player-card-art";
-
-const cardCondensed = localFont({
-  src: [
-    { path: "../../public/fonts/barlow-condensed-regular.ttf", weight: "400" },
-    { path: "../../public/fonts/barlow-condensed-bold.ttf", weight: "700" },
-  ],
-  display: "swap",
-  variable: "--font-card-condensed",
-});
+import { playerPortraitArt } from "@/lib/player-card-art";
 
 function Portrait({
   player,
@@ -159,10 +149,9 @@ export function AcademyExplorer({
     : [];
   const stats = playerStats(rows);
   const zone = positionZone(player?.position ?? "");
-  const cardArt = playerCardArt(player?.name ?? "");
-  const nameParts = player?.name.trim().split(/\s+/) ?? [];
-  const surname = nameParts.length > 1 ? nameParts.at(-1) : "";
-  const givenName = (surname ? nameParts.slice(0, -1) : nameParts).join(" ");
+  const cardUrl = player
+    ? `/api/player-card?team=${encodeURIComponent(team.slug)}&player=${encodeURIComponent(player.id)}`
+    : "";
 
   function choose(next: AcademyPlayer) {
     setSelectedId(next.id);
@@ -347,93 +336,17 @@ export function AcademyExplorer({
                 </div>
               </div>
               <div className={styles.cardStage}>
-                {cardArt ? (
-                  <div
-                    className={`${styles.collectible} ${styles.finishedCard} ${cardCondensed.variable}`}
-                  >
-                    <Image
-                      key={cardArt}
-                      src={cardArt}
-                      alt={`${player.name} oyuncu kartı`}
-                      fill
-                      sizes="(max-width: 700px) 90vw, 360px"
-                      style={{ objectFit: "contain" }}
-                    />
-                    <span className={styles.cardStatsCleanup} aria-hidden="true" />
-                    <dl
-                      className={`${styles.cardStats} ${styles.cardStatsLive}`}
-                      aria-label={`${season} canlı oyuncu istatistikleri`}
-                    >
-                      {[
-                        ["MAÇ", stats.matches],
-                        ["GOL", stats.goals],
-                        ["ASİST", stats.assists],
-                        ["DK", stats.minutes],
-                      ].map(([label, value]) => (
-                        <div key={label as string}>
-                          <dt>{label}</dt>
-                          <dd>{formatNumber(value as number | null)}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                ) : (
-                  <div
-                    className={`${styles.collectible} ${cardCondensed.variable}`}
-                    aria-label={`${player.name} oyuncu kartı`}
-                  >
-                    <Image
-                      className={styles.cardFrame}
-                      src="/media/academy/player-card-template.webp"
-                      alt=""
-                      fill
-                      sizes="(max-width: 700px) 90vw, 360px"
-                    />
-                    <div className={styles.cardMeta}>
-                      <strong
-                        aria-label={`Forma numarası: ${player.shirtNumber ?? "belirtilmemiş"}`}
-                      >
-                        {player.shirtNumber ?? "—"}
-                      </strong>
-                      <span>
-                        {zone.short} · {team.name}
-                      </span>
-                    </div>
-                    <div className={styles.cardPortrait}>
-                      <Portrait key={player.id} player={player} large />
-                    </div>
-                    <div className={styles.cardIdentity}>
-                      <h2 aria-label={player.name}>
-                        <span
-                          className={styles.cardGivenName}
-                          style={{
-                            fontSize: `${Math.min(11.5, 80 / Math.max(givenName.length, 1))}cqw`,
-                          }}
-                        >
-                          {givenName.toLocaleUpperCase("tr-TR")}
-                        </span>
-                        {surname && (
-                          <span className={styles.cardSurname}>
-                            {surname.toLocaleUpperCase("tr-TR")}
-                          </span>
-                        )}
-                      </h2>
-                    </div>
-                    <dl className={styles.cardStats}>
-                      {[
-                        ["MAÇ", stats.matches],
-                        ["GOL", stats.goals],
-                        ["ASİST", stats.assists],
-                        ["DK", stats.minutes],
-                      ].map(([label, value]) => (
-                        <div key={label as string}>
-                          <dt>{label}</dt>
-                          <dd>{formatNumber(value as number | null)}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                )}
+                <div className={`${styles.collectible} ${styles.finishedCard}`}>
+                  <Image
+                    key={cardUrl}
+                    src={cardUrl}
+                    alt={`${player.name} oyuncu kartı`}
+                    fill
+                    sizes="(max-width: 700px) 90vw, 360px"
+                    style={{ objectFit: "contain" }}
+                    unoptimized
+                  />
+                </div>
                 <p className={styles.cardTagline}>BİR OYUNCU. BİR HİKÂYE.</p>
               </div>
               <p className={styles.statsScope}>
