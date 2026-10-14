@@ -23,6 +23,12 @@ import {
 } from "@/lib/formations";
 import { LineupBuilder } from "./lineup-builder";
 
+type SupportedStarterCount = 7 | 8 | 9 | 11;
+
+function supportedStarterCount(value: number | null | undefined) {
+  return ([7, 8, 9, 11] as const).find((count) => count === value);
+}
+
 function PlayerSelect({
   label,
   players,
@@ -107,14 +113,11 @@ export function MatchFields({
   const competition = competitions.find((c) => c._id === draft.competitionId);
   const players = teams.find((t) => t.slug === draft.teamSlug)?.players ?? [];
   const report = draft.report as MatchReport | null | undefined;
-  const starterCount: 8 | 11 =
+  const starterCount: SupportedStarterCount =
     draft.starterCount ??
-    (report?.starterCount === 8
-      ? 8
-      : report?.starterCount === 11
-        ? 11
-        : undefined) ??
-    (competition?.starterCount === 8 ? 8 : 11);
+    supportedStarterCount(report?.starterCount) ??
+    supportedStarterCount(competition?.starterCount) ??
+    11;
   const score = report ? reportScore(report) : null;
   const match = { ...draft, id: draft._id ?? "new" } as Match;
   const sideOfClub = clubSide(match);
@@ -134,8 +137,8 @@ export function MatchFields({
     const calculated = reportScore(next);
     update({
       report: next,
-      ...(next.starterCount === 8 || next.starterCount === 11
-        ? { starterCount: next.starterCount }
+      ...(supportedStarterCount(next.starterCount)
+        ? { starterCount: supportedStarterCount(next.starterCount) }
         : {}),
       ...(draft.status === "played"
         ? { homeScore: calculated.home, awayScore: calculated.away }
@@ -172,11 +175,12 @@ export function MatchFields({
       homeScore: null,
       awayScore: null,
       status: "unreported",
-      starterCount: c.starterCount === 8 ? 8 : 11,
+      starterCount: supportedStarterCount(c.starterCount) ?? 11,
     });
   }
   function changeStarterCount(value: string) {
-    const next = Number(value) === 8 ? 8 : 11;
+    const parsed = Number(value);
+    const next = supportedStarterCount(parsed) ?? 11;
     if (next === starterCount) return;
     if (
       report &&
@@ -442,8 +446,10 @@ export function MatchFields({
           value={String(starterCount)}
           onChange={changeStarterCount}
           options={[
-            { value: "8", label: "8 oyuncu" },
-            { value: "11", label: "11 oyuncu" },
+            { value: "7", label: "6+1 (7 oyuncu)" },
+            { value: "8", label: "7+1 (8 oyuncu)" },
+            { value: "9", label: "8+1 (9 oyuncu)" },
+            { value: "11", label: "10+1 (11 oyuncu)" },
           ]}
         />
         {field("date", "Tarih (açıklanmadıysa boş bırakın)", "date")}

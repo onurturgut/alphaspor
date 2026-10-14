@@ -107,7 +107,7 @@ export function LineupBuilder({ players, report, onChange }: Props) {
     setAutoMessage("");
   }
 
-  function changePlayerCount(nextCount: 8 | 11) {
+  function changePlayerCount(nextCount: 7 | 8 | 9 | 11) {
     if (nextCount === report.starterCount) return;
     if (
       (report.starters.length > 0 || report.events.length > 0) &&
@@ -225,16 +225,21 @@ export function LineupBuilder({ players, report, onChange }: Props) {
         </label>
         <fieldset className="admin-lineup-count">
           <legend>Başlangıç oyuncu sayısı</legend>
-          {[8, 11].map((count) => (
+          {[
+            { count: 7, label: "6+1" },
+            { count: 8, label: "7+1" },
+            { count: 9, label: "8+1" },
+            { count: 11, label: "10+1" },
+          ].map(({ count, label }) => (
             <label key={count}>
               <input
                 type="radio"
                 name="lineup-player-count"
                 value={count}
                 checked={report.starterCount === count}
-                onChange={() => changePlayerCount(count as 8 | 11)}
+                onChange={() => changePlayerCount(count as 7 | 8 | 9 | 11)}
               />
-              <span>{count} oyuncu</span>
+              <span>{label}</span>
             </label>
           ))}
         </fieldset>

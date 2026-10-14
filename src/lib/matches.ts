@@ -71,7 +71,7 @@ export type Match = {
   awayId?: string | null;
   kind?: "official" | "friendly" | "tournament";
   published?: boolean;
-  starterCount?: 8 | 11;
+  starterCount?: 7 | 8 | 9 | 11;
   report?: MatchReport | null;
 };
 
@@ -135,6 +135,11 @@ export function onPitch(report: MatchReport, minute = report.duration) {
     }
   }
   return active;
+}
+
+export function onBench(report: MatchReport, minute = report.duration) {
+  const active = onPitch(report, minute);
+  return [...report.starters, ...report.bench].filter((id) => !active.has(id));
 }
 
 /** Used by the API as well as the editor; never trust client-side totals. */

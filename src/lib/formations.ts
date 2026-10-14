@@ -1,4 +1,5 @@
 export const formationIds = [
+  "2-3-1",
   "2-3-2",
   "3-2-2",
   "3-3-1",
@@ -10,6 +11,7 @@ export const formationIds = [
   "2-1-3-1",
   "4-2-1",
   "4-1-2",
+  "3-3-2",
   "4-3-3",
   "4-2-3-1",
   "4-4-2",
@@ -35,6 +37,7 @@ export const formationMeta: Record<
     description: string;
   }
 > = {
+  "2-3-1": { category: "Dengeli", description: "6+1 dengeli yerleşim" },
   "2-3-2": { category: "Dengeli", description: "Dengeli üçlü orta saha" },
   "3-2-2": { category: "Dengeli", description: "Üçlü savunma, çift forvet" },
   "3-3-1": { category: "Dengeli", description: "Kontrollü tek forvet" },
@@ -49,6 +52,7 @@ export const formationMeta: Record<
     category: "Savunmacı",
     description: "Dörtlü savunma, çift forvet",
   },
+  "3-3-2": { category: "Dengeli", description: "8+1 dengeli yerleşim" },
   "4-3-3": { category: "Kanat oyunu", description: "Geniş hücum üçlüsü" },
   "4-2-3-1": { category: "Dengeli", description: "Çift ön libero" },
   "4-4-2": { category: "Dengeli", description: "Klasik çift forvet" },
@@ -126,6 +130,15 @@ const slot = (
 });
 
 export const formations: Record<FormationId, FormationSlot[]> = {
+  "2-3-1": [
+    slot("gk", "KL", 50, 88, ["GK"]),
+    slot("lcb", "STP", 35, 70, ["CB", "LB", "LWB"]),
+    slot("rcb", "STP", 65, 70, ["CB", "RB", "RWB"]),
+    slot("lm", "SLO", 20, 47, ["LM", "LW", "LWB"]),
+    slot("cm", "OS", 50, 52, ["CM", "CDM", "CAM"]),
+    slot("rm", "SAĞO", 80, 47, ["RM", "RW", "RWB"]),
+    slot("st", "SNT", 50, 19, ["ST", "CF", "SS"]),
+  ],
   "2-3-2": [
     slot("gk", "KL", 50, 88, ["GK"]),
     slot("lcb", "STP", 35, 70, ["CB", "LB", "LWB"]),
@@ -235,6 +248,17 @@ export const formations: Record<FormationId, FormationSlot[]> = {
     slot("cm", "OS", 50, 49, ["CM", "CDM", "CAM"]),
     slot("lst", "F", 37, 20, ["ST", "CF", "SS"]),
     slot("rst", "F", 63, 20, ["ST", "CF", "SS"]),
+  ],
+  "3-3-2": [
+    slot("gk", "KL", 50, 88, ["GK"]),
+    slot("lb", "SLB", 20, 70, ["LB", "LWB", "CB"]),
+    slot("cb", "STP", 50, 74, ["CB", "CDM"]),
+    slot("rb", "SAĞB", 80, 70, ["RB", "RWB", "CB"]),
+    slot("lm", "SLO", 18, 47, ["LM", "LW", "LWB"]),
+    slot("cm", "OS", 50, 52, ["CM", "CDM", "CAM"]),
+    slot("rm", "SAĞO", 82, 47, ["RM", "RW", "RWB"]),
+    slot("lst", "F", 38, 20, ["ST", "CF", "SS"]),
+    slot("rst", "F", 62, 20, ["ST", "CF", "SS"]),
   ],
   "4-3-3": [
     slot("gk", "KL", 50, 88, ["GK"]),

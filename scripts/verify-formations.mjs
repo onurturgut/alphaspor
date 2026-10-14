@@ -13,6 +13,8 @@ assert.equal(defaultStarterCountForTeam("u-10 minikler"), 8);
 assert.equal(defaultStarterCountForTeam("U13"), 11);
 assert.equal(defaultStarterCountForTeam("U14"), 11);
 
+assert.deepEqual(formationIdsForPlayerCount(7), ["2-3-1"]);
+
 assert.deepEqual(formationIdsForPlayerCount(8), [
   "2-3-2",
   "3-2-2",
@@ -42,6 +44,7 @@ assert.deepEqual(formationIdsForPlayerCount(11), [
   "5-4-1",
   "5-2-2-1",
 ]);
+assert.deepEqual(formationIdsForPlayerCount(9), ["3-3-2"]);
 assert.deepEqual(playerRoles("Kaleci (GK)"), ["GK"]);
 assert.deepEqual(playerRoles("Sağ Kanat / Sağ Bek"), ["RB", "RW"]);
 assert.deepEqual(playerRoles("Defansif Orta Saha / Ön Libero"), ["CDM"]);
@@ -79,5 +82,5 @@ assert.ok(parseFloat(mobileDefenders[1].left) > 45);
 assert.ok(parseFloat(mobileDefenders[2].left) > 70);
 
 console.log(
-  "PASS: 8/11-player formation filtering, Turkish position normalization and automatic lineup assignment.",
+  "PASS: 7/8/9/11-player formation filtering, Turkish position normalization and automatic lineup assignment.",
 );

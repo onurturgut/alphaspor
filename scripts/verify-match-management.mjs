@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   generateFixtures,
   matchAppearances,
+  onBench,
   reportScore,
   validateReport,
   standings,
@@ -263,6 +264,8 @@ const reentry = {
     ],
   },
 };
+assert.deepEqual(onBench(match.report), ["a", "d"]);
+assert.deepEqual(onBench(reentry.report), ["c", "d"]);
 assert.deepEqual(validateReport(reentry, players), []);
 assert.equal(matchAppearances(reentry).get("a").minutes, 40);
 assert.equal(matchAppearances(reentry).get("c").minutes, 20);
@@ -329,11 +332,19 @@ assert.equal(
   false,
 );
 assert.equal(
-  schemas.competitions.safeParse({ ...competition, published: false, opponentIds: [] }).success,
+  schemas.competitions.safeParse({
+    ...competition,
+    published: false,
+    opponentIds: [],
+  }).success,
   true,
 );
 assert.equal(
-  schemas.competitions.safeParse({ ...competition, published: true, opponentIds: [] }).success,
+  schemas.competitions.safeParse({
+    ...competition,
+    published: true,
+    opponentIds: [],
+  }).success,
   false,
 );
 assert.deepEqual(

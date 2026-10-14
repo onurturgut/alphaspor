@@ -1,7 +1,12 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { PiArrowsLeftRightBold, PiSoccerBallFill } from "react-icons/pi";
-import { orderedEvents, type Match, type MatchReport } from "@/lib/matches";
+import {
+  onBench,
+  orderedEvents,
+  type Match,
+  type MatchReport,
+} from "@/lib/matches";
 import {
   cinematicPitchPosition,
   formationSlots,
@@ -25,7 +30,7 @@ function enteredAt(report: MatchReport, playerId: string) {
 }
 
 function exitedAt(report: MatchReport, playerId: string) {
-  return orderedEvents(report).find(
+  return orderedEvents(report).findLast(
     (event) => event.type === "substitution" && event.outId === playerId,
   )?.minute;
 }
@@ -39,6 +44,7 @@ export function MatchDetails({ match }: { match: Match }) {
   const photo = (id: string) => report.playerPhotos?.[id];
   const slots = formationSlots(report.formation);
   const events = orderedEvents(report);
+  const finalBench = onBench(report);
   const savedLineup = (report.lineup ?? []).filter(
     (item) =>
       report.starters.includes(item.playerId) &&
@@ -136,17 +142,22 @@ export function MatchDetails({ match }: { match: Match }) {
           <summary className="match-report__panel-head">
             <div>
               <span>Kadro</span>
-              <h4>Yedekler</h4>
+              <h4>{events.length ? "Maç sonundaki yedekler" : "Yedekler"}</h4>
             </div>
-            <small>{report.bench.length} oyuncu</small>
+            <small>{finalBench.length} oyuncu</small>
           </summary>
           <ul className="match-report__bench">
-            {report.bench.map((id) => {
+            {finalBench.map((id) => {
               const entry = enteredAt(report, id);
+              const exit = exitedAt(report, id);
               return (
                 <li key={id}>
                   <strong>{name(id)}</strong>
-                  {entry != null && <small>↑ {entry}′ oyuna girdi</small>}
+                  {exit != null ? (
+                    <small>↓ {exit}′ oyundan çıktı</small>
+                  ) : entry == null ? (
+                    <small>Oyuna girmedi</small>
+                  ) : null}
                 </li>
               );
             })}

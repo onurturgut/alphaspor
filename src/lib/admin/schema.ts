@@ -277,7 +277,9 @@ export const schemas = {
       awayId: required(100).nullable().optional(),
       kind: z.enum(["official", "friendly", "tournament"]).default("official"),
       published: z.boolean().default(true),
-      starterCount: z.union([z.literal(8), z.literal(11)]).optional(),
+      starterCount: z
+        .union([z.literal(7), z.literal(8), z.literal(9), z.literal(11)])
+        .optional(),
       report: matchReportSchema.nullable().optional(),
       teamSlug: slug,
       league: required(100),
