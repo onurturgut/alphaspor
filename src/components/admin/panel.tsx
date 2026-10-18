@@ -28,6 +28,7 @@ import { Editor, type Draft, type TeamOption } from "./editor";
 import { UserManagement } from "./user-management";
 import type { Competition, Opponent, Match } from "@/lib/matches";
 import { defaultStarterCountForTeam } from "@/lib/formations";
+import { ThemeToggle } from "@/components/theme-toggle";
 type View = Section | "overview" | "account";
 const sections = Object.keys(sectionNames) as Section[];
 const icons = {
@@ -444,6 +445,10 @@ export function AdminPanel({
           ))}
         </nav>
         <div className="admin-sidebar-bottom">
+          <div className="admin-sidebar-theme">
+            <span>Görünüm</span>
+            <ThemeToggle />
+          </div>
           <span>{email}</span>
           <button onClick={() => void logout()}>
             <LogOut size={17} />

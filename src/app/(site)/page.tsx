@@ -29,6 +29,20 @@ export default async function Home() {
       team,
       match: selectMatches(matches, team, archiveSeason, true)[0],
     }));
+  const barinTeam = content.teams.find(
+    (team) =>
+      team.slug === "u12" &&
+      team.players.some(
+        (player) => player.name.toLocaleLowerCase("tr-TR") === "barın kaptan",
+      ),
+  );
+  const barin = barinTeam?.players.find(
+    (player) => player.name.toLocaleLowerCase("tr-TR") === "barın kaptan",
+  );
+  const featuredPlayerCard =
+    barinTeam && barin
+      ? `/api/player-card?team=${encodeURIComponent(barinTeam.slug)}&player=${encodeURIComponent(barin.id)}`
+      : "/media/academy/player-card-template-v2.webp";
   return (
     <>
       <section className="hero hero-video-section" aria-label="Alfa Spor">
@@ -177,10 +191,11 @@ export default async function Home() {
                 </figure>
                 <figure>
                   <Image
-                    src="/media/academy/player-card-template-v2.webp"
-                    alt="Yeni standart kurt temalı Alfa Spor oyuncu kartı şablonu"
+                    src={featuredPlayerCard}
+                    alt="Barın Kaptan'ın Alfa Spor oyuncu kartı"
                     width={800}
                     height={1200}
+                    unoptimized
                     sizes="(max-width: 640px) 50vw, 240px"
                     style={{
                       display: "block",
