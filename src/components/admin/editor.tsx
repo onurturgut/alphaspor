@@ -501,7 +501,7 @@ export function Editor({
                           ) : (
                             <>
                               <Image
-                                src="/media/academy/player-card-template.webp"
+                                src="/media/academy/player-card-template-v2.webp"
                                 alt="Oyuncu kartı şablonu"
                                 fill
                                 sizes="(max-width: 900px) 100vw, 30vw"

@@ -177,10 +177,10 @@ export default async function Home() {
                 </figure>
                 <figure>
                   <Image
-                    src="/media/academy/player-cards/barin-kaptan-v1.webp"
-                    alt="Barın Kaptan’ın güncel kurt temalı Alfa Spor oyuncu kartı"
-                    width={1024}
-                    height={1536}
+                    src="/media/academy/player-card-template-v2.webp"
+                    alt="Yeni standart kurt temalı Alfa Spor oyuncu kartı şablonu"
+                    width={800}
+                    height={1200}
                     sizes="(max-width: 640px) 50vw, 240px"
                     style={{
                       display: "block",

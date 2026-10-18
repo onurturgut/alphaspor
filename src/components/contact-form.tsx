@@ -90,7 +90,7 @@ export function ContactForm({
           <Mail size={15} aria-hidden="true" /> BİZE ULAŞIN
         </span>
         <div className="contact-form__title">
-          <Image src="/media/logo.webp" alt="" width={42} height={58} />
+          <Image src="/media/general/logo.webp" alt="" width={42} height={58} />
           <h2 id={`${id}-heading`}>{heading}</h2>
         </div>
         <p>

@@ -33,7 +33,7 @@ body:has(#site-content) {
   z-index: -1;
   pointer-events: none;
   background-color: var(--motif-base);
-  background-image: linear-gradient(var(--motif-wash), var(--motif-wash)), url('/media/wolf-motif-themes.png');
+  background-image: linear-gradient(var(--motif-wash), var(--motif-wash)), url('/media/general/wolf-motif-themes.png');
   background-size: 100% 100%, var(--motif-size);
   background-position: center, var(--motif-position);
   background-repeat: no-repeat;
@@ -84,7 +84,7 @@ html body #site-content footer.club-footer {
   z-index: -1;
   border-radius: inherit;
   pointer-events: none;
-  background: url('/media/card-wolf-motif.webp') right center / auto 480px repeat;
+  background: url('/media/general/card-wolf-motif.webp') right center / auto 480px repeat;
   filter: var(--card-motif-filter);
   opacity: var(--card-motif-opacity);
   mask-image: linear-gradient(100deg, transparent, #0004 35%, #000);

@@ -796,7 +796,7 @@ html body .admin-root::before {
   background-color: var(--motif-base);
   background-image:
     linear-gradient(var(--motif-wash), var(--motif-wash)),
-    url("/media/wolf-motif-themes.png");
+    url("/media/general/wolf-motif-themes.png");
   background-size:
     100% 100%,
     var(--motif-size);
@@ -1017,7 +1017,7 @@ html body .admin-root .admin-editor::after,
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: url("/media/card-wolf-motif.webp") right center / auto 520px
+  background: url("/media/general/card-wolf-motif.webp") right center / auto 520px
     repeat;
   filter: var(--card-motif-filter);
   opacity: 0.14;

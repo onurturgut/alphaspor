@@ -1,46 +1,51 @@
-// Finished artwork from tasarim/oyuncu-kartlari. The same player may be
-// registered in multiple age groups, so match the normalized full name.
-const cardNames = new Set([
+const legacyCardPortraitNames = new Set([
   "adil-badur",
   "adnan-asrin-calik",
   "ahmet-eren-sener",
+  "akdeniz-harmandar",
   "ali-eren-tuncay",
   "aren-sogut",
   "asil-cengiz",
   "asil-murat-koc",
   "aslan-dikmen",
+  "atlas-yildirim",
   "ates-bostanci",
   "ayaz-uysal",
   "barin-kaptan",
   "baris-ali-altinok",
   "batu-boce",
   "bekir-aras-ozdemir",
+  "bulut-alpsoy",
   "cagan-arel-turgut",
-  "cayan-biten",
   "cansin-toydemir",
+  "cayan-biten",
   "cemil-gursoy",
   "cesur-armagan-unal",
   "cesur-kurt",
   "demir-kurt",
   "deniz-aynaci",
-  "ege-yasar",
   "efe-hasbi",
+  "ege-yasar",
   "emir-sokmen",
   "emir-turgay",
   "emirhan-alicioglu",
   "ertugrul-ozcan",
   "eymen-bulut",
+  "eymen-ozcan",
   "hasan-pehlivan",
   "mete-ozturk",
-  "mirac-goster",
   "mirac-eymen-kuscu",
-  "murat-asil-koc",
+  "mirac-goster",
   "muhammet-hamza-yalcin",
+  "murat-asil-koc",
   "nevzat-ruzgar-unal",
+  "omer-habes",
   "ruzgar-saat",
   "sarp-dolek",
   "selahattin-badur",
   "tuncer-doruk-sahin",
+  "timur-itgensoy",
+  "toprak-sari",
   "ulas-doruk-deniz",
   "vedat-can-yasar",
   "yaman-hammaloglu",
@@ -49,22 +54,11 @@ const cardNames = new Set([
   "yusuf-aras-yaniklar",
 ]);
 
-const ageGroupCardNames = new Map([
-  ["u14:enes-cura", "enes-cura-u14"],
-  ["u14:eyup-yalcin", "eyup-yalcin-u14"],
-  ["u-15:enes-cura", "enes-cura-u15"],
-  ["u-15:eyup-yalcin", "eyup-yalcin-u15"],
-]);
-
-const portraitNames = new Set([
-  "cansin-toydemir",
-  "ege-yasar",
-  "enes-cura",
-  "ertugrul-ozcan",
-  "eyup-yalcin",
-  "mirac-goster",
-  "murat-asil-koc",
-  "tuncer-doruk-sahin",
+const ageGroupLegacyPortraits = new Map([
+  ["u14:enes-cura", "enes-cura-u14-v1"],
+  ["u-15:enes-cura", "enes-cura-u15-v1"],
+  ["u14:eyup-yalcin", "eyup-yalcin-u14-v1"],
+  ["u-15:eyup-yalcin", "eyup-yalcin-u15-v1"],
 ]);
 
 function normalizedPlayerName(name: string) {
@@ -77,27 +71,47 @@ function normalizedPlayerName(name: string) {
     .replace(/\s+/g, "-");
 }
 
-export function playerCardKey(name: string, teamSlug?: string): string | null {
-  const key = normalizedPlayerName(name);
-  const ageGroupCard = teamSlug
-    ? ageGroupCardNames.get(`${teamSlug}:${key}`)
+export function legacyPlayerPortraitArt(
+  name: string,
+  teamSlug?: string,
+): string | null {
+  const normalized = normalizedPlayerName(name);
+  const key = normalized === "muhamet-hamza-yalcin"
+    ? "muhammet-hamza-yalcin"
+    : normalized;
+  const ageGroupPortrait = teamSlug
+    ? ageGroupLegacyPortraits.get(`${teamSlug}:${key}`)
     : null;
-  if (ageGroupCard) return ageGroupCard;
-  // The roster also contains the single-m spelling for the same player.
-  const cardKey = key === "muhamet-hamza-yalcin" ? "muhammet-hamza-yalcin" : key;
-  return cardNames.has(cardKey) ? cardKey : null;
+  if (ageGroupPortrait)
+    return `/media/academy/legacy-player-portraits/${ageGroupPortrait}.png`;
+  if (!legacyCardPortraitNames.has(key)) return null;
+  const version = key === "batu-boce" ? "v2" : "v1";
+  const extension = key === "atlas-yildirim" ? "webp" : "png";
+  return `/media/academy/legacy-player-portraits/${key}-${version}.${extension}`;
 }
 
-export function playerCardArt(name: string, teamSlug?: string): string | null {
-  const cardKey = playerCardKey(name, teamSlug);
-  if (!cardKey) return null;
-  const version = cardKey === "batu-boce" ? "v2" : "v1";
-  return `/media/academy/player-cards/${cardKey}-${version}.webp`;
-}
+type PlayerImageInput = {
+  name: string;
+  teamSlug?: string;
+  photo?: string;
+  placeholder?: boolean;
+  usage?: "display" | "card";
+};
 
-export function playerPortraitArt(name: string): string | null {
-  const key = normalizedPlayerName(name);
-  return portraitNames.has(key)
-    ? `/media/academy/player-portraits/${key}-v1.webp`
-    : null;
+/**
+ * Single image source for cards, roster portraits and match avatars.
+ * Prepared identity-preserving portraits always win over uploaded originals.
+ */
+export function resolvePlayerImage({
+  name,
+  teamSlug,
+  photo,
+  placeholder = false,
+  usage = "display",
+}: PlayerImageInput): string | null {
+  const preparedPortrait = legacyPlayerPortraitArt(name, teamSlug);
+  if (preparedPortrait) return preparedPortrait;
+  if (placeholder) return null;
+
+  return usage === "display" && photo ? photo : null;
 }

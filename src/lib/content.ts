@@ -3,6 +3,7 @@ import { cache } from "react";
 import { connection } from "next/server";
 import { getDb } from "./mongodb";
 import { uploadedImageUrl } from "./media";
+import { resolvePlayerImage } from "./player-card-art";
 import { previewContext } from "./admin/preview-context";
 import type seed from "@/data/content.json";
 import defaultHeroVideo from "@/data/hero-video.json";
@@ -98,8 +99,20 @@ export const getContent = cache(async (): Promise<Content> => {
     );
   return {
     teams: withMatchAppearances(teams.map((team) => ({
-      ...team, photo: uploadedImageUrl(team.photo || "/media/logo.webp"),
-      players: team.players.map((player) => ({ ...player, photo: uploadedImageUrl(player.photo) })),
+      ...team, photo: uploadedImageUrl(team.photo || "/media/general/logo.webp"),
+      players: team.players.map((player) => {
+        const photo = uploadedImageUrl(player.photo);
+        return {
+          ...player,
+          photo:
+            resolvePlayerImage({
+              name: player.name,
+              teamSlug: team.slug,
+              photo,
+              placeholder: player.placeholder,
+            }) ?? "",
+        };
+      }),
     })), matchData.matches),
     news: news.map((item) => ({ ...item, image: item.image ? uploadedImageUrl(item.image) : item.image })),
     staff: staff.map((member) => ({ ...member, photo: member.photo ? uploadedImageUrl(member.photo) : member.photo })),
@@ -115,18 +128,45 @@ export const getContent = cache(async (): Promise<Content> => {
 
 export const getMatchData = cache(async () => {
   await connection();
-  const [allMatches, matchSources, allCompetitions, opponents] =
+  const [allMatches, matchSources, allCompetitions, opponents, teams] =
     await Promise.all([
       readList<Match>("matches"),
       readList<MatchSource>("matchSources"),
       readList<Competition>("competitions"),
       readList<Opponent>("opponents"),
+      readList<Content["teams"][number]>("teams"),
     ]);
   const competitions = allCompetitions.filter((c) => c.published);
   const matches = allMatches.filter(
     (m) =>
       m.published !== false &&
       (!m.competitionId || competitions.some((c) => c._id === m.competitionId)),
-  );
+  ).map((match) => {
+    if (!match.report) return match;
+    const team = teams.find((candidate) => candidate.slug === match.teamSlug);
+    if (!team) return match;
+    const rosterIds = new Set([
+      ...match.report.starters,
+      ...match.report.bench,
+    ]);
+    const playerPhotos = Object.fromEntries(
+      team.players
+        .filter((player) => rosterIds.has(player.id))
+        .map((player) => [
+          player.id,
+          resolvePlayerImage({
+            name: player.name,
+            teamSlug: team.slug,
+            photo: uploadedImageUrl(player.photo),
+            placeholder: player.placeholder,
+          }),
+        ])
+        .filter((entry): entry is [string, string] => Boolean(entry[1])),
+    );
+    return {
+      ...match,
+      report: { ...match.report, playerPhotos },
+    };
+  });
   return { matches, matchSources, competitions, opponents };
 });

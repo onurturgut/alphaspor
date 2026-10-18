@@ -1,7 +1,6 @@
 # Content migration
 
-`content.json` is the UTF-8 application dataset generated from `arsiv/` by
-`node scripts/prepare-content.mjs`. The archived source is never overwritten.
+`content.json` is the maintained UTF-8 application dataset used by the site.
 
 - `teams`: U9, U10, U11, U12, U13, U14/U15; URL slugs are lowercase, with
   `u14` for the combined squad. There are 74 team-player records. U9 has no
@@ -23,10 +22,8 @@
 category texts and the original contact object for later migration work. It
 should not be included in the client bundle unnecessarily.
 
-`media-sources.json` records the 18 article images missing from the old downloaded
-inventory. They are now stored under `public/media/`. A normal rebuild reuses
-these files without network access. If starting without those media files, fetch
-them with `node scripts/prepare-content.mjs --fetch-missing-media`.
+`media-sources.json` records the source mapping for article images. Runtime media
+is stored under `public/media/` and does not require network access during builds.
 
 The requested 2026/2027 display season is used for the rebuilt team pages. The
 original team cards also contain 25/26 labels; those original labels survive in
@@ -34,12 +31,10 @@ original team cards also contain 25/26 labels; those original labels survive in
 
 ## Brand assets
 
-Team card photos are matched by the U9–U14 labels in the archived
-`arsiv/sayfalar/04-ekiplerimiz.html` and stored locally under `public/media/`.
-The U14 source photo is used for the combined U14/U15 team. Their source season
-is 2025/2026; the mapping is preserved by `prepare-content.mjs`.
+Team card photos are stored locally under `public/media/`. The U14 source photo
+is used for the combined U14/U15 team; its source season is 2025/2026.
 
-- `public/media/logo.webp`: club crest supplied by the user as
+- `public/media/general/logo.webp`: club crest supplied by the user as
   `400_69d214b288fdb.webp`, used in the header and browser icon.
 - `public/fonts/aldrich.woff2`: official Google Fonts Aldrich Latin subset.
 - `public/fonts/Aldrich-OFL.txt`: the upstream SIL Open Font License.
@@ -48,8 +43,8 @@ is 2025/2026; the mapping is preserved by `prepare-content.mjs`.
 The official Aldrich font lacks Ğ/ğ/İ/Ş/ş glyphs. Keep a system sans-serif fallback
 for those characters. The font was not altered or substituted.
 
-The homepage may intentionally render “g” placeholders. Actual archived player
-and article images are independently available for the roster and article pages.
+The homepage may intentionally render “g” placeholders. Player and article
+images are independently available for the roster and article pages.
 
 ## Fixture migration (2026-09-10)
 

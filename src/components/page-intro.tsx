@@ -28,7 +28,7 @@ export function PageIntro({
         <span>{title}</span>
       </div>
       <p className="eyebrow">{eyebrow}</p>
-      <h1 className={logo ? "page-intro-with-logo" : undefined}>{logo && <Image src="/media/logo.webp" alt="" width={56} height={76} />}{title}</h1>
+      <h1 className={logo ? "page-intro-with-logo" : undefined}>{logo && <Image src="/media/general/logo.webp" alt="" width={56} height={76} />}{title}</h1>
       {description && <p>{description}</p>}
     </div>
   );

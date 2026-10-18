@@ -1,7 +1,7 @@
 /* Increment this version when changing the offline page or precached assets. */
-const CACHE = "alfa-pwa-v2";
+const CACHE = "alfa-pwa-v3";
 const OFFLINE = "/offline.html";
-const ASSETS = [OFFLINE, "/media/logo.webp", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/icon-maskable-512.png", "/icons/apple-touch-icon.png"];
+const ASSETS = [OFFLINE, "/media/general/logo.webp", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/icon-maskable-512.png", "/icons/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)));

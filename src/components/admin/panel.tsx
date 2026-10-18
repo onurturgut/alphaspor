@@ -388,7 +388,7 @@ export function AdminPanel({
         >
           <Image
             className="admin-brand-logo"
-            src="/media/logo.webp"
+            src="/media/general/logo.webp"
             alt=""
             width={30}
             height={40}
@@ -949,7 +949,7 @@ export function AdminPanel({
                         <article className="admin-news-card" key={r._id}>
                           <div className="admin-news-card-visual">
                             <Image
-                              src={r.image || "/media/logo.webp"}
+                              src={r.image || "/media/general/logo.webp"}
                               alt={
                                 r.image
                                   ? `${r.title ?? "Haber"} görseli`

@@ -38,7 +38,7 @@ Eski oyuncular ek alanlar olmadan çalışır. Veri tabanı migrasyonu ve mevcut
 
 ## Görsel üretimi
 
-Yerleşim referansı: `public/media/club/WhatsApp Image 2026-09-23 at 16.51.29*.jpeg` ve `16.51.30.jpeg`. Referanstaki neon yeşil, sıralamalar ve örnek OVR puanları taşınmadı; sitenin siyah/gümüş teması ve gerçek oyuncu verileri kullanıldı.
+Akademi yerleşimi, sitenin siyah/gümüş temasına ve gerçek oyuncu verilerine göre hazırlandı. İlk tasarım çalışmalarındaki neon yeşil, örnek sıralamalar ve OVR puanları kullanılmadı.
 
 Yerleşik image_gen ile iki özgün görsel üretildi; proje için WebP olarak kaydedildi:
 

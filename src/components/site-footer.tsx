@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import {
   FiClock as Clock3,
@@ -22,7 +22,7 @@ export async function SiteFooter() {
             href="/"
             aria-label="Alfa Spor ana sayfa"
           >
-            <Image src="/media/logo.webp" alt="" width={64} height={76} />
+            <Image src="/media/general/logo.webp" alt="" width={64} height={76} />
             <span>
               ALFA SPOR<small>FETHİYE · 2024</small>
             </span>

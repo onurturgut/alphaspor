@@ -50,7 +50,7 @@ export function QuickSupport({ instagram }: { instagram: string }) {
         aria-controls="quick-support-panel"
         onClick={() => setOpen((value) => !value)}
       >
-        <Image src="/media/support-wolf-transparent.png" alt="" width={88} height={88} sizes="(max-width: 600px) 72px, 88px" />
+        <Image src="/media/general/support-wolf-transparent.png" alt="" width={88} height={88} sizes="(max-width: 600px) 72px, 88px" />
       </button>
       <nav id="quick-support-panel" className={styles.bubbles} hidden={!open} aria-label="İletişim seçenekleri">
         <Link className={styles.bubble} href="/iletisim" onClick={() => setOpen(false)}>

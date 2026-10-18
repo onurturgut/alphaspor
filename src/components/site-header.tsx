@@ -83,7 +83,7 @@ export function SiteHeader() {
           aria-label="Fethiye Alfa Spor ana sayfa"
           onClick={() => setOpen(false)}
         >
-          <Image src="/media/logo.webp" alt="" width={40} height={60} preload />
+          <Image src="/media/general/logo.webp" alt="" width={40} height={60} preload />
           <span>
             ALFA SPOR<small>FETHİYE · 2024</small>
           </span>

@@ -23,7 +23,7 @@ const save = (data, recordId = null, version = null) => fetch(`${base}/api/admin
 try {
   assert.equal(slugify("U-15"), "u-15");
   assert.equal(slugify("İĞDIR Şampiyon Çocukları"), "igdir-sampiyon-cocuklari");
-  const data = { slug: slug.toUpperCase(), name: "Verification U-15", season: "2026/2027", photo: "/media/logo.webp", photoAlt: "", players: [], order: 9999 };
+  const data = { slug: slug.toUpperCase(), name: "Verification U-15", season: "2026/2027", photo: "/media/general/logo.webp", photoAlt: "", players: [], order: 9999 };
   assert.equal(schemas.teams.parse(data).slug, slug);
   assert.equal(schemas.teams.safeParse({ ...data, slug: "---" }).success, false);
   assert.equal(schemas.teams.safeParse({ ...data, slug: "x".repeat(81) }).success, false);

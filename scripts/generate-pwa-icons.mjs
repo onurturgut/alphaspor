@@ -8,7 +8,7 @@ for (const [name, size, inset] of [
   ["icon-maskable-512.png", 512, 96],
   ["apple-touch-icon.png", 180, 24],
 ]) {
-  const logo = await sharp("public/media/logo.png")
+  const logo = await sharp("public/media/general/logo.png")
     .resize(size - inset * 2, size - inset * 2, { fit: "contain", background: "#f4f4f4" })
     .png().toBuffer();
   await sharp({ create: { width: size, height: size, channels: 3, background: "#f4f4f4" } })

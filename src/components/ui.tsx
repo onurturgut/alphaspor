@@ -112,7 +112,7 @@ export function NewsCards({
                 style={{ objectFit: "cover" }}
               />
             ) : (
-              <Image src="/media/logo.webp" alt="Alfa Spor" width={72} height={96} className="news-fallback-logo" />
+              <Image src="/media/general/logo.webp" alt="Alfa Spor" width={72} height={96} className="news-fallback-logo" />
             )}
           </div>
           <div className="news-meta">

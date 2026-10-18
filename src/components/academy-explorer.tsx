@@ -28,7 +28,6 @@ import {
   type AcademyTeam,
 } from "@/lib/academy";
 import styles from "./academy-explorer.module.css";
-import { playerPortraitArt } from "@/lib/player-card-art";
 
 function Portrait({
   player,
@@ -38,8 +37,7 @@ function Portrait({
   large?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
-  const preparedPortrait = playerPortraitArt(player.name);
-  const portrait = preparedPortrait || (!player.placeholder ? player.photo : "");
+  const portrait = player.photo || "";
   return portrait && !failed ? (
     <Image
       src={portrait}

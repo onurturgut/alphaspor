@@ -39,19 +39,9 @@ npm start
 
 `public/media/` yerel logoyu, öğrenci ve haber fotoğraflarını içerir. `placeholder: true` olan öğrenci kayıtlarında temsili fotoğraf yerine fotoğraf hazırlanıyor durumu gösterilir.
 
-Maçlar `src/data/matches-u11.json`, `matches-u12.json`, `matches-u13.json` ve `matches-u14.json` dosyalarındadır. Kaynak bilgileri `src/data/match-sources.json`, orijinal fikstür görselleri `public/media/fixtures/` içindedir. Maç sonuçları görsellerden elle okunarak aktarılmıştır; canlı skor bağlantısı yoktur. Kaynak verisinin bütünlüğünü kontrol etmek için `npm run verify:matches` çalıştırın. `prepare:content` bu maç dosyalarını değiştirmez.
+Maçlar `src/data/matches-u11.json`, `matches-u12.json`, `matches-u13.json` ve `matches-u14.json` dosyalarındadır. Kaynak bilgileri `src/data/match-sources.json`, orijinal fikstür görselleri `public/media/fixtures/` içindedir. Maç sonuçları görsellerden elle okunarak aktarılmıştır; canlı skor bağlantısı yoktur. Kaynak verisinin bütünlüğünü kontrol etmek için `npm run verify:matches` çalıştırın.
 
 Kullanıcının isteğiyle pazarlama sayfalarındaki görsel alanları `g` yer tutucusudur. Gerçek öğrenci fotoğrafları takım sayfalarında kullanılır. Saha işaretçisi genel mevki bölgesini gösterir; kesin taktik rol, ilk 11 veya forma numarası uydurulmaz.
-
-Arşivden yeniden veri üretmek için:
-
-```sh
-npm run prepare:content
-# Gerekirse eksik haber görsellerini kaynaktan indir:
-node scripts/prepare-content.mjs --fetch-missing-media
-```
-
-Bu komut elle düzenlenmiş `src/data/content.json` dosyasının üzerine arşiv verisini yazar. İçerik güncellemelerinden sonra çalıştırmadan önce bu dosyayı yedekleyin.
 
 ## Sonraki içerik ve servis bağlantıları
 
@@ -62,4 +52,4 @@ Bu komut elle düzenlenmiş `src/data/content.json` dosyasının üzerine arşiv
 - Tesisin açık adresi teyit edildikten sonra harita yer tutucusu gerçek tesis konumuyla değiştirilebilir.
 - Bu sürümde CSS 3D efektleri vardır; WebGL/Three.js sahnesi veya gerçek 3D model henüz yoktur.
 
-`arsiv/` yeniden kullanılabilir kaynak arşivi, `audit/` ilk inceleme, `tasarim/` tasarım notları ve tarayıcı kontrol görüntüleridir. Canlı SITE123 sitesinde değişiklik veya yayın yapılmadı.
+`audit/` ilk inceleme kayıtlarını içerir. Canlı SITE123 sitesinde değişiklik veya yayın yapılmadı.

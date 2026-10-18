@@ -135,7 +135,7 @@ final result: passed
 
 # Kulübümüz — tanıtım akışı revizyonu
 
-- Kaynak: public/media/club/Ekran görüntüsü 2026-09-23 144857.png (1896×901) ve 144915.png (1895×775). Bunlar akış, başlık, vizyon/misyon ve değer kartları için referanstır. Kullanıcı talebiyle Alfa Spor içeriği ve yarı boyutlu mevcut fotoğraflar kullanıldı.
+- İlk tasarımda iki kulüp ekran görüntüsü akış, başlık, vizyon/misyon ve değer kartları için referans alınmıştı. Kullanıcı talebiyle Alfa Spor içeriği ve yarı boyutlu mevcut fotoğraflar kullanıldı; artık çalışma zamanında gerekmeyen referans dosyaları daha sonra kaldırıldı.
 - Uygulama: /kulubumuz. Fotoğraflar aynı satırda bulunmuyor; hikâye, öğrenci gelişimi ve gelişim örneği boyunca dönüşümlü metin/fotoğraf düzeninde ilerliyor. Masaüstü görseller 320 px (önce yaklaşık 648 px), mobilde içerik genişliğinin %50’si.
 - Kanıt: audit/screenshots/club-flow-desktop.png, club-flow-desktop-top.png, club-flow-development.png, club-flow-goals.png, club-flow-mobile.png, club-flow-mobile-mission-dark.png.
 - Viewport: 1440×1000 ve 390×844 CSS px, 1×; 320×740 taşma kontrolü. Kaynak farklı viewportta olduğu için karşılaştırma birebir piksel eşleştirme değil, kullanıcının istediği yapısal uyarlamadır.
@@ -152,7 +152,7 @@ final result: passed
 
 # Takımlar — üç panel akademi deneyimi (23 Eylül 2026)
 
-- Görsel referans: public/media/club içindeki sekiz WhatsApp Image 2026-09-23 at 16.51.29 / 16.51.30 JPEG (720×1600). Kaynak profil, kart ve istatistik düzeni Alfa Spor kimliğine uyarlandı; ekran görüntüsü birebir kopyalanmadı. Kullanıcı tarafından kararlaştırılan masaüstü üç panel yapısı uygulandı.
+- İlk görsel referanslardaki profil, kart ve istatistik düzeni Alfa Spor kimliğine uyarlandı; ekran görüntüleri birebir kopyalanmadı. Kullanıcı tarafından kararlaştırılan masaüstü üç panel yapısı uygulandı ve artık çalışma zamanında gerekmeyen referans dosyaları kaldırıldı.
 - Saha ve gümüş kart çerçevesi yerleşik image_gen ile üretildi. Kaynak promptları ve dosyalar docs/academy.md içinde.
 - Masaüstü kanıt: audit/screenshots/academy-desktop.png (açık tema, 1600 px genişlikte tam sayfa); academy-desktop-final.png (koyu tema, 1600×1300 CSS px).
 - Mobil kanıt: academy-mobile.png (390×844 CSS viewport, tam sayfa); academy-mobile-pitch.png (320×740 CSS viewport, tam sayfa). Yoğunluk 1×. Tablet taşma kontrolü 820×1180. Kaynak mobilken hedef masaüstü üç panel olduğundan piksel eşleştirmesi yapılmadı.
@@ -168,6 +168,7 @@ final result: passed
 - P0/P1/P2 görsel/etkileşim bulgusu kalmadı. P3: mevcut portrelerin arka planları farklı; standart akademi portre çekimi veya ayrı kullanıcı talebiyle arka plan düzenlemesi kartları daha tutarlı yapabilir.
 
 final result: passed
+
 # Oyuncu kartı — 25 Eylül 2026
 
 - Kaynak: `C:/Users/onurt/Downloads/ChatGPT Image 24 Eyl 2026 15_33_21.png`, 1024 × 1536 px.
@@ -203,3 +204,50 @@ final result: passed
 Kadro ve maç detayları çalışmasının tarayıcı-render karşılaştırması, bu oturumda kullanılabilir tarayıcı yüzeyi bulunmadığı için henüz tamamlanamadı.
 
 final result: blocked
+
+# Oyuncu kartı metin standardizasyonu — 14 Ekim 2026
+
+- Kaynak görsel: konuşmaya eklenen Miraç Eymen Kuşcu kartı, 470 × 677 px.
+- Uygulama: `/takimlar/[slug]` içindeki oyuncu kartı ve `/api/player-card` tarafından üretilen 800 × 1200 WebP.
+- Hedef durum: Tüm kartlarda referansla aynı kurt/metal çerçeve düzeni; oyuncu adı, forma numarası, mevki, `AKADEMİ` ve istatistik etiketlerinin gerçek veriden, Türkçe karakter destekli yerel fontla basılması.
+- Uygulama ekran görüntüsü: alınamadı. Bu oturumda kullanılabilir IAB, Chrome veya başka tarayıcı yüzeyi bulunmuyor.
+- Viewport ve yoğunluk: kaynak 470 × 677 px; uygulama kart çıktısı 800 × 1200 px. Tarayıcı CSS ölçüsü ve yoğunluk normalizasyonu ölçülemedi.
+- Durum: Varsayılan oyuncu kartı görünümü; seçili oyuncu ve istatistik filtresi canlı veriye bağlı.
+
+## Uygulanan düzeltmeler
+
+- AI tarafından görselin içine üretilen ve kare/glif hatası gösterebilen metin bölgeleri koyu geçişlerle temizleniyor.
+- Forma numarası, mevki, `AKADEMİ`, ad-soyad ve `MAÇ / GOL / ASİST / DK` alanları bütün hazır kartların üstüne aynı 800 × 1200 koordinat sistemiyle yeniden basılıyor.
+- Metin kaynağı oyuncu ve maç kayıtları; font kaynağı yerel `barlow-condensed-bold.ttf`. Böylece yapay görsel içindeki bozuk karakterler kullanıcıya gösterilmiyor.
+- Hazır kartı olmayan oyuncuların standart kartında da takım yaş grubu yerine `AKADEMİ` kullanılıyor.
+
+## Teknik kontroller
+
+- `npm run typecheck`: geçti.
+- `npm run lint -- --no-cache`: geçti.
+- `npm run verify:academy`: geçti.
+- `npm run build`: Next.js 16.3.4 üretim derlemesi geçti.
+
+## Görsel QA engeli
+
+- Tam görünüm karşılaştırması: tarayıcı yüzeyi bulunmadığı için yapılamadı.
+- Odak bölge karşılaştırması: kaynak kart açıldı ve mevcut yüksek çözünürlüklü kart varlıkları incelendi; yeni tarayıcı çıktısı yakalanamadığı için son piksel karşılaştırması yapılamadı.
+- Tipografi: Türkçe karakter içeren yerel font ve sabit punto/harf aralığı kodda doğrulandı; render görünümü doğrulanamadı.
+- Yerleşim: referans kartla aynı 800 × 1200 koordinat sistemi kullanıldı; responsive sayfa içi görünüm doğrulanamadı.
+- Renkler: mevcut siyah/gümüş görsel korunup metin temizleme bölgelerinde koyu geçiş kullanıldı; son birleşim görünümü doğrulanamadı.
+- Görsel kalite: hazır yüksek çözünürlüklü oyuncu kartları ve portreleri korunuyor; WebP kalite 94.
+- İçerik: ad, forma numarası, mevki, akademi etiketi ve istatistik alanları gerçek kayıtlardan geliyor.
+
+**Findings**
+
+- [P2] Tarayıcı tabanlı son görsel karşılaştırma eksik.
+  Location: `/takimlar/[slug]` oyuncu kartı.
+  Evidence: kaynak görsel açılabildi; bu oturumda tarayıcı envanteri boş olduğu için uygulama ekran görüntüsü alınamadı.
+  Impact: metin bölgelerinin gerçek sayfadaki son hizası ve responsive ölçeği piksel düzeyinde onaylanamadı.
+  Fix: tarayıcı yüzeyi kullanılabilir olduğunda aynı oyuncuyu açıp 800 × 1200 kart bölgesini kaynakla yan yana karşılaştırmak.
+
+**Implementation Checklist**
+
+- Tarayıcıda Miraç Eymen Kuşcu kartını aç.
+- Masaüstü ve mobilde ad, numara, mevki, `AKADEMİ` ve istatistik hizalarını kontrol et.
+- Kare karakter kalmadığını ve uzun adların taşmadığını doğrula.

@@ -11,6 +11,8 @@ import {
   type Opponent,
 } from "../matches";
 import type { AcademyPlayer } from "../academy";
+import { resolvePlayerImage } from "../player-card-art";
+import { uploadedImageUrl } from "../media";
 import {
   defaultGallery,
   defaultHome,
@@ -324,11 +326,17 @@ export async function saveAdmin(
       );
       report.playerPhotos = Object.fromEntries(
         team.players
-          .filter(
-            (p) =>
-              [...report.starters, ...report.bench].includes(p.id) && p.photo,
-          )
-          .map((p) => [p.id, p.photo]),
+          .filter((p) => [...report.starters, ...report.bench].includes(p.id))
+          .map((p) => [
+            p.id,
+            resolvePlayerImage({
+              name: p.name,
+              teamSlug: String(fields.teamSlug),
+              photo: uploadedImageUrl(p.photo),
+              placeholder: p.placeholder,
+            }),
+          ])
+          .filter((entry): entry is [string, string] => Boolean(entry[1])),
       );
     }
   }
