@@ -2,6 +2,7 @@ import "server-only";
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { parse, type Font } from "opentype.js";
 import sharp, { type OverlayOptions } from "sharp";
 import { AdminError, fail, requireAdmin } from "@/lib/admin/auth";
 import {
@@ -12,9 +13,7 @@ import {
 } from "@/lib/academy";
 import { getDb } from "@/lib/mongodb";
 import { withMatchAppearances, type Match } from "@/lib/matches";
-import {
-  resolvePlayerImage,
-} from "@/lib/player-card-art";
+import { resolvePlayerImage } from "@/lib/player-card-art";
 
 export const runtime = "nodejs";
 
@@ -22,16 +21,7 @@ const WIDTH = 800;
 const HEIGHT = 1200;
 const TEMPLATE = "/media/academy/player-card-template-v2.webp";
 const STAT_CENTERS = [162, 322, 478, 638];
-
-function escapeXml(value: string) {
-  return value.replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&apos;",
-  })[character]!);
-}
+let bionFontPromise: Promise<Font> | null = null;
 
 function formatStat(value: number | null) {
   return value === null ? "—" : new Intl.NumberFormat("tr-TR").format(value);
@@ -76,34 +66,78 @@ async function localAsset(url: string) {
   }
 }
 
-async function fontCss() {
-  const font = await readFile(
+function loadBionFont() {
+  bionFontPromise ??= readFile(
     path.join(process.cwd(), "public/fonts/bion-bold.ttf"),
-  );
-  return `@font-face{font-family:Bion;src:url(data:font/ttf;base64,${font.toString("base64")})}`;
+  ).then((font) => {
+    const fontBuffer = font.buffer.slice(
+      font.byteOffset,
+      font.byteOffset + font.byteLength,
+    );
+    return parse(fontBuffer);
+  });
+  return bionFontPromise;
 }
 
-function dynamicCardText(
-  player: AcademyPlayer,
-  values: string[],
-  css: string,
+function textPath(
+  font: Font,
+  text: string,
+  x: number,
+  y: number,
+  fontSize: number,
+  options: {
+    className?: string;
+    letterSpacing?: number;
+    attributes?: string;
+  } = {},
 ) {
+  const glyphs = font.stringToGlyphs(text);
+  const scale = fontSize / font.unitsPerEm;
+  const letterSpacing = options.letterSpacing ?? 0;
+  let width = 0;
+
+  for (let index = 0; index < glyphs.length; index += 1) {
+    const glyph = glyphs[index];
+    width += (glyph.advanceWidth ?? font.unitsPerEm) * scale;
+    if (index < glyphs.length - 1) {
+      width += font.getKerningValue(glyph, glyphs[index + 1]) * scale;
+      width += letterSpacing;
+    }
+  }
+
+  let cursor = -width / 2;
+  const pathData: string[] = [];
+  for (let index = 0; index < glyphs.length; index += 1) {
+    const glyph = glyphs[index];
+    pathData.push(glyph.getPath(cursor, 0, fontSize, {}, font).toPathData(2));
+    cursor += (glyph.advanceWidth ?? font.unitsPerEm) * scale;
+    if (index < glyphs.length - 1) {
+      cursor += font.getKerningValue(glyph, glyphs[index + 1]) * scale;
+      cursor += letterSpacing;
+    }
+  }
+
+  const className = options.className ? ` class="${options.className}"` : "";
+  const attributes = options.attributes ? ` ${options.attributes}` : "";
+  return `<path${className} d="${pathData.join(" ")}" transform="translate(${x} ${y}) skewX(-10)"${attributes}/>`;
+}
+
+function dynamicCardText(player: AcademyPlayer, values: string[], font: Font) {
   const { givenName, surname } = splitPlayerName(player.name);
   const upperGiven = givenName.toLocaleUpperCase("tr-TR");
   const upperSurname = surname.toLocaleUpperCase("tr-TR");
-  const givenSize = upperGiven.length > 17 ? 42 : upperGiven.length > 12 ? 49 : 55;
-  const surnameSize = upperSurname.length > 14 ? 50 : upperSurname.length > 10 ? 58 : 66;
+  const givenSize =
+    upperGiven.length > 17 ? 42 : upperGiven.length > 12 ? 49 : 55;
+  const surnameSize =
+    upperSurname.length > 14 ? 50 : upperSurname.length > 10 ? 58 : 66;
   const zone = positionZone(player.position);
   const labels = ["MAÇ", "GOL", "ASİST", "DK"];
-  const positioned = (x: number, y: number) =>
-    `x="0" y="0" transform="translate(${x} ${y}) skewX(-10)"`;
 
   return Buffer.from(`
     <svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
-          ${css}
-          .card{font-family:Bion,Arial,sans-serif;font-weight:700;fill:#fff}
+          .card{fill:#fff}
           .muted{fill:#e1e4e6}
         </style>
         <filter id="shadow"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity=".95"/></filter>
@@ -113,13 +147,13 @@ function dynamicCardText(
         </linearGradient>
       </defs>
       <g class="card" filter="url(#shadow)">
-        <text ${positioned(122, 438)} text-anchor="middle" font-size="122" fill="url(#metal)" stroke="#080b0e" stroke-width="7" paint-order="stroke fill">${escapeXml(String(player.shirtNumber ?? "—"))}</text>
-        <text class="muted" ${positioned(122, 478)} text-anchor="middle" font-size="25">${escapeXml(zone.label.toLocaleUpperCase("tr-TR"))}</text>
-        <text class="muted" ${positioned(122, 507)} text-anchor="middle" font-size="18" letter-spacing="2">AKADEMİ</text>
-        <text ${positioned(400, 814)} text-anchor="middle" font-size="${givenSize}">${escapeXml(upperGiven)}</text>
-        ${upperSurname ? `<text ${positioned(400, 875)} text-anchor="middle" font-size="${surnameSize}">${escapeXml(upperSurname)}</text>` : ""}
-        ${labels.map((label, index) => `<text class="muted" ${positioned(STAT_CENTERS[index] - 4, 944)} text-anchor="middle" font-size="25" letter-spacing="1.1">${label}</text>`).join("")}
-        ${values.map((value, index) => `<text ${positioned(STAT_CENTERS[index] - 7, 1007)} text-anchor="middle" font-size="52">${escapeXml(value)}</text>`).join("")}
+        ${textPath(font, String(player.shirtNumber ?? "—"), 122, 438, 122, { attributes: 'fill="url(#metal)" stroke="#080b0e" stroke-width="7" paint-order="stroke fill"' })}
+        ${textPath(font, zone.label.toLocaleUpperCase("tr-TR"), 122, 478, 25, { className: "muted" })}
+        ${textPath(font, "AKADEMİ", 122, 507, 18, { className: "muted", letterSpacing: 2 })}
+        ${textPath(font, upperGiven, 400, 814, givenSize)}
+        ${upperSurname ? textPath(font, upperSurname, 400, 875, surnameSize) : ""}
+        ${labels.map((label, index) => textPath(font, label, STAT_CENTERS[index] - 4, 944, 25, { className: "muted", letterSpacing: 1.1 })).join("")}
+        ${values.map((value, index) => textPath(font, value, STAT_CENTERS[index] - 7, 1007, 52)).join("")}
       </g>
     </svg>`);
 }
@@ -130,22 +164,44 @@ export async function GET(request: Request) {
     if (url.pathname.startsWith("/api/admin/")) await requireAdmin();
     const teamSlug = url.searchParams.get("team") ?? "";
     const playerId = url.searchParams.get("player") ?? "";
-    if (!/^[a-z0-9-]{1,100}$/.test(teamSlug) || !/^[\w-]{1,100}$/.test(playerId))
+    if (
+      !/^[a-z0-9-]{1,100}$/.test(teamSlug) ||
+      !/^[\w-]{1,100}$/.test(playerId)
+    )
       throw new AdminError("Geçersiz takım veya oyuncu.");
 
     const db = await getDb();
     const [teams, matches, competitions] = await Promise.all([
-      db.collection<{ name: string; slug: string; season: string; players: AcademyPlayer[] }>("teams").find({ _deleted: { $ne: true } }).toArray(),
-      db.collection<Match>("matches").find({ published: { $ne: false }, _deleted: { $ne: true } }).toArray(),
-      db.collection<{ _id: string; published?: boolean }>("competitions").find({ published: { $ne: false }, _deleted: { $ne: true } }).toArray(),
+      db
+        .collection<{
+          name: string;
+          slug: string;
+          season: string;
+          players: AcademyPlayer[];
+        }>("teams")
+        .find({ _deleted: { $ne: true } })
+        .toArray(),
+      db
+        .collection<Match>("matches")
+        .find({ published: { $ne: false }, _deleted: { $ne: true } })
+        .toArray(),
+      db
+        .collection<{ _id: string; published?: boolean }>("competitions")
+        .find({ published: { $ne: false }, _deleted: { $ne: true } })
+        .toArray(),
     ]);
     const team = teams.find((item) => item.slug === teamSlug);
     if (!team) throw new AdminError("Takım bulunamadı.", 404);
 
-    const allowedCompetitions = new Set(competitions.map((competition) => competition._id));
+    const allowedCompetitions = new Set(
+      competitions.map((competition) => competition._id),
+    );
     const mergedTeams = withMatchAppearances(
       teams,
-      matches.filter((match) => !match.competitionId || allowedCompetitions.has(match.competitionId)),
+      matches.filter(
+        (match) =>
+          !match.competitionId || allowedCompetitions.has(match.competitionId),
+      ),
     );
     const mergedTeam = mergedTeams.find((item) => item.slug === teamSlug)!;
     const player = mergedTeam.players.find((item) => item.id === playerId);
@@ -157,13 +213,24 @@ export async function GET(request: Request) {
       .filter((candidate) => playerIdentity(candidate.name) === identity)
       .flatMap((candidate) => playerAppearances(candidate, team.season));
     const uniqueAppearances = [
-      ...new Map(pooledAppearances.map((appearance) => [appearance.id, appearance])).values(),
+      ...new Map(
+        pooledAppearances.map((appearance) => [appearance.id, appearance]),
+      ).values(),
     ];
     const stats = playerStats(uniqueAppearances);
-    const values = [stats.matches, stats.goals, stats.assists, stats.minutes].map(formatStat);
+    const values = [
+      stats.matches,
+      stats.goals,
+      stats.assists,
+      stats.minutes,
+    ].map(formatStat);
 
-    const [cardBase, css] = await Promise.all([localAsset(TEMPLATE), fontCss()]);
-    if (!cardBase) throw new AdminError("Standart kart şablonu bulunamadı.", 500);
+    const [cardBase, font] = await Promise.all([
+      localAsset(TEMPLATE),
+      loadBionFont(),
+    ]);
+    if (!cardBase)
+      throw new AdminError("Standart kart şablonu bulunamadı.", 500);
 
     const composites: OverlayOptions[] = [];
     const cutoutUrl = resolvePlayerImage({
@@ -187,7 +254,7 @@ export async function GET(request: Request) {
       composites.push({ input: portrait, left: 90, top: 115, blend: "over" });
     }
     composites.push({
-      input: dynamicCardText(player, values, css),
+      input: dynamicCardText(player, values, font),
       left: 0,
       top: 0,
       blend: "over",
