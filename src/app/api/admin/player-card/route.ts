@@ -21,6 +21,7 @@ const WIDTH = 800;
 const HEIGHT = 1200;
 const TEMPLATE = "/media/academy/player-card-template-v2.webp";
 const STAT_CENTERS = [162, 322, 478, 638];
+const NAME_MAX_WIDTH = 600;
 let bionFontPromise: Promise<Font> | null = null;
 
 function formatStat(value: number | null) {
@@ -79,6 +80,37 @@ function loadBionFont() {
   return bionFontPromise;
 }
 
+function textWidth(
+  font: Font,
+  text: string,
+  fontSize: number,
+  letterSpacing = 0,
+) {
+  const glyphs = font.stringToGlyphs(text);
+  const scale = fontSize / font.unitsPerEm;
+
+  return glyphs.reduce((width, glyph, index) => {
+    const nextGlyph = glyphs[index + 1];
+    return (
+      width +
+      (glyph.advanceWidth ?? font.unitsPerEm) * scale +
+      (nextGlyph
+        ? font.getKerningValue(glyph, nextGlyph) * scale + letterSpacing
+        : 0)
+    );
+  }, 0);
+}
+
+function fitFontSize(
+  font: Font,
+  text: string,
+  preferredSize: number,
+  maxWidth: number,
+) {
+  const width = textWidth(font, text, preferredSize);
+  return width > maxWidth ? preferredSize * (maxWidth / width) : preferredSize;
+}
+
 function textPath(
   font: Font,
   text: string,
@@ -94,16 +126,7 @@ function textPath(
   const glyphs = font.stringToGlyphs(text);
   const scale = fontSize / font.unitsPerEm;
   const letterSpacing = options.letterSpacing ?? 0;
-  let width = 0;
-
-  for (let index = 0; index < glyphs.length; index += 1) {
-    const glyph = glyphs[index];
-    width += (glyph.advanceWidth ?? font.unitsPerEm) * scale;
-    if (index < glyphs.length - 1) {
-      width += font.getKerningValue(glyph, glyphs[index + 1]) * scale;
-      width += letterSpacing;
-    }
-  }
+  const width = textWidth(font, text, fontSize, letterSpacing);
 
   let cursor = -width / 2;
   const pathData: string[] = [];
@@ -126,10 +149,22 @@ function dynamicCardText(player: AcademyPlayer, values: string[], font: Font) {
   const { givenName, surname } = splitPlayerName(player.name);
   const upperGiven = givenName.toLocaleUpperCase("tr-TR");
   const upperSurname = surname.toLocaleUpperCase("tr-TR");
-  const givenSize =
+  const preferredGivenSize =
     upperGiven.length > 17 ? 42 : upperGiven.length > 12 ? 49 : 55;
-  const surnameSize =
+  const preferredSurnameSize =
     upperSurname.length > 14 ? 50 : upperSurname.length > 10 ? 58 : 66;
+  const givenSize = fitFontSize(
+    font,
+    upperGiven,
+    preferredGivenSize,
+    NAME_MAX_WIDTH,
+  );
+  const surnameSize = fitFontSize(
+    font,
+    upperSurname,
+    preferredSurnameSize,
+    NAME_MAX_WIDTH,
+  );
   const zone = positionZone(player.position);
   const labels = ["MAÇ", "GOL", "ASİST", "DK"];
 
