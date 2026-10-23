@@ -43,7 +43,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr" className={aldrich.variable} suppressHydrationWarning>
+    <html
+      lang="tr"
+      className={aldrich.variable}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script
           id="alfa-theme-init"

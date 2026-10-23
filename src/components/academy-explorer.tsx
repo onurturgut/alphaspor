@@ -191,6 +191,11 @@ export function AcademyExplorer({
             <Link
               key={item.slug}
               href={`/takimlar/${item.slug}`}
+              scroll
+              onClick={() => {
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+              }}
               aria-current={item.slug === team.slug ? "page" : undefined}
             >
               {item.name}

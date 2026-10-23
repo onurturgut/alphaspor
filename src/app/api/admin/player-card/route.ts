@@ -2,7 +2,7 @@ import "server-only";
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { parse, type Font } from "opentype.js";
+import { parse, type Font, type PathCommand } from "opentype.js";
 import sharp, { type OverlayOptions } from "sharp";
 import { AdminError, fail, requireAdmin } from "@/lib/admin/auth";
 import {
@@ -111,6 +111,25 @@ function fitFontSize(
   return width > maxWidth ? preferredSize * (maxWidth / width) : preferredSize;
 }
 
+function pathNumber(value: number) {
+  const rounded = Math.round(value * 100) / 100;
+  return String(Object.is(rounded, -0) ? 0 : rounded);
+}
+
+function pathCommandData(command: PathCommand) {
+  switch (command.type) {
+    case "M":
+    case "L":
+      return `${command.type} ${pathNumber(command.x)} ${pathNumber(command.y)}`;
+    case "Q":
+      return `Q ${pathNumber(command.x1)} ${pathNumber(command.y1)} ${pathNumber(command.x)} ${pathNumber(command.y)}`;
+    case "C":
+      return `C ${pathNumber(command.x1)} ${pathNumber(command.y1)} ${pathNumber(command.x2)} ${pathNumber(command.y2)} ${pathNumber(command.x)} ${pathNumber(command.y)}`;
+    case "Z":
+      return "Z";
+  }
+}
+
 function textPath(
   font: Font,
   text: string,
@@ -132,7 +151,8 @@ function textPath(
   const pathData: string[] = [];
   for (let index = 0; index < glyphs.length; index += 1) {
     const glyph = glyphs[index];
-    pathData.push(glyph.getPath(cursor, 0, fontSize, {}, font).toPathData(2));
+    const glyphPath = glyph.getPath(cursor, 0, fontSize);
+    pathData.push(glyphPath.commands.map(pathCommandData).join(" "));
     cursor += (glyph.advanceWidth ?? font.unitsPerEm) * scale;
     if (index < glyphs.length - 1) {
       cursor += font.getKerningValue(glyph, glyphs[index + 1]) * scale;
